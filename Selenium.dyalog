@@ -130,9 +130,10 @@ RETRYLIMIT←2000
  ⍝ Set the path to the Selenium DLLs
      
  ⎕USING←0⍴⎕USING
- ⎕USING,←⊂'OpenQA.Selenium,',DLLPATH,'webdriver.dll'
- ⎕USING,←⊂',',DLLPATH,'webdriver.support.dll'
+ ⎕USING,←⊂('/'⎕r'\\')'OpenQA.Selenium,',DLLPATH,'webdriver.dll'
+ ⎕USING,←⊂('/'⎕r'\\')',',DLLPATH,'webdriver.support.dll'
 ∇
+
 
 ∇ Start
  ⎕←'DLLPATH←''',DLLPATH,''''
