@@ -6,8 +6,14 @@ under Microsoft Windows, using the Microsoft.Net bindings for Selenium.
 It has been tested with Firefox and Google Chrome; drivers should also be available for Internet Explorer
 and other browsers.
 
+##Required DLLs
 For Firefox support, you need to download the C# language bindings from the Selenium site. In particular, you need
 to put the files WebDriver.dll and WebDriver.Support.dll in a known location.
 
 For Google Chrome, you need to [download the file chromedriver.exe](https://sites.google.com/a/chromium.org/chromedriver/downloads).
+
+NB! After downloading the files, you may need to "Unblock" them before Windows will allow you to use them.
+
+##Documentation
+Is coming... Until then, see the files in the Samples folder.
 
