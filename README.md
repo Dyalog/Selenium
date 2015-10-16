@@ -10,7 +10,7 @@ and other browsers.
 You need to download the C# language bindings from the Selenium site. In particular, you need
 to put the files WebDriver.dll and WebDriver.Support.dll in a known location. Note that in recent versions of Microsoft Windows, you will need to "Unblock" them after downloading them, before Windows will allow you to use them.
 
-If you will be useing FireFox, the above 2 DLL's are all you need. Other browesers require the installation of additional components, support is available for several browsers.
+If you will be using Mozilla FireFox, the above 2 DLL's are all you need. Other browsers require the installation of additional components, support is available for several browsers.
 
 For example, to use Google Chrome, you need to [download the file chromedriver.exe](https://sites.google.com/a/chromium.org/chromedriver/downloads).
 
