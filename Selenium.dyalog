@@ -85,7 +85,7 @@
     ∇ id ListMgrSelect items;elements
      ⍝ Move items from left to right in a MiServer ejListManager control
      
-      elements←(id,'_left')FindListBoxItems items
+      elements←(id,'_left')FindListItems items
       elements DragNDrop¨⊂id,'_right_container'
     ∇
 
