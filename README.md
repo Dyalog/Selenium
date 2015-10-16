@@ -15,4 +15,4 @@ If you will be using Mozilla FireFox, the above 2 DLL's are all you need. Other 
 For example, to use Google Chrome, you need to [download the file chromedriver.exe](https://sites.google.com/a/chromium.org/chromedriver/downloads).
 
 ##Documentation
-Is coming... Until then, see the files in the Samples folder.
+See "Selenium from Dyalog.pdf" (docx source in the DocSrc folder).
