@@ -16,11 +16,18 @@
       b.Click
     ∇
 
-    ∇ fromid DragNDrop toid;from;to
+    ∇ fromid DragAndDrop toid;from;to
      ⍝ Drag and Drop
      
       (from to)←Find¨fromid toid
-      ((⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER).DragAndDrop from to).Perform
+      (ACTIONS.DragAndDrop from to).Perform
+    ∇
+  
+    ∇ MoveToElement args;id;target
+     ⍝ Move to element with optional x & y offsets
+     
+      (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
+      (ACTIONS.MoveToElement args).Perform
     ∇
 
     ∇ r←{type}Find id;f;ok;time
@@ -79,6 +86,7 @@
           ⎕←'Starting ',browser
           BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
           CURRENTBROWSER←browser
+          ACTIONS←⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER
       :End
     ∇
 
@@ -86,7 +94,7 @@
      ⍝ Move items from left to right in a MiServer ejListManager control
      
       elements←(id,'_left')FindListItems items
-      elements DragNDrop¨⊂id,'_right_container'
+      elements DragAndDrop¨⊂id,'_right_container'
     ∇
 
     ∇ selectId Select itemText;sp;se;type
