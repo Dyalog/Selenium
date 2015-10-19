@@ -194,6 +194,7 @@
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
      
+      :If 9≠⎕NC'element' ⋄ element←Find element ⋄ :EndIf
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
       f←'{∨/''',((1+text='''')/text),'''⍷'
