@@ -22,12 +22,20 @@
       (from to)←Find¨fromid toid
       (ACTIONS.DragAndDrop from to).Perform
     ∇
-  
-    ∇ MoveToElement args;id;target
+    
+    ∇ {action}MoveToElement args;id;target
      ⍝ Move to element with optional x & y offsets
+     ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
      
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
       (ACTIONS.MoveToElement args).Perform
+      :If 2=⎕NC'action'
+          :If (⊂action)∊ACTIONS.⎕NL-3
+              (ACTIONS⍎action)⍬
+          :Else
+              ('Unsupported action: ',action)⎕SIGNAL 11
+          :EndIf
+      :EndIf
     ∇
 
     ∇ r←{type}Find id;f;ok;time
@@ -170,7 +178,7 @@
     ∇
 
     ∇ {ok}←(fn Retry)arg;time;z
-⍝ Retry fn for a while
+     ⍝ Retry fn for a while
      
       ok←0 ⋄ time←⎕AI[3]
       :Repeat
@@ -180,6 +188,19 @@
               ⎕DL 0.1
           :EndTrap
       :Until (⊃ok)∨(⎕AI[3]-time)>RETRYLIMIT ⍝ Try for a second
+    ∇
+    
+    ∇ r←element WaitFor(text msg);f
+    ⍝ Retry until text/value of element begins with text
+    ⍝ Return msg on failure, '' on success
+     
+      f←'{''',((1+text='''')/text),'''≡',(⍕⍴text),'↑'
+      :If element.TagName≡'input'
+          f,←'element.GetAttribute⊂''value''}'
+      :Else
+          f,←'element.Text}'
+      :EndIf
+      r←(~(⍎f)Retry ⍬)/msg
     ∇
 
 :EndNamespace 
