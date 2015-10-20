@@ -1,7 +1,7 @@
 ﻿:Namespace TestTryAPL
 
     ∇ r←Basic;S;result
-     ⍝ Verify that TryAPL is working
+     ⍝ Verify that TryAPL is working - return error message if it isn't
      
       S←##.Selenium
       S.InitBrowser''
@@ -10,12 +10,7 @@
       'APLedit'S.SendKeys'1 2 3+4 5 6'
       S.('APLedit'SendKeys Keys.Return)
       result←'ClassName'S.Find'result'
-     
-      :If '5 7 9'≡result.Text
-          r←'TRYAPL is working'
-      :Else
-          r←'1 2 3+4 5 6 failed'
-      :EndIf
+      r←result S.WaitFor'5 7 9' '1 2 3+4 5 6 failed'
     ∇
 
 :EndNamespace 
