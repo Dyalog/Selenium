@@ -37,6 +37,10 @@
           :EndIf
       :EndIf
     ∇
+    
+    ∇ R←PageSource
+      R←BROWSER.PageSource
+    ∇
 
     ∇ r←{type}Find id;f;ok;time
       :If 9=⎕NC'id' ⋄ r←id ⍝ Already an object
@@ -148,10 +152,6 @@
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',DLLPATH,'webdriver.dll'
       ⎕USING,←⊂('/'⎕R'\\')',',DLLPATH,'webdriver.support.dll'
-    ∇
-
-    ∇ R←SourceCode
-      R←BROWSER.PageSource
     ∇
 
     ∇ Start
