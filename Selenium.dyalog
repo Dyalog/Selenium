@@ -150,6 +150,9 @@
       ⎕USING,←⊂('/'⎕R'\\')',',DLLPATH,'webdriver.support.dll'
     ∇
 
+    ∇ R←SourceCode
+      R←BROWSER.PageSource
+    ∇
 
     ∇ Start
       ⎕←'DLLPATH←''',DLLPATH,''''
