@@ -5,7 +5,7 @@
     CURRENTBROWSER←'Chrome'
     DEFAULTBROWSER←'Chrome'
     DLLPATH←'C:\Devt\Selenium\'
-    RETRYLIMIT←2000
+    RETRYLIMIT←5000
 
     ∇ {type}Click id;b;ok;time
   ⍝ Click on an element, by default identified by id. See "Find" for options
@@ -31,7 +31,7 @@
       (ACTIONS.MoveToElement args).Perform
       :If 2=⎕NC'action'
           :If (⊂action)∊ACTIONS.⎕NL-3
-              (ACTIONS⍎action)⍬
+              ((ACTIONS⍎action)⍬).Perform
           :Else
               ('Unsupported action: ',action)⎕SIGNAL 11
           :EndIf
