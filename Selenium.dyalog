@@ -143,7 +143,7 @@
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
      
       q←Find obj
-      {q.SendKeys⊂,⍵ ⋄ ⎕DL 0.1}¨,⍕text ⍝ Give a little time to respond to each one
+      q.SendKeys⊂,text
     ∇
 
     ∇ SetUsing
