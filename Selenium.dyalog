@@ -22,7 +22,7 @@
       (from to)←Find¨fromid toid
       (ACTIONS.DragAndDrop from to).Perform
     ∇
-    
+
     ∇ {action}MoveToElement args;id;target
      ⍝ Move to element with optional x & y offsets
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
@@ -37,7 +37,7 @@
           :EndIf
       :EndIf
     ∇
-    
+
     ∇ R←PageSource
       R←BROWSER.PageSource
     ∇
@@ -139,11 +139,17 @@
       :EndFor
     ∇
 
-    ∇ obj SendKeys text;q
+    ∇ obj SendKeys text;q;i;k
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
      
       q←Find obj
-      q.SendKeys⊂,text
+      text←eis text
+      i←4~⍨'Shift' 'Control' 'Alt'⍳¯1↓text
+      :For k :In i
+          (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Perform
+      :EndFor
+      q.SendKeys,¨text↓⍨⍴i
+     
     ∇
 
     ∇ SetUsing
@@ -192,7 +198,7 @@
           :EndTrap
       :Until (⊃ok)∨(⎕AI[3]-time)>RETRYLIMIT ⍝ Try for a second
     ∇
-    
+
     ∇ r←element WaitFor args;f;text;msg
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
@@ -209,4 +215,4 @@
       r←(~(⍎f)Retry ⍬)/msg
     ∇
 
-:EndNamespace 
+:EndNamespace
