@@ -141,6 +141,8 @@
 
     ∇ obj SendKeys text;q;i;k
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
+     ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
+     ⍝ To get A,Ctrl+X use 'A'(Control 'X')
      
       q←Find obj
       text←eis text
@@ -148,7 +150,7 @@
       :For k :In i
           (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Perform
       :EndFor
-      q.SendKeys,¨text↓⍨⍴i
+      q.SendKeys,¨text~Keys.(Shift Control Alt)
      
     ∇
 
