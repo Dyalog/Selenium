@@ -7,8 +7,9 @@
     DLLPATH←'C:\Devt\Selenium\'
     RETRYLIMIT←5000
 
-    ∇ {type}Click id;b;ok;time
+    ∇ {dummy}←{type}Click id;b;ok;time
   ⍝ Click on an element, by default identified by id. See "Find" for options
+      dummy←⍪⍬
      
       :If 0=⎕NC'type' ⋄ type←'Id' ⋄ :EndIf
      
@@ -16,16 +17,18 @@
       b.Click
     ∇
 
-    ∇ fromid DragAndDrop toid;from;to
+    ∇ {dummy}←fromid DragAndDrop toid;from;to
      ⍝ Drag and Drop
+      dummy←⍪⍬
      
       (from to)←Find¨fromid toid
       (ACTIONS.DragAndDrop from to).Perform
     ∇
 
-    ∇ {action}MoveToElement args;id;target
+    ∇ {dummy}←{action}MoveToElement args;id;target
      ⍝ Move to element with optional x & y offsets
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
+      dummy←⍪⍬
      
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
       (ACTIONS.MoveToElement args).Perform
@@ -74,8 +77,9 @@
       r←(li.Text∊eis text)/li
     ∇
 
-    ∇ GoTo url
+    ∇ {dummy}←GoTo url
      ⍝ Ask the browser to navigate to a URL and check that it did it
+      dummy←⍪⍬
      
       BROWSER.Navigate.GoToUrl⊂url
       :If ~(⊂BROWSER.Url)∊url(url,'/')
@@ -102,15 +106,17 @@
       :End
     ∇
 
-    ∇ id ListMgrSelect items;elements
+    ∇ {dummy}←id ListMgrSelect items;elements
      ⍝ Move items from left to right in a MiServer ejListManager control
+      dummy←⍪⍬
      
       elements←(id,'_left')FindListItems items
       elements DragAndDrop¨⊂id,'_right_container'
     ∇
 
-    ∇ selectId Select itemText;sp;se;type
+    ∇ {dummy}←selectId Select itemText;sp;se;type
       ⍝ Select an item in a select element
+      dummy←⍪⍬
      
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
       :If 2=≡selectId ⋄ (type selectId)←selectId
@@ -122,10 +128,11 @@
       se.SelectByText⊂,itemText
     ∇
 
-    ∇ selectId SelectItemText itemsText;item;se
+    ∇ {dummy}←selectId SelectItemText itemsText;item;se
      ⍝ Select items in a select control
      ⍝ Each item can be deselected by preceding it with '-'.
      ⍝ A single '-' deselects all
+      dummy←⍪⍬
      
       se←⎕NEW OpenQA.Selenium.Support.UI.SelectElement,⊂Find selectId
       :For item :In eis itemsText
@@ -139,10 +146,11 @@
       :EndFor
     ∇
 
-    ∇ obj SendKeys text;q;i;k
+    ∇ {dummy}←obj SendKeys text;q;i;k
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
      ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
      ⍝ To get A,Ctrl+X use 'A'(Control 'X')
+      dummy←⍪⍬
      
       q←Find obj
       text←eis text
@@ -167,8 +175,8 @@
       ⎕←'DEFAULTBROWSER←''',DEFAULTBROWSER,''' ⍝ Chrome Firefox supported'
     ∇
 
-    ∇ Wait msec
-      {}⎕DL msec÷1000
+    ∇ {dummy}←Wait msec
+      dummy←⍪⍬⊣⎕DL msec÷1000
     ∇
 
     ∇ x←eis x
@@ -176,8 +184,9 @@
       :If (≡x)∊0 1 ⋄ x←,⊂,x ⋄ :EndIf
     ∇
 
-    ∇ {open}ejAccordionTab(tabText ctlId)
+    ∇ {dummy}←{open}ejAccordionTab(tabText ctlId)
      ⍝ Make sure that a control, within an accordiontab, is visible or not
+      dummy←⍪⍬
      
       :If 0=⎕NC'open' ⋄ open←1 ⋄ :EndIf
      
