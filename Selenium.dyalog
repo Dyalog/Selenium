@@ -144,7 +144,7 @@
      
       q←Find obj
       text←eis text
-      i←4~⍨'Shift' 'Control' 'Alt'⍳¯1↓text
+      i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
       :For k :In i
           (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Perform
       :EndFor
