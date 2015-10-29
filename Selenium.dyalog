@@ -33,7 +33,7 @@
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
       (ACTIONS.MoveToElement args).Perform
       :If 2=⎕NC'action'
-          :If (⊂action)∊ACTIONS.⎕NL-3
+          :If (⊂action)∊'Click' 'ClickAndHold' 'ContextClick' 'DoubleClick'
               ((ACTIONS⍎action)⍬).Perform
           :Else
               ('Unsupported action: ',action)⎕SIGNAL 11
