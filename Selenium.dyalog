@@ -217,7 +217,7 @@
       :If 9≠⎕NC'element' ⋄ element←Find element ⋄ :EndIf
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
-      f←'{∨/''',((1+text='''')/text),'''⍷'
+      f←'{∨/''',((1+text='''')/text),'''','≡⍷'[1+×⍴,text]
       :If element.TagName≡'input'
           f,←'element.GetAttribute⊂''value''}'
       :Else
