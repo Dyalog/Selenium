@@ -25,6 +25,14 @@
       (ACTIONS.DragAndDrop from to).Perform
     ∇
 
+    ∇ {dummy}←fromid DragAndDropToOffset xy;from
+     ⍝ Drag
+      dummy←⍪⍬
+     
+      from←Find fromid
+      (ACTIONS.DragAndDropToOffset from,xy).Perform
+    ∇
+
     ∇ {dummy}←{action}MoveToElement args;id;target
      ⍝ Move to element with optional x & y offsets
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
