@@ -53,6 +53,10 @@
       R←BROWSER.PageSource
     ∇
 
+    ∇ {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
+      r←BROWSER.ExecuteScript script #
+    ∇
+
     ∇ r←{type}Find id;f;ok;time
       :If 9=⎕NC'id' ⋄ r←id ⍝ Already an object
       :Else
