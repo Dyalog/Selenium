@@ -40,6 +40,7 @@
      
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
       (ACTIONS.MoveToElement args).Perform
+      ⎕DL 0.1
       :If 2=⎕NC'action'
           :If (⊂action)∊'Click' 'ClickAndHold' 'ContextClick' 'DoubleClick'
               ((ACTIONS⍎action)⍬).Perform
@@ -57,16 +58,21 @@
       r←BROWSER.ExecuteScript script #
     ∇
 
-    ∇ r←{type}Find id;f;ok;time
-      :If 9=⎕NC'id' ⋄ r←id ⍝ Already an object
+    ∇ r←{type}Find id;f;ok;time;value;attr;search;elms;mask
+      :If 9=⎕NC'id'
+          r←id ⍝ Already an object
       :Else
      
           :If 0=⎕NC'type' ⋄ type←'Id' ⋄ :EndIf
           ⍝ See auto-complete on BROWSER.F for a list of possible ways to find things
-     
+          (id attr value)←{3↑⍵,(⍴⍵)↓'' '' ''}eis id
+          :If search←~0∊⍴attr
+              type,←('s'=¯1↑type)↓'s'
+          :EndIf
           :If 's'=¯1↑type ⍝ The call FindElements*
               f←⍎'BROWSER.FindElementsBy',¯1↓type
-          :Else ⋄ f←⍎'BROWSER.FindElementBy',type
+          :Else
+              f←⍎'BROWSER.FindElementBy',type
           :EndIf
      
           time←⎕AI[3]
@@ -79,6 +85,13 @@
                   :If RETRYLIMIT>0 ⋄ ⎕DL 0.1 ⋄ ok←0 ⋄ :EndIf
               :EndTrap
           :Until ok∨(⎕AI[3]-time)>RETRYLIMIT ⍝ Try for a second
+          :If ok
+          :AndIf search
+              elms←⌷r
+              :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
+                  r←⊃mask/elms
+              :EndIf
+          :EndIf
       :EndIf
     ∇
 
