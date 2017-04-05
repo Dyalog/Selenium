@@ -175,7 +175,7 @@
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
      ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
      ⍝ To get A,Ctrl+X use 'A'(Control 'X')
-      dummy←⍪⍬
+      dummy←1
      
       q←Find obj
       text←eis text
