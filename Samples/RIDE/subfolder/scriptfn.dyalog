@@ -12,7 +12,7 @@
 ⍝ fn
 ⍝ Morten: Hello Morten
 ⍝ ∇fn
-⍝ [2]Hej,name
+⍝ [2]'Hej ',name
 ⍝ ∇
 ⍝ fn
 ⍝ Morten: Hej Morten

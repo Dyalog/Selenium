@@ -3,7 +3,7 @@
  Se'var←''Hej Morten'''Enter
  'var'Gives'Hej Morten'
  Se'var←''Hello'',3↓var'Enter
- 'var'Gives'Hello Morten'
+ 'var'Gives'Hello John'
  Se'∇res←fn;name'Enter
  Se'name←⍞'Enter
  Se'res←''Hello '',name'Enter
