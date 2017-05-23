@@ -36,32 +36,46 @@
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝ site: port number (default is PORT) or URL
       ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL
-      :If ×⎕NC'BROWSER' ⍝ close any open browser
-          BROWSER.Quit
-      :EndIf
-      SetUsing PathOf SourceFile ⎕THIS
       InitBrowser''
-      :If ~×#.⎕NC'MAX'
-          BROWSER.Manage.Window.Maximize
-      :EndIf
       (⍎,∘'←∊Keys.(',,∘')')⍕Keys.⎕NL ¯2 ⍝ Localize non-alphanumeric key names for easy access
       'stop_site_match'DefaultTo 0
       failed←stop_site_match RunAllTests path_filter
       BROWSER.Quit
     ∇
 
-    ∇ InitBrowser browser;z
+    ∇ InitBrowser browser;files;msg;path;len
+      :If ×⎕NC'BROWSER' ⍝ close any open browser
+          BROWSER.Quit
+      :EndIf
+      path←PathOf SourceFile ⎕THIS
+      files←SetUsing path
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
-          z←BROWSER.Url
+          {}BROWSER.Url
       :Else
           ⎕←'Starting ',browser
-          BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+          :Trap 0
+              BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+          :Else
+              msg←'Could not load '
+              len←≢path
+              msg,←len↓⊃files
+              msg,←' and ',len↓⊃⌽files
+              msg,←' from ',path,' ─ they may be '
+              :If 1 1≡⎕NEXISTS¨files
+                  (msg,'blocked (Properties>General>Unblock)')⎕SIGNAL 19
+              :Else
+                  (msg,'missing')⎕SIGNAL 22
+              :EndIf
+          :EndTrap
           CURRENTBROWSER←browser
           ACTIONS←⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER
       :End
+      :If ~×#.⎕NC'MAX'
+          BROWSER.Manage.Window.Maximize
+      :EndIf
     ∇
 
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter
@@ -448,10 +462,11 @@
       :EndIf
     ∇
 
-    ∇ SetUsing path ⍝ Set the path to the Selenium DLLs
+    ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
+      files←'dll' 'support.dll',¨⍨⊂path,'webdriver.'
       ⎕USING←0⍴⎕USING
-      ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',path,'webdriver.dll'
-      ⎕USING,←⊂('/'⎕R'\\')',',path,'webdriver.support.dll'
+      ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
+      ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
     ∇
 
       SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
