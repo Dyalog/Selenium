@@ -1,20 +1,24 @@
-﻿:Namespace Selenium ⍝ V 2.00
+﻿:Namespace Selenium ⍝ V 2.01
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
+⍝
 ⍝ 2017 05 09 Adam: Version info added
+⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 
     :Section ADOC
     ∇ t←Describe
-      t←'>>> See "Selenium from Dyalog.pdf" for information. <<<'
+      t←1↓∊(⎕UCS 10),¨{⍵/⍨∧\(⊂'')≢¨⍵}Comments ⎕SRC ⎕THIS ⍝ first block of non-empty comment lines
     ∇
 
-    ∇ (n v d)←Version;s
-      n←(⊢↑⍨1-'.'⍳⍨⌽)⍕⎕THIS
+    ∇ (n v d)←Version;f;s
       s←⎕SRC ⎕THIS
-      v←'.0',⍨' '~⍨(⍳∘'V'↓⊢)⊃s
-      s↓⍨←1++/∧\''∘≡¨s
-      s/⍨←∧\'⍝'=⊃∘{(∨\' '≠⍵)/⍵}¨s
-      d←1↓∊¯4 ¯2 ¯2{'-',⍺↑'0',⍕⍵}¨⊃(//)⎕VFI⊃⌽s
+      f←Words⊃s                     ⍝ split first line
+      n←2⊃f                         ⍝ ns name
+      v←'.0',⍨'V'~⍨⊃⌽f              ⍝ version number
+      d←1↓∊'-',¨3↑Words⊃⌽Comments s ⍝ date
     ∇
+
+    Words←' '∘≠⊆⊢
+    Comments←{1↓¨⍵/⍨∧\'⍝'=⊃∘{(∨\' '≠⍵)/⍵}¨⍵}1∘↓
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section INITIALISATION
