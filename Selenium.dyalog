@@ -39,7 +39,7 @@
     ∇ failed←{stop_site_match}Test path_filter;⎕USING;stop;match;site
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝ site: port number (default is PORT) or URL
-      ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL
+      ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
       InitBrowser''
       (⍎,∘'←∊Keys.(',,∘')')⍕Keys.⎕NL ¯2 ⍝ Localize non-alphanumeric key names for easy access
       'stop_site_match'DefaultTo 0
@@ -332,7 +332,7 @@
     :EndNamespace
 
     ∇ se←SeRef ⍝ Get ref to Session
-      :Trap 6 90 ⍝ VALUE (first use) EXCEPTION (stale - probably won't happen)
+      :Trap 2 6 90 ⍝ SYNTAX (not found) VALUE (first use) EXCEPTION (stale - probably won't happen)
           {}Cache.SE.Displayed
       :Else
           Cache.SE←'CssSelector'Find'.ride_win textarea'
@@ -378,7 +378,9 @@
           '$$'≡2↑rot:(2↓rot)⎕S 0⊢⍺
           '$;$'≡3↑rot:('^',(rot[4]~'^'),4↓rot)⎕S 0⊢⍺
           ';'=⊃⍵:0/⍨(1↓rot)≡⍺↑⍨¯1+≢⍵
-          1⍳⍨⍺⍷⍵
+          loc←⍺⍷⍵
+          ∨/loc:loc⍳1
+          ¯1
       }
 
     Fix←{⍺←2 ⋄ Se((⍕⍺),'⎕FIX''file://',⍵,'''')Enter} ⍝ Execute ⎕FIX in Session
