@@ -477,7 +477,7 @@
 
       SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
           file←⊃(4∘⊃¨(/⍨)(⍵≡⊃)¨)5177⌶⍬ ⍝ ⎕FIX
-          ''≡file:⍵.SALT_Data.SourceFile ⍝ SALT
+          ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
 
