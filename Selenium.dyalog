@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.01
+:Namespace Selenium ⍝ V 2.01
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -476,7 +476,7 @@
     ∇
 
       SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
-          file←⊃(4∘⊃¨(/⍨)(⍵≡⊃)¨)5177⌶⍬ ⍝ ⎕FIX
+          file←4⊃5179⌶⍵ ⍝ ⎕FIX
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
