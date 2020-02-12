@@ -3,16 +3,18 @@
     "_usage": "Simple refer to the name of a config in ⍺ of the Test-fn",
     "_usage2": "i.e. 'Chrome80'Test'./MS3'",
     "Chrome80": {
-        "DLLPATH": ".\\Drivers\\ChromeDriver80",
-        "BROWSER":"Chrome"
+        "DLLPATH": ".\\Drivers\\ChromeDriver80\\",
+        "BROWSER":"Chrome",
+        "DUIPort":8080
     },
     "Firefox73": {
-        "DLLPATH": ".\\Drivers\\geckodriver026",
-        "BROWSER":"Firefox"
+        "DLLPATH": ".\\Drivers\\geckodriver026\\",
+        "BROWSER":"Firefox",
+        "DUIPort":8080
     },
     "HTMLRenderer": {
-        "DLLPATH": ".\\Drivers\\ChromeDriver79",
-        "BROWSER":"Chrome"
+        "DLLPATH": ".\\Drivers\\ChromeDriver79\\",
+        "BROWSER":"HTMLRENDERER"
     },
     "WebDriver": ".\\Selenium\\Drivers"
 }

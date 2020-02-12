@@ -1,8 +1,9 @@
-﻿:Namespace Selenium ⍝ V 2.01
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
+⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 
     :Section ADOC
     ∇ t←Describe
@@ -64,7 +65,7 @@ DEFAULTBROWSER←settings.BROWSER
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :EndIf
-      files←SetUsing DLLPATH
+      files←SetUsing path←DLLPATH
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
@@ -481,6 +482,7 @@ DEFAULTBROWSER←settings.BROWSER
     ∇
 
     ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
+    :if path≡'' ⋄ path←1⊃1⎕nparts GetSourceFile ⎕this ⋄ :endif
       files←'dll' 'support.dll',¨⍨⊂path,'webdriver.'
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
@@ -492,6 +494,10 @@ DEFAULTBROWSER←settings.BROWSER
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
+
+∇ R←GetSettings
+
+∇
 
     Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load)
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
