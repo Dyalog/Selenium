@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.01
+﻿:Namespace Selenium ⍝ V 2.01
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -19,6 +19,8 @@
 
     Words←{⎕ML←3 ⋄ ⍵⊂⍨' '≠⍵}
     Comments←{1↓¨⍵/⍨∧\'⍝'=⊃∘{(∨\' '≠⍵)/⍵}¨⍵}1∘↓
+
+
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section INITIALISATION
@@ -26,7 +28,7 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-
+    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test - wish we could initialize this with SourceFile!
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -36,14 +38,25 @@
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section MAIN FRAMEWORK PROGRAMS
-    ∇ failed←{stop_site_match}Test path_filter;⎕USING;stop;match;site
+    ∇ failed←{stop_site_match_config}Test path_filter;⎕USING;stop;match;site
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝ site: port number (default is PORT) or URL
       ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
+      ⍝ config: points to an entry of your settinghs.json-Foöe 
+      'stop_site_match_config'DefaultTo 0
+      :if 82=⎕dr stop_site_match_config  ⍝ handle mode where just the name of a config is given
+      stop_site_match_config←0 0 0 ,⊂stop_site_match_config
+      :endif 
+      settings←GetSettings
+      :if 0<≢4⊃4↑stop_site_match_config
+      :andif 0≠settings.⎕nc 4⊃stop_site_match_config
+      ref←settings⍎ 4⊃stop_site_match_config
+DLLPATH←settings.DLLPATH
+DEFAULTBROWSER←settings.BROWSER
+      :endif
       InitBrowser''
       (⍎,∘'←∊Keys.(',,∘')')⍕Keys.⎕NL ¯2 ⍝ Localize non-alphanumeric key names for easy access
-      'stop_site_match'DefaultTo 0
-      failed←stop_site_match RunAllTests path_filter
+      failed←({3<≢⍵:3↑⍵ ⋄ ⍵}stop_site_match_config) RunAllTests path_filter
       BROWSER.Quit
     ∇
 
@@ -51,8 +64,7 @@
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :EndIf
-      path←PathOf SourceFile ⎕THIS
-      files←SetUsing path
+      files←SetUsing DLLPATH
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one

@@ -1,0 +1,18 @@
+{
+    "_doc": "This file contains settings for some browser-configs that were current at the time it was composed.",
+    "_usage": "Simple refer to the name of a config in ⍺ of the Test-fn",
+    "_usage2": "i.e. 'Chrome80'Test'./MS3'",
+    "Chrome80": {
+        "DLLPATH": ".\\Drivers\\ChromeDriver80",
+        "BROWSER":"Chrome"
+    },
+    "Firefox73": {
+        "DLLPATH": ".\\Drivers\\geckodriver026",
+        "BROWSER":"Firefox"
+    },
+    "HTMLRenderer": {
+        "DLLPATH": ".\\Drivers\\ChromeDriver79",
+        "BROWSER":"Chrome"
+    },
+    "WebDriver": ".\\Selenium\\Drivers"
+}
