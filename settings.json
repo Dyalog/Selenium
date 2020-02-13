@@ -14,7 +14,8 @@
     },
     "HTMLRenderer": {
         "DLLPATH": ".\\Drivers\\ChromeDriver79\\",
-        "BROWSER":"HTMLRENDERER"
+        "BROWSER":"HTMLRENDERER",
+        "DUIPort":8080
     },
     "WebDriver": ".\\Selenium\\Drivers"
 }
