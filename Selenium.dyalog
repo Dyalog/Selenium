@@ -43,22 +43,42 @@
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝ site: port number (default is PORT) or URL
       ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
-      ⍝ config: points to an entry of your settinghs.json-Foöe 
+      ⍝ config: points to an entry of your settinghs.json-Foöe
       'stop_site_match_config'DefaultTo 0
-      :if 82=⎕dr stop_site_match_config  ⍝ handle mode where just the name of a config is given
-      stop_site_match_config←0 0 0 ,⊂stop_site_match_config
-      :endif 
-      settings←GetSettings
-      :if 0<≢4⊃4↑stop_site_match_config
-      :andif 0≠settings.⎕nc 4⊃stop_site_match_config
-      ref←settings⍎ 4⊃stop_site_match_config
-DLLPATH←settings.DLLPATH
-DEFAULTBROWSER←settings.BROWSER
-      :endif
+      :If 82=⎕DR stop_site_match_config  ⍝ handle mode where just the name of a config is given
+          stop_site_match_config←0 0 0,⊂stop_site_match_config
+      :EndIf
+      :If 0<≢4⊃4↑stop_site_match_config
+      :AndIf 0<≢4⊃stop_site_match_config
+          ApplySettings 4⊃stop_site_match_config
+      :EndIf
       InitBrowser''
       (⍎,∘'←∊Keys.(',,∘')')⍕Keys.⎕NL ¯2 ⍝ Localize non-alphanumeric key names for easy access
-      failed←({3<≢⍵:3↑⍵ ⋄ ⍵}stop_site_match_config) RunAllTests path_filter
+      failed←({3<≢⍵:3↑⍵ ⋄ ⍵}stop_site_match_config)RunAllTests path_filter
       BROWSER.Quit
+    ∇
+
+    ∇ R←ApplySettings name;settings;ref
+     
+      settings←GetSettings
+      ref←settings{6::'' ⋄ ⍺⍎⍵}name
+      :If ref≡''
+          ('Settings "',name,'" not found!')⎕SIGNAL 11
+          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
+      :EndIf
+      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
+      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
+      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+     
+    ∇
+
+
+    ∇ path←base NormalizePath path
+      path base←{('/'@{'\'=⍵})⍵}¨path base
+      base←base,('/'≠⊃⌽base)/'/'
+      :If './'≡2↑path ⋄ path←base,2↓path   ⍝ relative path
+      :ElseIf ⍝ are there any more cases to consider???
+      :EndIf
     ∇
 
     ∇ InitBrowser browser;files;msg;path;len
@@ -195,6 +215,7 @@ DEFAULTBROWSER←settings.BROWSER
       ok←1
       'type'DefaultTo'Id'
       b←type Find id
+      ('Control "',id,'" not found')⎕signal (0=b)/11
       b.Click
     ∇
 
@@ -482,11 +503,12 @@ DEFAULTBROWSER←settings.BROWSER
     ∇
 
     ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
-    :if path≡'' ⋄ path←1⊃1⎕nparts GetSourceFile ⎕this ⋄ :endif
+      :If path≡'' ⋄ path←1⊃1 ⎕NPARTS SourceFile ⎕THIS ⋄ :EndIf
       files←'dll' 'support.dll',¨⍨⊂path,'webdriver.'
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
+      ⎕SE.Dyalog.Utils.display ⎕USING
     ∇
 
       SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
@@ -495,9 +517,9 @@ DEFAULTBROWSER←settings.BROWSER
           file
       }
 
-∇ R←GetSettings
-
-∇
+    ∇ R←GetSettings
+      R←⎕JSON 1⊃⎕NGET(⊃⎕NPARTS SourceFile ⎕THIS),'settings.json'
+    ∇
 
     Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load)
     :EndSection ───────────────────────────────────────────────────────────────────────────────────

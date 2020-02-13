@@ -1,21 +1,23 @@
 {
     "_doc": "This file contains settings for some browser-configs that were current at the time it was composed.",
-    "_usage": "Simple refer to the name of a config in ⍺ of the Test-fn",
-    "_usage2": "i.e. 'Chrome80'Test'./MS3'",
+    "_usage": "Simply refer to the name of a config in ⍺ of the Test-fn",
+    "_usage2": "i.e. Test'./MS3' '' 'Chrome80'",
+    "_usage3": "or use `Selenium.ApplySettings'Chrom80'` in your own test-function",
     "Chrome80": {
         "DLLPATH": ".\\Drivers\\ChromeDriver80\\",
-        "BROWSER":"Chrome",
-        "DUIPort":8080
+        "BROWSER": "Chrome",
+        "PORT": 8080
     },
     "Firefox73": {
         "DLLPATH": ".\\Drivers\\geckodriver026\\",
-        "BROWSER":"Firefox",
-        "DUIPort":8080
+        "BROWSER": "Firefox",
+        "PORT": 8080
     },
     "HTMLRenderer": {
         "DLLPATH": ".\\Drivers\\ChromeDriver79\\",
-        "BROWSER":"HTMLRENDERER",
-        "DUIPort":8080
+        "BROWSER": "HTMLRENDERER",
+        "PORT": 8080
     },
-    "WebDriver": ".\\Selenium\\Drivers"
+    "WebDriver": ".\\Selenium\\Drivers",
+    "default": "Firefox73"
 }
