@@ -15,8 +15,12 @@
     },
     "HTMLRenderer": {
         "DLLPATH": ".\\Drivers\\ChromeDriver79\\",
-        "BROWSER": "HTMLRENDERER",
-        "PORT": 8080
+        "BROWSER": "Chrome",
+        "PORT": 8080,
+        "OptionsInstanceOf": "Chrome.ChromeOptions",
+        "Options": {
+            "DebuggerAddress":"127.0.0.1:8080"
+        }
     },
     "WebDriver": ".\\Selenium\\Drivers",
     "default": "Firefox73"

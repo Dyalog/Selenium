@@ -69,6 +69,12 @@
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      :If 2=ref.⎕NC'OptionsInstanceOf'
+      :AndIf 9=ref.⎕NC'Options'
+          BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
+      :Else
+          BROWSEROPTIONS←⍬  ⍝ no options found...
+      :EndIf
      
     ∇
 
@@ -81,7 +87,8 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len
+    ∇ InitBrowser browser;files;msg;path;len;options;opt
+      options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :EndIf
@@ -92,9 +99,21 @@
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
+          :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
+          :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
+              ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON 2⊃BROWSEROPTIONS
+              options←⎕NEW⍎1⊃BROWSEROPTIONS
+              :For opt :In (2⊃BROWSEROPTIONS).⎕NL-2
+                  ⍎'options.',opt,'←(2⊃BROWSEROPTIONS).',opt
+              :EndFor
+          :EndIf
           ⎕←'Starting ',browser
           :Trap 0
-              BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+              :If options≡''
+                  BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+              :Else
+                  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
+              :EndIf
           :Else
               msg←'Could not load '
               len←≢path
@@ -111,7 +130,9 @@
           ACTIONS←⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER
       :End
       :If ~×#.⎕NC'MAX'
-          BROWSER.Manage.Window.Maximize
+          :Trap 90           ⍝ can't do that with CEF
+              BROWSER.Manage.Window.Maximize
+          :EndTrap
       :EndIf
     ∇
 
@@ -215,7 +236,7 @@
       ok←1
       'type'DefaultTo'Id'
       b←type Find id
-      ('Control "',id,'" not found')⎕signal (0=b)/11
+      ('Control "',id,'" not found')⎕SIGNAL(0=b)/11
       b.Click
     ∇
 
@@ -508,7 +529,6 @@
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
-      ⎕SE.Dyalog.Utils.display ⎕USING
     ∇
 
       SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
