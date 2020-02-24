@@ -1,8 +1,9 @@
-:Namespace Selenium ⍝ V 2.01
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
+⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 
     :Section ADOC
     ∇ t←Describe
@@ -19,6 +20,8 @@
 
     Words←{⎕ML←3 ⋄ ⍵⊂⍨' '≠⍵}
     Comments←{1↓¨⍵/⍨∧\'⍝'=⊃∘{(∨\' '≠⍵)/⍵}¨⍵}1∘↓
+
+
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section INITIALISATION
@@ -26,7 +29,7 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-
+    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test - wish we could initialize this with SourceFile!
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -36,32 +39,81 @@
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section MAIN FRAMEWORK PROGRAMS
-    ∇ failed←{stop_site_match}Test path_filter;⎕USING;stop;match;site
+    ∇ failed←{stop_site_match_config}Test path_filter;⎕USING;stop;match;site
       ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
       ⍝ site: port number (default is PORT) or URL
       ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
+      ⍝ config: points to an entry of your settinghs.json-Foöe
+      'stop_site_match_config'DefaultTo 0
+      :If 82=⎕DR stop_site_match_config  ⍝ handle mode where just the name of a config is given
+          stop_site_match_config←0 0 0,⊂stop_site_match_config
+      :EndIf
+      :If 0<≢4⊃4↑stop_site_match_config
+      :AndIf 0<≢4⊃stop_site_match_config
+          ApplySettings 4⊃stop_site_match_config
+      :EndIf
       InitBrowser''
       (⍎,∘'←∊Keys.(',,∘')')⍕Keys.⎕NL ¯2 ⍝ Localize non-alphanumeric key names for easy access
-      'stop_site_match'DefaultTo 0
-      failed←stop_site_match RunAllTests path_filter
+      failed←({3<≢⍵:3↑⍵ ⋄ ⍵}stop_site_match_config)RunAllTests path_filter
       BROWSER.Quit
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len
+    ∇ R←ApplySettings name;settings;ref
+     
+      settings←GetSettings
+      ref←settings{6::'' ⋄ ⍺⍎⍵}name
+      :If ref≡''
+          ('Settings "',name,'" not found!')⎕SIGNAL 11
+          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
+      :EndIf
+      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
+      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
+      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      :If 2=ref.⎕NC'OptionsInstanceOf'
+      :AndIf 9=ref.⎕NC'Options'
+          BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
+      :Else
+          BROWSEROPTIONS←⍬  ⍝ no options found...
+      :EndIf
+     
+    ∇
+
+
+    ∇ path←base NormalizePath path
+      path base←{('/'@{'\'=⍵})⍵}¨path base
+      base←base,('/'≠⊃⌽base)/'/'
+      :If './'≡2↑path ⋄ path←base,2↓path   ⍝ relative path
+      :ElseIf ⍝ are there any more cases to consider???
+      :EndIf
+    ∇
+
+    ∇ InitBrowser browser;files;msg;path;len;options;opt
+      options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :EndIf
-      path←PathOf SourceFile ⎕THIS
-      files←SetUsing path
+      files←SetUsing path←DLLPATH
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
+          :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
+          :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
+              ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON 2⊃BROWSEROPTIONS
+              options←⎕NEW⍎1⊃BROWSEROPTIONS
+              :For opt :In (2⊃BROWSEROPTIONS).⎕NL-2
+                  ⍎'options.',opt,'←(2⊃BROWSEROPTIONS).',opt
+              :EndFor
+          :EndIf
           ⎕←'Starting ',browser
           :Trap 0
-              BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+              :If options≡''
+                  BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+              :Else
+                  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
+              :EndIf
           :Else
               msg←'Could not load '
               len←≢path
@@ -78,7 +130,9 @@
           ACTIONS←⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER
       :End
       :If ~×#.⎕NC'MAX'
-          BROWSER.Manage.Window.Maximize
+          :Trap 90           ⍝ can't do that with CEF
+              BROWSER.Manage.Window.Maximize
+          :EndTrap
       :EndIf
     ∇
 
@@ -182,6 +236,7 @@
       ok←1
       'type'DefaultTo'Id'
       b←type Find id
+      ('Control "',id,'" not found')⎕SIGNAL(0=b)/11
       b.Click
     ∇
 
@@ -438,7 +493,11 @@
     ∇ {ok}←GoTo url ⍝ Ask the browser to navigate to a URL and check that it did it
       ok←1
       BROWSER.Navigate.GoToUrl⊂url
-      ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
+      :Trap 90
+          ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
+      :Else
+          ('Alert running "',url,'": ',⎕EXCEPTION.Message)⎕SIGNAL 11
+      :EndTrap
     ∇
 
     UrlIs←{(⊂BROWSER.Url)∊⍵(⍵,'/')} ⍝ Is the browser currently at ⍵?
@@ -469,6 +528,7 @@
     ∇
 
     ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
+      :If path≡'' ⋄ path←1⊃1 ⎕NPARTS SourceFile ⎕THIS ⋄ :EndIf
       files←'dll' 'support.dll',¨⍨⊂path,'webdriver.'
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
@@ -480,6 +540,10 @@
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
+
+    ∇ R←GetSettings
+      R←⎕JSON 1⊃⎕NGET(⊃⎕NPARTS SourceFile ⎕THIS),'settings.json'
+    ∇
 
     Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load)
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
