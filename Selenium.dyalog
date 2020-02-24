@@ -493,7 +493,11 @@
     ∇ {ok}←GoTo url ⍝ Ask the browser to navigate to a URL and check that it did it
       ok←1
       BROWSER.Navigate.GoToUrl⊂url
-      ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
+      :Trap 90
+          ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
+      :Else
+          ('Alert running "',url,'": ',⎕EXCEPTION.Message)⎕SIGNAL 11
+      :EndTrap
     ∇
 
     UrlIs←{(⊂BROWSER.Url)∊⍵(⍵,'/')} ⍝ Is the browser currently at ⍵?
