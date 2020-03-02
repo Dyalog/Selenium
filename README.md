@@ -8,7 +8,9 @@ and other browsers.
 
 ## Required DLLs
 
-You may need to download the C# language bindings from the Selenium site (we provide the current version in the WebDrivers-Folder).
+You may need to download the C# language bindings from the Selenium site (we provide the current versions for Chrome 
+and Firefox in the WebDrivers-Folder).
+
 **Note that in recent versions of Microsoft Windows, you will need to "Unblock" them after downloading them, before Windows will allow you to use them.**
 
 If you will be using Mozilla FireFox, the above 2 DLL's are all you need. Other browsers require the installation of additional components, support is available for several browsers.
@@ -17,8 +19,19 @@ For example, to use Google Chrome, you need to [download the file chromedriver.e
 
 ## Documentation
 
-See "[Selenium from Dyalog.pdf](/Selenium%20from%20Dyalog.pdf)" (docx source in the DocSrc folder).
+See "[Selenium from Dyalog.pdf](./Selenium%20from%20Dyalog.pdf)" (docx source in the DocSrc folder).
 
 ## Issues
 
-* can we put the common files webdriver.dll and webdriver.support.dll into one place (ie Drivers)?
+* occassionally the client may throw an error similar to the following one when creating a Selenium-Instance:
+
+```
+Could not load webdriver.dll and webdriver.support.dll from c:/git/Selenium/Drivers/ChromeDriver79/ ─ they may be blocked (Properties>General>Unblock)
+
+Test[71] Selenium.InitBrowser''
+         ∧
+```
+
+"Unblocking" as described may help (the first time). The author of these lines also observed cases when the error was thrown despite those files being unblocked already.
+We currently have no idea how to fix it. (In one case, it worked for a few days - then stopped working for almost a week and at the end of the week worked again.)
+The issue has been posted to various forums without getting much attention or support.

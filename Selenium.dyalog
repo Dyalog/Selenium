@@ -101,13 +101,13 @@
       :Else
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
           :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-              ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON 2⊃BROWSEROPTIONS
+              ⎕←'Processing browseroptions',(⎕UCS 13),opts←⎕JSON 2⊃BROWSEROPTIONS
               options←⎕NEW⍎1⊃BROWSEROPTIONS
-              :For opt :In (2⊃BROWSEROPTIONS).⎕NL-2
-                  ⍎'options.',opt,'←(2⊃BROWSEROPTIONS).',opt
+              :For opt :In opts.⎕NL-2
+                  ⍎'options.',opt,'←opts.',opt
               :EndFor
           :EndIf
-          ⎕←'Starting ',browser
+          :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0
               :If options≡''
                   BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
@@ -136,28 +136,30 @@
       :EndIf
     ∇
 
-    ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter
+    ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
       path filter←2↑(eis path_filter),⊂''
+      shutUp←0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'  ⍝ use QUIETMODE to suppress everything BUT error-messages
+      showMsg←⍎(1+shutUp⊃)'{⍵}' '{}'
       allfiles←(≢path)↓¨FindAllFiles path
       hasfilter←×≢filter
       files←filter ⎕S'%'⍣hasfilter⊢allfiles
       n←≢files
-      ⎕←'Selected: ',(⍕n),(hasfilter/' of ',⍕≢allfiles),' tests.'
+      showMsg'Selected: ',(⍕n),(hasfilter/' of ',⍕≢allfiles),' tests.'
       maxlen←⌈/≢¨files
       failed←''
       start←⎕AI[3]
       :For i file :InEach (⍳n)files
-          ⍞←(⎕UCS 13),maxlen↑file
+          prefix←(⎕UCS 13),maxlen↑file
           msg←stop_site_match Run1Test path file
           :If 0=⍴msg
-              ⍞←' *** PASSED ***'
+              showMsg prefix,' *** PASSED ***'
           :Else
               failed,←⊂file
-              ⍞←' *** FAILED *** #',(⍕i),' of ',(⍕n),': ',msg
+              ⎕←prefix,' *** FAILED *** #',(⍕i),' of ',(⍕n),': ',msg
           :EndIf
       :EndFor
       time←∊'ms',¨⍨⍕¨24 60⊤⌊0.5+0.001×⎕AI[3]-start
-      ⎕←'Total of ',(⍕n),' samples tested in ',time,': ',(⍕≢failed),' failed.'
+      showMsg←'Total of ',(⍕n),' samples tested in ',time,': ',(⍕≢failed),' failed.'
     ∇
 
     ∇ r←stop_site_match Run1Test(path file);name;Test;stop;site;match
