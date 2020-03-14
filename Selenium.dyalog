@@ -91,8 +91,9 @@
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
-      :EndIf
-      files←SetUsing path←DLLPATH
+      :EndIf                      
+            files←SetUsing path←DLLPATH
+
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
@@ -101,7 +102,8 @@
       :Else
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
           :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-              ⎕←'Processing browseroptions',(⎕UCS 13),opts←⎕JSON 2⊃BROWSEROPTIONS
+          opts←2⊃BROWSEROPTIONS
+           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'    ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄:endif
               options←⎕NEW⍎1⊃BROWSEROPTIONS
               :For opt :In opts.⎕NL-2
                   ⍎'options.',opt,'←opts.',opt
@@ -121,7 +123,10 @@
               msg,←' and ',len↓⊃⌽files
               msg,←' from ',path,' ─ they may be '
               :If 1 1≡⎕NEXISTS¨files
-                  (msg,'blocked (Properties>General>Unblock)')⎕SIGNAL 19
+                  msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
+                  msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
+                  msg,←⎕EXCEPTION.Message
+                  msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
               :EndIf

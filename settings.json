@@ -4,17 +4,17 @@
     "_usage2": "i.e. Test'./MS3' '' 'Chrome80'",
     "_usage3": "or use `Selenium.ApplySettings'Chrom80'` in your own test-function",
     "Chrome80": {
-        "DLLPATH": ".\\Drivers\\ChromeDriver80\\",
+        "DLLPATH": "./Drivers/ChromeDriver80/",
         "BROWSER": "Chrome",
         "PORT": 8080
     },
     "Firefox73": {
-        "DLLPATH": ".\\Drivers\\geckodriver026\\",
+        "DLLPATH": "./Drivers/geckodriver026/",
         "BROWSER": "Firefox",
         "PORT": 8080
     },
     "HTMLRenderer": {
-        "DLLPATH": ".\\Drivers\\ChromeDriver79\\",
+        "DLLPATH": "./Drivers/ChromeDriver79/",
         "BROWSER": "Chrome",
         "PORT": 8080,
         "OptionsInstanceOf": "Chrome.ChromeOptions",
@@ -22,6 +22,5 @@
             "DebuggerAddress":"127.0.0.1:8080"
         }
     },
-    "WebDriver": ".\\Selenium\\Drivers",
     "default": "Firefox73"
 }
