@@ -126,6 +126,7 @@
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
+                  msg,←(1=2⊃⎕vfi 2⎕nq'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕ucs 13),'*** Please not that DYALOG_NETCORE=1 can also cause these symptoms! (Probably a Selenium-Issue and hopefully fixed sooon...)'
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
