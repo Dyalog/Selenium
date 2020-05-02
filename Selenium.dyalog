@@ -537,7 +537,7 @@
 
     ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
       :If path≡'' ⋄ path←1⊃1 ⎕NPARTS SourceFile ⎕THIS ⋄ :EndIf
-      files←'dll' 'support.dll',¨⍨⊂path,'webdriver.'
+      files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.'
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
