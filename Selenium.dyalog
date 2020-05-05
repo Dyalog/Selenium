@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.10
+:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -126,7 +126,7 @@
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
-                  msg,←(1=2⊃⎕vfi 2⎕nq'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕ucs 13),'*** Please not that DYALOG_NETCORE=1 can also cause these symptoms! (Probably a Selenium-Issue and hopefully fixed sooon...)'
+                  msg,←(1=2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕UCS 13),'*** Please not that DYALOG_NETCORE=1 can also cause these symptoms! (Probably a Selenium-Issue and hopefully fixed sooon...)'
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
@@ -233,7 +233,7 @@
       text←eis text
       i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
       :For k :In i
-          (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Perform
+          (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
       :EndFor
       q.SendKeys,¨text~Keys.(Shift Control Alt)
      
@@ -259,7 +259,7 @@
      ⍝ Drag
       ok←1
       from←Find fromid
-      (ACTIONS.DragAndDropToOffset from,xy).Perform
+      (ACTIONS.DragAndDropToOffset from,xy).Build.Perform
     ∇
 
     ∇ {ok}←{action}MoveToElement args;id;target
@@ -267,11 +267,11 @@
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
       ok←1
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
-      (ACTIONS.MoveToElement args).Perform
+      (ACTIONS.MoveToElement args).Build.Perform
       ⎕DL 0.1
       :If 2=⎕NC'action'
           :If (⊂action)∊'Click' 'ClickAndHold' 'ContextClick' 'DoubleClick'
-              ((ACTIONS⍎action)⍬).Perform
+              ((ACTIONS⍎action)⍬).Build.Perform
           :Else
               ('Unsupported action: ',action)⎕SIGNAL 11
           :EndIf
