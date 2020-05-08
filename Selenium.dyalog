@@ -1,9 +1,10 @@
-:Namespace Selenium ⍝ V 2.10
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
+⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
 
     :Section ADOC
     ∇ t←Describe
@@ -29,7 +30,7 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test - wish we could initialize this with SourceFile!
+    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -66,6 +67,11 @@
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
       :EndIf
+      :If 0=ref.⎕NC'DLLPATH'   ⍝ DLLPATH can also be set on a global level...
+      :AndIf 2=settings.⎕NC'DLLPATH'
+          ref.DLLPATH←settings.DLLPATH
+      :EndIf
+      SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
@@ -83,38 +89,66 @@
       path base←{('/'@{'\'=⍵})⍵}¨path base
       base←base,('/'≠⊃⌽base)/'/'
       :If './'≡2↑path ⋄ path←base,2↓path   ⍝ relative path
-      :ElseIf ⍝ are there any more cases to consider???
+ ⍝     :ElseIf... ⍝ are there any more cases to consider???
       :EndIf
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len;options;opt
+    ∇ InitBrowser browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
-      :EndIf                      
-            files←SetUsing path←DLLPATH
-
+      :EndIf
+     
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
+      files←browser SetUsing path←DLLPATH
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
+          subF←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
+          suffix←('W'=1 1⊃'.'⎕WG'APLVersion')/'.exe'
+          :If 2=SETTINGS.⎕NC'Executable'
+              drv←SETTINGS.Executable,suffix
+          :Else
+              drv←(⎕C browser),'driver',suffix
+          :EndIf
+          :If 2=SETTINGS.⎕NC'DRIVERS' ⋄ path←SETTINGS.DRIVERS ⋄ :EndIf
+          pth←path
+          :If '.'=⊃pth
+          :AndIf (2⊃pth)∊'\/'
+              pth←∊1 ⎕NPARTS(SourcePath ⎕THIS),2↓pth
+          :EndIf
+          :If ~(⎕NEXISTS⍠1)pth,drv        ⍝ will this work on Linux?
+          :AndIf (⎕NEXISTS⍠1)pth,subF,drv
+              pth←pth,subF   ⍝ pick subfolder depending on platform
+          :EndIf
+     
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
           :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-          opts←2⊃BROWSEROPTIONS
-           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'    ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄:endif
+              opts←2⊃BROWSEROPTIONS
+              :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄ :EndIf
               options←⎕NEW⍎1⊃BROWSEROPTIONS
               :For opt :In opts.⎕NL-2
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
+          :ElseIf 0 ⍝ temporarily disabled this branch to use constructor w/o path (required different folder-layout, currently only done for Chrome81)
+              options←⎕NEW⍎browser,'Options'
+              :Select browser
+              :Case 'Firefox'
+                  options.BrowserExecutableLocation←'\'@('/'∘=)pth,drv
+              :Case 'Chrome'
+                  options.BinaryLocation←'\'@('/'∘=)pth,drv
+              :EndSelect
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
-          :Trap 0
+          :Trap 0/0  ⍝ ###TEMP### remove after testing
               :If options≡''
-                  BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+                ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')
+                  BROWSER←⎕NEW(⍎browser,'Driver')
               :Else
-                  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
+                ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
+                  BROWSER←⎕NEW(⍎browser,'Driver')options
               :EndIf
           :Else
               msg←'Could not load '
@@ -126,7 +160,7 @@
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
-                  msg,←(1=2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕UCS 13),'*** Please not that DYALOG_NETCORE=1 can also cause these symptoms! (Probably a Selenium-Issue and hopefully fixed sooon...)'
+                  msg,←(1=2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕UCS 13),'*** Please note that DYALOG_NETCORE=1 may also cause these symptoms!'
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
@@ -535,24 +569,34 @@
       :EndIf
     ∇
 
-    ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
-      :If path≡'' ⋄ path←1⊃1 ⎕NPARTS SourceFile ⎕THIS ⋄ :EndIf
-      files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.'
+    ∇ {files}←browser SetUsing path ⍝ Set the path to the Selenium DLLs
+      :If path≡'' ⋄ path←SourcePath ⎕THIS
+      :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
+      :If ~⎕NEXISTS path,'webdriver.dll'
+          path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
+      :EndIf
+      path←('/'⎕R'\\')path
+      files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.' ⍝ 3.141
       ⎕USING←0⍴⎕USING
-      ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
-      ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
+      ⎕USING,←⊂'OpenQA.Selenium,',⊃files
+      :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
+          ⎕USING,←⊂',',⊃⌽files
+      :EndIf
+      ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
     ∇
 
-      SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
+      SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
           file←4⊃5179⌶⍵ ⍝ ⎕FIX
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
 
+    SourcePath←{⊃1⎕nparts SourceFile ⍵}  ⍝ just the path of the SourceFile in questions
+
     ∇ R←GetSettings
-      R←⎕JSON 1⊃⎕NGET(⊃⎕NPARTS SourceFile ⎕THIS),'settings.json'
+      R←⎕JSON 1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
     ∇
 
-    Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load)
+   ⍝ Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load) ⍝ cadidate for removal...
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 :EndNamespace
