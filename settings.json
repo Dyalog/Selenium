@@ -28,6 +28,6 @@
             "DebuggerAddress":"127.0.0.1:8080"
         }
     },
-    "default": "Firefox73",
-    "DLLPATH":"C:/Git/Selenium/Drivers/ChromeDriver81/"
+    "default": "Chrome81",
+    "DLLPATH":"C:/Git/Selenium/Drivers/WebDriver3"
 }

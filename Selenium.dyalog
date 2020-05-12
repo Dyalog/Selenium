@@ -62,7 +62,7 @@
     ∇ R←ApplySettings name;settings;ref
      
       settings←GetSettings
-      ref←settings{6::'' ⋄ ⍺⍎⍵}name
+      ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
       :If ref≡''
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
@@ -111,7 +111,8 @@
           :If 2=SETTINGS.⎕NC'Executable'
               drv←SETTINGS.Executable,suffix
           :Else
-              drv←(⎕C browser),'driver',suffix
+⍝              drv←(⎕C browser),'driver',suffix
+              drv←(0(819⌶)browser),'driver',suffix
           :EndIf
           :If 2=SETTINGS.⎕NC'DRIVERS' ⋄ path←SETTINGS.DRIVERS ⋄ :EndIf
           pth←path
@@ -133,19 +134,22 @@
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
           :ElseIf 0 ⍝ temporarily disabled this branch to use constructor w/o path (required different folder-layout, currently only done for Chrome81)
-              options←⎕NEW⍎browser,'Options'
-              :Select browser
-              :Case 'Firefox'
-                  options.BrowserExecutableLocation←'\'@('/'∘=)pth,drv
-              :Case 'Chrome'
-                  options.BinaryLocation←'\'@('/'∘=)pth,drv
-              :EndSelect
+⍝              options←⎕NEW⍎browser,'Options'
+⍝              :Select browser
+⍝              :Case 'Firefox'
+⍝                  options.BrowserExecutableLocation←'\'@('/'∘=)pth,drv
+⍝              :Case 'Chrome'
+⍝                  options.BinaryLocation←'\'@('/'∘=)pth,drv
+⍝              :EndSelect
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               :If options≡''
                 ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')
-                  BROWSER←⎕NEW(⍎browser,'Driver')
+      ⍝            BROWSER←⎕NEW(⍎browser,'Driver')
+      BSVC←(⍎browser,'DriverService').CreateDefaultService (pth)(drv)
+      ⍝BSVC←ChromeDriverService.CreateDefaultService (pth)(drv)
+      BROWSER←⎕new(⍎browser,'Driver')BSVC
               :Else
                 ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
                   BROWSER←⎕NEW(⍎browser,'Driver')options
