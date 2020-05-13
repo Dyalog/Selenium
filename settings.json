@@ -29,5 +29,5 @@
         }
     },
     "default": "Chrome81",
-    "DLLPATH":"C:/Git/Selenium/Drivers/WebDriver3"
+    "DLLPATH":"./Drivers/WebDriver4"
 }

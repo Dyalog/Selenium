@@ -587,6 +587,7 @@
           ⎕USING,←⊂',',⊃⌽files
       :EndIf
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
+      ⎕using,←⊂''  ⍝ VC 200513 via mail to MB
     ∇
 
       SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
