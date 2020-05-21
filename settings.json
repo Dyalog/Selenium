@@ -18,6 +18,12 @@
         "BROWSER": "Chrome",
         "PORT": 8080
     },
+    "Edge83": {
+        "DRIVERS": "./Drivers/EdgeDriver83/",
+        "BROWSER": "Edge",
+        "PORT": 8080,
+        "Executable":"msedgedriver"
+    },    
     "Firefox73": {
         "DRIVERS": "./Drivers/geckodriver026/",
         "BROWSER": "Firefox",
@@ -33,6 +39,6 @@
             "DebuggerAddress":"127.0.0.1:8080"
         }
     },
-    "default": "Chrome83",
-    "DLLPATH":"./Drivers/WebDriver3"
+    "default": "Edge83",
+    "DLLPATH":"./Drivers/WebDriver4"
 }

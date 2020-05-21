@@ -123,6 +123,8 @@
           :If ~(⎕NEXISTS⍠1)pth,drv        ⍝ will this work on Linux?
           :AndIf (⎕NEXISTS⍠1)pth,subF,drv
               pth←pth,subF   ⍝ pick subfolder depending on platform
+          :ElseIf (⎕NEXISTS⍠1)pth,(subF←subF,((1+∨/'64'⍷1⊃'.'⎕WG'APLVersion')⊃'32' '64'),'/'),drv   ⍝ test adding bits to folder (see folder-structure for Edge/Win!)
+              pth←pth,subF   ⍝ pick subfolder depending on platform
           :EndIf
      
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
@@ -133,26 +135,16 @@
               :For opt :In opts.⎕NL-2
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
-          :ElseIf 0 ⍝ temporarily disabled this branch to use constructor w/o path (required different folder-layout, currently only done for Chrome81)
-⍝              options←⎕NEW⍎browser,'Options'
-⍝              :Select browser
-⍝              :Case 'Firefox'
-⍝                  options.BrowserExecutableLocation←'\'@('/'∘=)pth,drv
-⍝              :Case 'Chrome'
-⍝                  options.BinaryLocation←'\'@('/'∘=)pth,drv
-⍝              :EndSelect
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
+              BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
               :If options≡''
-                ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')
-      ⍝            BROWSER←⎕NEW(⍎browser,'Driver')
-      BSVC←(⍎browser,'DriverService').CreateDefaultService (pth)(drv)
-      ⍝BSVC←ChromeDriverService.CreateDefaultService (pth)(drv)
-      BROWSER←⎕new(⍎browser,'Driver')BSVC
+                  BROWSER←⎕NEW(⍎browser,'Driver')BSVC
               :Else
-                ⍝  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
-                  BROWSER←⎕NEW(⍎browser,'Driver')options
+                ⍝  ∘∘∘
+                ⍝  options.SetLoggingPreference(LogType.Browser 0)
+                  BROWSER←⎕NEW(⍎browser,'Driver')(BSVC options)
               :EndIf
           :Else
               msg←'Could not load '
@@ -587,7 +579,7 @@
           ⎕USING,←⊂',',⊃⌽files
       :EndIf
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
-      ⎕using,←⊂''  ⍝ VC 200513 via mail to MB
+      ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
     ∇
 
       SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
