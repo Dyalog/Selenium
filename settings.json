@@ -13,6 +13,11 @@
         "BROWSER": "Chrome",
         "PORT": 8080
     },
+    "Chrome83": {
+        "DRIVERS": "./Drivers/ChromeDriver83/",
+        "BROWSER": "Chrome",
+        "PORT": 8080
+    },
     "Firefox73": {
         "DRIVERS": "./Drivers/geckodriver026/",
         "BROWSER": "Firefox",
@@ -28,6 +33,6 @@
             "DebuggerAddress":"127.0.0.1:8080"
         }
     },
-    "default": "Chrome81",
-    "DLLPATH":"./Drivers/WebDriver4"
+    "default": "Chrome83",
+    "DLLPATH":"./Drivers/WebDriver3"
 }
