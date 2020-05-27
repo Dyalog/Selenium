@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.10
+:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -67,10 +67,12 @@
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
       :EndIf
-      :If 0=ref.⎕NC'DLLPATH'   ⍝ DLLPATH can also be set on a global level...
-      :AndIf 2=settings.⎕NC'DLLPATH'
-          ref.DLLPATH←settings.DLLPATH
+      :for go :in 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
+      :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
+      :AndIf 2=settings.⎕NC go
+          ⍎'ref.',go,'←settings.',go
       :EndIf
+      :endif
       SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER

@@ -5,40 +5,35 @@
     "_usage3": "or use `Selenium.ApplySettings'Chrome80'` in your own test-function",
     "Chrome80": {
         "DRIVERS": "./Drivers/ChromeDriver80/",
-        "BROWSER": "Chrome",
-        "PORT": 8080
+        "BROWSER": "Chrome"
     },
     "Chrome81": {
         "DRIVERS": "./Drivers/ChromeDriver81/",
-        "BROWSER": "Chrome",
-        "PORT": 8080
+        "BROWSER": "Chrome"
     },
     "Chrome83": {
         "DRIVERS": "./Drivers/ChromeDriver83/",
-        "BROWSER": "Chrome",
-        "PORT": 8080
+        "BROWSER": "Chrome"
     },
     "Edge83": {
         "DRIVERS": "./Drivers/EdgeDriver83/",
         "BROWSER": "Edge",
-        "PORT": 8080,
         "Executable":"msedgedriver"
     },    
     "Firefox73": {
         "DRIVERS": "./Drivers/geckodriver026/",
         "BROWSER": "Firefox",
-        "PORT": 8080,
         "Executable":"geckodriver"        
     },
     "HTMLRenderer": {
         "DRIVERS": "./Drivers/ChromeDriver79/",
         "BROWSER": "Chrome",
-        "PORT": 8080,
         "OptionsInstanceOf": "Chrome.ChromeOptions",
         "Options": {
             "DebuggerAddress":"127.0.0.1:8080"
         }
     },
-    "default": "Edge83",
+    "PORT": 8080,
+    "default": "Chrome83",
     "DLLPATH":"./Drivers/WebDriver4"
 }
