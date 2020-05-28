@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.10
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -72,7 +72,7 @@
       :AndIf 2=settings.⎕NC go
           ⍎'ref.',go,'←settings.',go
       :EndIf
-      :endif
+      :endfor
       SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
@@ -138,6 +138,10 @@
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
           :EndIf
+          ⍝ shouldn't be needed (JD, May 28th)
+          ⍝ if needed, consider DYALOG_NETCORE!
+          ⍝ next: DOTNET-detection to only execute the next line with CORE!
+        ⎕using,←⊂',',∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
