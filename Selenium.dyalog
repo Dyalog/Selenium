@@ -574,7 +574,7 @@
     ∇ {files}←browser SetUsing path ⍝ Set the path to the Selenium DLLs
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-      :If ~⎕NEXISTS path,'webdriver.dll'
+      :If ~⎕NEXISTS path,'WebDriver.dll'        
           path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
       :EndIf
       path←('/'⎕R'\\')path
