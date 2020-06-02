@@ -139,7 +139,11 @@
               :EndFor
           :EndIf
           :if 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+          :if 'W'=1⊃1⊃'.'⎕wg'APLVersion'
             ⎕USING,←⊂',','\'@('/'∘=)∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+            :else 
+            ⎕USING,←⊂',','/'@('\'∘=)∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+            :endif
           :endif
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
