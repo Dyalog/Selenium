@@ -90,13 +90,3 @@ Test[..] Selenium.InitBrowser''
 ```
 
 "Unblocking" as described may help (the first time). However, since other reasons may cause this problem as well, we also show exceptions (usually .net-Exceptions give clear indication of the problem, though they may be verbose at times...)
-
-* when running Dyalog 18 with `DYALOG_DOTNETCORE=1`, Selenium will throw an exception when instantiating a new driver.
-
-````language=text
-⍎VALUE ERROR: Undefined name: ChromeDriverService
-InitBrowser[46] ChromeDriverService
-                ∧
-````
-
-This is a known problem that is being [worked on](http://mantis.dyalog.com/view.php?id=18161).

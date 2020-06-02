@@ -28,6 +28,7 @@
     "HTMLRenderer": {
         "DRIVERS": "./Drivers/ChromeDriver79/",
         "BROWSER": "Chrome",
+        "SITEROOT": "http://dyalog_root",
         "OptionsInstanceOf": "Chrome.ChromeOptions",
         "Options": {
             "DebuggerAddress":"127.0.0.1:8080"

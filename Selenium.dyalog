@@ -67,12 +67,12 @@
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
       :EndIf
-      :for go :in 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
-      :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
-      :AndIf 2=settings.⎕NC go
-          ⍎'ref.',go,'←settings.',go
-      :EndIf
-      :endfor
+      :For go :In 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
+          :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
+          :AndIf 2=settings.⎕NC go
+              ⍎'ref.',go,'←settings.',go
+          :EndIf
+      :EndFor
       SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
@@ -138,10 +138,9 @@
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
           :EndIf
-          ⍝ shouldn't be needed (JD, May 28th)
-          ⍝ if needed, consider DYALOG_NETCORE!
-          ⍝ next: DOTNET-detection to only execute the next line with CORE!
-        ⎕using,←⊂',',∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+          :if 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+            ⎕USING,←⊂',','\'@('/'∘=)∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+          :endif
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
@@ -386,9 +385,13 @@
           :Until ok∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second
           :If ok
           :AndIf search
-              elms←⌷r
-              :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
-                  r←⊃mask/elms
+              :If 0<r.Count
+                  elms←⌷r
+                  :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
+                      r←⊃mask/elms
+                  :EndIf
+              :Else
+                  r←0   ⍝ nothing found!
               :EndIf
           :EndIf
       :EndIf
