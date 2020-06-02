@@ -138,13 +138,6 @@
                   ⍎'options.',opt,'←opts.',opt
               :EndFor
           :EndIf
-          :if 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-          :if 'W'=1⊃1⊃'.'⎕wg'APLVersion'
-            ⎕USING,←⊂',','\'@('/'∘=)∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
-            :else 
-            ⎕USING,←⊂',','/'@('\'∘=)∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
-            :endif
-          :endif
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
@@ -593,6 +586,15 @@
       :EndIf
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
+          :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+              ⎕USING,←⊂∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+          :EndIf
+          :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
+              ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
+          :Else
+              ⎕USING←{'/'@('\'∘=)⍵}¨⎕USING
+          :EndIf
+
     ∇
 
       SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
