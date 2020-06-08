@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.10
+:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -311,7 +311,7 @@
     ∇
 
     ∇ {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
-      r←BROWSER.ExecuteScript script #
+      r←BROWSER.ExecuteScript script ⍬
     ∇
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
