@@ -552,8 +552,31 @@
 
     Split←,⊂⍨⊣=, ⍝ Split ⍵ at separator ⍺, but keep the separators as prefixes to each section
 
-    ∇ {ok}←GoTo url ⍝ Ask the browser to navigate to a URL and check that it did it
+    ∇ r←lc R  ⍝ lowercase
+      :If 18≤2⊃⎕VFI 2↑2⊃'.'⎕WG'aplversion'
+          r←⎕C R
+      :Else
+          r←0(819⌶)R
+      :EndIf
+    ∇
+
+    ∇ {ok}←GoTo url;z;base ⍝ Ask the browser to navigate to a URL and check that it did it
       ok←1
+      :If 'http'≢lc 4↑url  ⍝ it's probably a relative URL (does this text need be more detailed?)
+          base←BROWSER.Url
+          :While (≢url)>z←url⍳'/'
+              :If z=1
+                  base←((2≥+\base='/')/base),'/'
+              :ElseIf '../'≡z↑url
+                  base←()↑base
+              :ElseIf './'≡z↑url  ⍝ do nothing
+              :Else
+                  base←base,z↑url
+              :EndIf
+              url←z↓url
+          :EndWhile
+          url←base,url
+      :EndIf
       BROWSER.Navigate.GoToUrl⊂url
       :Trap 90
           ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
