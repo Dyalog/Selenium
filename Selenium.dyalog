@@ -99,6 +99,8 @@
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
+      :Else
+          :If 0=⎕NC'SETTINGS' ⋄ ApplySettings browser ⋄ :EndIf
       :EndIf
      
       :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
@@ -271,12 +273,28 @@
      
     ∇
 
+
+    ∇ {ok}←id SetInputValue text;s;i;r
+⍝ Set the value of an input control to text.
+      :If ∨/i←text='"'
+          text←(1+i)/text
+          text[(⍸i)+(0,¯1↓+\i)[⍸i]]←'\'
+      :EndIf
+      s←'document.getElementById("',id,'").value= "',text,'";'
+      ok←1
+      :Trap 0
+          r←ExecuteScript s
+      :Else
+          ok←0
+      :EndTrap
+    ∇
+
     ∇ {ok}←{type}Click id;b;ok;time
      ⍝ Click on an element, by default identified by id. See "Find" for options
       ok←1
       'type'DefaultTo'Id'
       b←type Find id
-      ('Control "',id,'" not found')⎕SIGNAL(0=b)/11
+      ('Control "',id,'" not found')⎕SIGNAL(0≡b)/11
       b.Click
     ∇
 
