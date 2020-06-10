@@ -13,12 +13,46 @@
     },
     "Chrome83": {
         "DRIVERS": "./Drivers/ChromeDriver83/",
-        "BROWSER": "Chrome"
+        "BROWSER": "Chrome",
+        "OptionsInstanceOf": "Chrome.ChromeOptions",
+        "LoggingPreferences": 
+            [
+             {   "type":"Browser","level":"LogLevel.All"},
+              {  "type":"Driver","level":"LogLevel.All"}
+            ]
     },
     "Edge83": {
         "DRIVERS": "./Drivers/EdgeDriver83/",
         "BROWSER": "Edge",
-        "Executable":"msedgedriver"
+        "Executable":"msedgedriver",
+        "OptionsInstanceOf": "Edge.EdgeOptions",
+        "LoggingPreferences": 
+            [
+             {   "type":"Browser","level":"LogLevel.All"},
+              {  "type":"Driver","level":"LogLevel.All"}
+            ]
+    },    
+    "Edge84": {
+        "DRIVERS": "./Drivers/EdgeDriver84/",
+        "BROWSER": "Edge",
+        "Executable":"msedgedriver",
+        "OptionsInstanceOf": "Edge.EdgeOptions",
+        "LoggingPreferences": 
+            [
+             {   "type":"Browser","level":"LogLevel.All"},
+              {  "type":"Driver","level":"LogLevel.All"}
+            ]
+    },        
+    "Edge85": {
+        "DRIVERS": "./Drivers/EdgeDriver85/",
+        "BROWSER": "Edge",
+        "Executable":"msedgedriver",
+        "OptionsInstanceOf": "Edge.EdgeOptions",
+        "LoggingPreferences": 
+            [
+             {   "type":"Browser","level":"LogLevel.All"},
+              {  "type":"Driver","level":"LogLevel.All"}
+            ]
     },    
     "Firefox73": {
         "DRIVERS": "./Drivers/geckodriver026/",
@@ -35,6 +69,6 @@
         }
     },
     "PORT": 8080,
-    "default": "Chrome83",
+    "default": "Edge84",
     "DLLPATH":"./Drivers/WebDriver4"
 }

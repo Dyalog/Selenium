@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.10
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -77,13 +77,22 @@
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      BROWSEROPTIONS←⍬  ⍝ no options found...
       :If 2=ref.⎕NC'OptionsInstanceOf'
-      :AndIf 9=ref.⎕NC'Options'
-          BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
-      :Else
-          BROWSEROPTIONS←⍬  ⍝ no options found...
+          :If 9=ref.⎕NC'Options'
+              BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
+          :Else
+              BROWSEROPTIONS←ref.OptionsInstanceOf
+          :EndIf
       :EndIf
      
+      ⍝ are settings plausible?
+      ⎕USING←'System'
+      :If 4=Environment.Version.Major  ⍝ .net Framework
+          :If '4'=⊢/DLLPATH ⋄ 'Can not use WebDriver4 with .net Framework!'⎕SIGNAL 11 ⋄ :EndIf
+      :Else
+          :If '3'=⊢/DLLPATH ⋄ 'Can not use WebDriver3 with .NET Core!'⎕SIGNAL 11 ⋄ :EndIf
+      :EndIf
     ∇
 
 
@@ -132,13 +141,29 @@
           :EndIf
      
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
-          :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-              opts←2⊃BROWSEROPTIONS
-              :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄ :EndIf
-              options←⎕NEW⍎1⊃BROWSEROPTIONS
-              :For opt :In opts.⎕NL-2
-                  ⍎'options.',opt,'←opts.',opt
-              :EndFor
+              :If 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
+                  opts←2⊃BROWSEROPTIONS
+                  :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄ :EndIf
+                  options←⎕NEW⍎1⊃BROWSEROPTIONS
+                  :For opt :In opts.⎕NL-2
+                      ⍎'options.',opt,'←opts.',opt
+                  :EndFor
+              :ElseIf 0<≢BROWSEROPTIONS
+                  options←⎕NEW⍎BROWSEROPTIONS
+              :EndIf
+              :if options≢''
+              :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
+              :AndIf 0 ⍝ not yet ripe for production!
+                  :For cap :In SETTINGS.AdditionalCapabilities
+                      options.AddAdditionalCapability(cap.name)(cap.value)
+                  :EndFor
+              :EndIf
+              :if 2=SETTINGS.⎕nc'LoggingPreferences'
+              :for p :in SETTINGS.LoggingPreferences
+              options.SetLoggingPreference p.type (⍎p.level)
+              :endfor
+              :endif
+              :endif
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
@@ -160,7 +185,6 @@
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
-                  msg,←(1=2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕UCS 13),'*** Please note that DYALOG_NETCORE=1 may also cause these symptoms!'
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
@@ -330,6 +354,23 @@
 
     ∇ {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
       r←BROWSER.ExecuteScript script ⍬
+    ∇
+
+    ∇ r←GetLogs 
+    ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
+r←''
+        :For type :In BROWSER.Manage.Logs.AvailableLogTypes
+      lb←BROWSER.Manage.Logs.GetLog⊂type
+       r,←⊂'Log: ',type
+       :If 0<lb.Count
+           r,←⊂lb.Count,' entries:'
+           :For e :In ⍳lb.Count
+               r,←⊂' ',' ',e⌷lb
+           :EndFor
+       :Else
+           r,←⊂'No entries'
+       :EndIf
+   :EndFor
     ∇
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
@@ -615,27 +656,29 @@
     ∇ {files}←browser SetUsing path ⍝ Set the path to the Selenium DLLs
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-      :If ~⎕NEXISTS path,'WebDriver.dll'        
+      :If ~⎕NEXISTS path,'WebDriver.dll'
           path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
       :EndIf
       path←('/'⎕R'\\')path
       files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.' ⍝ 3.141
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
+      ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
       :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
           ⎕USING,←⊂',',⊃⌽files
       :EndIf
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
-          :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-              ⎕USING,←⊂∊(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
-          :EndIf
-          :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
-              ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
-          :Else
-              ⎕USING←{'/'@('\'∘=)⍵}¨⎕USING
-          :EndIf
-
+      :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+          ⎕USING,←⊂∊'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+      :EndIf
+      ⍝ make sure we use the correct path-separator (⎕USING)
+      :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
+          ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
+      :Else
+          ⎕USING←{'/'@('\'∘=)⍵}¨⎕USING
+      :EndIf
+     
     ∇
 
       SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
