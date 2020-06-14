@@ -78,12 +78,8 @@
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
       BROWSEROPTIONS←⍬  ⍝ no options found...
-      :If 2=ref.⎕NC'OptionsInstanceOf'
-          :If 9=ref.⎕NC'Options'
-              BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
-          :Else
-              BROWSEROPTIONS←ref.OptionsInstanceOf
-          :EndIf
+      :If 9=ref.⎕NC'Options'
+          BROWSEROPTIONS←ref.Options
       :EndIf
      
       ⍝ are settings plausible?
@@ -141,29 +137,37 @@
           :EndIf
      
           :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
-              :If 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-                  opts←2⊃BROWSEROPTIONS
-                  :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄ :EndIf
-                  options←⎕NEW⍎1⊃BROWSEROPTIONS
-                  :For opt :In opts.⎕NL-2
-                      ⍎'options.',opt,'←opts.',opt
-                  :EndFor
-              :ElseIf 0<≢BROWSEROPTIONS
-                  options←⎕NEW⍎BROWSEROPTIONS
-              :EndIf
-              :if options≢''
-              :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
-              :AndIf 0 ⍝ not yet ripe for production!
-                  :For cap :In SETTINGS.AdditionalCapabilities
-                      options.AddAdditionalCapability(cap.name)(cap.value)
-                  :EndFor
-              :EndIf
-              :if 2=SETTINGS.⎕nc'LoggingPreferences'
-              :for p :in SETTINGS.LoggingPreferences
-              options.SetLoggingPreference p.type (⍎p.level)
-              :endfor
-              :endif
-              :endif
+          :AndIf 0<≢BROWSEROPTIONS
+              :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON BROWSEROPTIONS ⋄ :EndIf
+              options←InitOptions browser
+              ∘∘∘∘
+              :For opt :In BROWSEROPTIONS.⎕NL-2
+                  ⍎'options.',opt,'←opts.',opt
+              :EndFor
+            ⍝   :ElseIf 0<≢BROWSEROPTIONS
+            ⍝       options←⎕NEW⍎BROWSEROPTIONS
+          :EndIf
+          :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
+          :AndIf 0 ⍝ not yet ripe for production!
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              :For cap :In SETTINGS.AdditionalCapabilities
+                  options.AddAdditionalCapability(cap.name)(cap.value)
+              :EndFor
+          :EndIf
+⍝          ∘∘∘
+          :If 2=SETTINGS.⎕NC'AddArguments'
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              :For opt :In SETTINGS.AddArguments
+                  options.AddArgument⊂opt
+              :EndFor
+          :EndIf
+          :If 2=SETTINGS.⎕NC'LoggingPreferences'
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              cap←options.ToCapabilities
+              
+              :For p :In SETTINGS.LoggingPreferences
+                  options.SetLoggingPreference p.type(⍎p.level)
+              :EndFor
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
@@ -198,6 +202,9 @@
               BROWSER.Manage.Window.Maximize
           :EndTrap
       :EndIf
+    ∇
+    ∇ options←InitOptions browser
+      options←⎕NEW⍎browser,'Options'
     ∇
 
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
@@ -356,21 +363,21 @@
       r←BROWSER.ExecuteScript script ⍬
     ∇
 
-    ∇ r←GetLogs 
+    ∇ r←GetLogs
     ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
-r←''
-        :For type :In BROWSER.Manage.Logs.AvailableLogTypes
-      lb←BROWSER.Manage.Logs.GetLog⊂type
-       r,←⊂'Log: ',type
-       :If 0<lb.Count
-           r,←⊂lb.Count,' entries:'
-           :For e :In ⍳lb.Count
-               r,←⊂' ',' ',e⌷lb
-           :EndFor
-       :Else
-           r,←⊂'No entries'
-       :EndIf
-   :EndFor
+      r←''
+      :For type :In BROWSER.Manage.Logs.AvailableLogTypes
+          lb←BROWSER.Manage.Logs.GetLog⊂type
+          r,←⊂'Log: ',type
+          :If 0<lb.Count
+              r,←⊂(⍕lb.Count),' entries:'
+              :For e :In ⍳lb.Count
+                  r,←⊂' ',' ',⍕e⌷lb
+              :EndFor
+          :Else
+              r[≢r]←⊂((≢r)⊃r),': no entries'
+          :EndIf
+      :EndFor
     ∇
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 

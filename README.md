@@ -48,8 +48,8 @@ put it into a folder within that structure.)
 The file settings.json holds the configuration of drivers and spexcifies associated details such as location of required files. It has the following mandatory components:
 
 * a char-field "**DLLPATH**" which holds the path for the WebDriver to use. Currently WebDriver3 is 2yrs old while WebDriver4
-  is being developed, but still in alpha-stage. Attenpts to debug issues with Selenium made us try out WD4. It did not fix 
-  those issues, but hasn't created new ones either. So you have a choice ;-)
+  is being developed, but still in alpha-stage. Which driver you use depends on whether you're using the .net Framework (WebDriver3)
+  or .NET Core (WebDriver4).
 * a numeric field "**PORT**" defining the port that the browser uses to retrieve data
 * named configurations (settings of parameters) with these elements:
   * **BROWSER**: the name of the brower
@@ -73,6 +73,14 @@ The file settings.json holds the configuration of drivers and spexcifies associa
 
 Start one APL-Session, `)load /git/dui/DUI` and `Start'./MS3' 8080`
 Start another APL-Session, `)load /git/dui/DUI` and `[1] DUI.Test'./MS3'`. The syntax of Test is `[pause]DUI.Test site[page [browser]]`:  if the optional left argument `pause=1`, we will pause after a test has failed. `page` is the name of the specific page you want to test Chrome81 is the name of a config for most recent Chrome (at the time of writing this).
+
+### Plain tests
+To write your own tests of website, you can ]LOAD Selenium.dyalog and then
+
+````
+Selenium.ApplySettings''  ⍝ get default-settings (recommended)
+b←Selenium.InitBrowser''  ⍝ instantiate configured browser
+````
 
 ## More Documentation
 
