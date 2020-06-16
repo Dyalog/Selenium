@@ -207,6 +207,10 @@
       options←⎕NEW⍎browser,'Options'
     ∇
 
+∇ SaveScreenshot ToFile 
+BROWSER.GetScreenshot.SaveAsFile⊂ ToFile 
+∇
+
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
       path filter←2↑(eis path_filter),⊂''
       shutUp←0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'  ⍝ use QUIETMODE to suppress everything BUT error-messages
