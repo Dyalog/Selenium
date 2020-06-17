@@ -13,28 +13,90 @@
     },
     "Chrome83": {
         "DRIVERS": "./Drivers/ChromeDriver83/",
-        "BROWSER": "Chrome"
+        "BROWSER": "Chrome",
+        "LoggingPreferences": [{
+                "type": "browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "driver",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "performance",
+                "level": "LogLevel.All"
+            }
+        ],
+        "AddArguments":[
+            "--verbose",
+            "--log-file=c:\\temp\\addarg.log"
+        ]
     },
     "Edge83": {
         "DRIVERS": "./Drivers/EdgeDriver83/",
         "BROWSER": "Edge",
-        "Executable":"msedgedriver"
-    },    
+        "Executable": "msedgedriver",
+        "LoggingPreferences": [{
+                "type": "Browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "Driver",
+                "level": "LogLevel.All"
+            }
+        ]
+    },
+    "Edge84": {
+        "DRIVERS": "./Drivers/EdgeDriver84/",
+        "BROWSER": "Edge",
+        "Executable": "msedgedriver",
+        "LoggingPreferences": [{
+                "type": "Browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "Driver",
+                "level": "LogLevel.All"
+            }
+        ]
+    },
+    "Edge85": {
+        "DRIVERS": "./Drivers/EdgeDriver85/",
+        "BROWSER": "Edge",
+        "Executable": "msedgedriver",
+        "LoggingPreferences": [{
+                "type": "Browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "Driver",
+                "level": "LogLevel.All"
+            }
+        ]
+    },
     "Firefox73": {
         "DRIVERS": "./Drivers/geckodriver026/",
         "BROWSER": "Firefox",
-        "Executable":"geckodriver"        
+        "Executable": "geckodriver",
+        "LoggingPreferences": [{
+                "type": "Browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "Driver",
+                "level": "LogLevel.All"
+            }
+        ]
     },
     "HTMLRenderer": {
         "DRIVERS": "./Drivers/ChromeDriver79/",
         "BROWSER": "Chrome",
         "SITEROOT": "http://dyalog_root",
-        "OptionsInstanceOf": "Chrome.ChromeOptions",
         "Options": {
-            "DebuggerAddress":"127.0.0.1:8080"
+            "DebuggerAddress": "127.0.0.1:8080"
         }
     },
     "PORT": 8080,
     "default": "Chrome83",
-    "DLLPATH":"./Drivers/WebDriver4"
+    "DLLPATH": "./Drivers/WebDriver4"
 }
