@@ -28,8 +28,27 @@
             }
         ],
         "AddArguments":[
-            "--verbose",
-            "--log-file=c:\\temp\\addarg.log"
+            "--verbose"
+        ]
+    },
+    "Chrome84": {
+        "DRIVERS": "./Drivers/ChromeDriver84/",
+        "BROWSER": "Chrome",
+        "LoggingPreferences": [{
+                "type": "browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "driver",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "performance",
+                "level": "LogLevel.All"
+            }
+        ],
+        "AddArguments":[
+            "--verbose"
         ]
     },
     "Edge83": {
