@@ -172,6 +172,16 @@
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
+              :trap 90
+                z←BSVC.IsRunning
+              :else
+                z←0
+              :endtrap
+              :if ~z 
+                ⎕←'Could not create instance of ',browser,'DriverService.'
+                ⎕←'Please check permissions for file ',pth,drv
+                →0
+              :endif
               :If options≡''
                   BROWSER←⎕NEW(⍎browser,'Driver')BSVC
               :Else
