@@ -173,14 +173,15 @@
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
               :trap 90
-                z←BSVC.IsRunning
+                z←1⊣BSVC.IsRunning
               :else
                 z←0
               :endtrap
               :if ~z 
                 ⎕←'Could not create instance of ',browser,'DriverService.'
-                ⎕←'Please check permissions for file ',pth,drv
-                →0
+                ⎕←'You may have to adjust file-permissions to make this file executable:'
+                ⎕←⎕sh'ls -l ',pth,drv
+                'Could not create DriverService - check msg in session'⎕signal 11
               :endif
               :If options≡''
                   BROWSER←⎕NEW(⍎browser,'Driver')BSVC
