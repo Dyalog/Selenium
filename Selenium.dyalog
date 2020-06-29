@@ -312,6 +312,7 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
       q←Find obj
       text←eis text
       i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
+      ACTIONS.Reset
       :For k :In i
           (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
       :EndFor
@@ -348,6 +349,7 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
      ⍝ Drag and Drop
       ok←1
       (from to)←Find¨fromid toid
+      ACTIONS.Reset
       (ACTIONS.DragAndDrop from to).Perform
     ∇
 
@@ -355,6 +357,7 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
      ⍝ Drag
       ok←1
       from←Find fromid
+      ACTIONS.Reset
       (ACTIONS.DragAndDropToOffset from,xy).Build.Perform
     ∇
 
@@ -363,6 +366,7 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
       ok←1
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
+      ACTIONS.Reset
       (ACTIONS.MoveToElement args).Build.Perform
       ⎕DL 0.1
       :If 2=⎕NC'action'
@@ -431,7 +435,7 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
           :ElseIf '~'=1↑item
               se.DeselectByText⊂1↓item
           :Else
-              se.SelectByText⊂,item
+              se.SelectByText item 1   ⍝ signature changed in WebDriver4 - do we need to distinguish?
           :EndIf
       :EndFor
     ∇
@@ -678,21 +682,26 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
     ∇ {files}←browser SetUsing path ⍝ Set the path to the Selenium DLLs
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-      :If ~⎕NEXISTS path,'WebDriver.dll'
-          path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
-      :EndIf
+    ⍝   :If ~⎕NEXISTS path,'WebDriver.dll'
+    ⍝       path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
+    ⍝   :EndIf
       path←('/'⎕R'\\')path
       files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.' ⍝ 3.141
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
-      :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
-          ⎕USING,←⊂',',⊃⌽files
-      :EndIf
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
       :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
           ⎕USING,←⊂∊'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
+          ⎕using,←⊂'OpenQA.Selenium.Support,',path,'netstandard2.0\WebDriver.support.dll'
+:else 
+      :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
+          ⎕USING,←⊂',',⊃⌽files
+          :else 
+          ⎕using,←⊂'OpenQA.Selenium.Support,',path,'net47\',⊃⌽files
+      :EndIf
+
       :EndIf
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
