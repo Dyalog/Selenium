@@ -5,8 +5,10 @@
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 ⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
+⍝ 2020 07 10 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings
 
     :Section ADOC
+
     ∇ t←Describe
       t←1↓∊(⎕UCS 10),¨{⍵/⍨∧\(⊂'')≢¨⍵}Comments ⎕SRC ⎕THIS ⍝ first block of non-empty comment lines
     ∇
@@ -58,39 +60,6 @@
       failed←({3<≢⍵:3↑⍵ ⋄ ⍵}stop_site_match_config)RunAllTests path_filter
       BROWSER.Quit
     ∇
-
-    ∇ R←ApplySettings name;settings;ref
-     
-      settings←GetSettings
-      ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
-      :If ref≡''
-          ('Settings "',name,'" not found!')⎕SIGNAL 11
-          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
-      :EndIf
-      :For go :In 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
-          :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
-          :AndIf 2=settings.⎕NC go
-              ⍎'ref.',go,'←settings.',go
-          :EndIf
-      :EndFor
-      SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
-      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
-      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
-      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
-      BROWSEROPTIONS←⍬  ⍝ no options found...
-      :If 9=ref.⎕NC'Options'
-          BROWSEROPTIONS←ref.Options
-      :EndIf
-     
-      ⍝ are settings plausible?
-      ⎕USING←'System'
-      :If 4=Environment.Version.Major  ⍝ .net Framework
-          :If '4'=⊢/DLLPATH ⋄ 'Can not use WebDriver4 with .net Framework!'⎕SIGNAL 11 ⋄ :EndIf
-      :Else
-          :If '3'=⊢/DLLPATH ⋄ 'Can not use WebDriver3 with .NET Core!'⎕SIGNAL 11 ⋄ :EndIf
-      :EndIf
-    ∇
-
 
     ∇ path←base NormalizePath path
       path base←{('/'@{'\'=⍵})⍵}¨path base
@@ -164,7 +133,7 @@
           :If 2=SETTINGS.⎕NC'LoggingPreferences'
               :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
               cap←options.ToCapabilities
-              
+     
               :For p :In SETTINGS.LoggingPreferences
                   options.SetLoggingPreference p.type(⍎p.level)
               :EndFor
@@ -172,17 +141,17 @@
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0/0  ⍝ ###TEMP### remove after testing
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
-              :trap 90
-                z←1⊣BSVC.IsRunning
-              :else
-                z←0
-              :endtrap
-              :if ~z 
-                ⎕←'Could not create instance of ',browser,'DriverService.'
-                ⎕←'You may have to adjust file-permissions to make this file executable:'
-                ⎕←⎕sh'ls -l ',pth,drv
-                'Could not create DriverService - check msg in session'⎕signal 11
-              :endif
+              :Trap 90
+                  z←1⊣BSVC.IsRunning
+              :Else
+                  z←0
+              :EndTrap
+              :If ~z
+                  ⎕←'Could not create instance of ',browser,'DriverService.'
+                  ⎕←'You may have to adjust file-permissions to make this file executable:'
+                  ⎕←⎕SH'ls -l ',pth,drv
+                  'Could not create DriverService - check msg in session'⎕SIGNAL 11
+              :EndIf
               :If options≡''
                   BROWSER←⎕NEW(⍎browser,'Driver')BSVC
               :Else
@@ -218,9 +187,9 @@
       options←⎕NEW⍎browser,'Options'
     ∇
 
-∇ SaveScreenshot ToFile 
-BROWSER.GetScreenshot.SaveAsFile⊂ ToFile 
-∇
+    ∇ SaveScreenshot ToFile
+      BROWSER.GetScreenshot.SaveAsFile⊂ToFile
+    ∇
 
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
       path filter←2↑(eis path_filter),⊂''
@@ -694,14 +663,14 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
       :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
           ⎕USING,←⊂∊'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
-          ⎕using,←⊂'OpenQA.Selenium.Support,',path,'netstandard2.0\WebDriver.support.dll'
-:else 
-      :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
-          ⎕USING,←⊂',',⊃⌽files
-          :else 
-          ⎕using,←⊂'OpenQA.Selenium.Support,',path,'net47\',⊃⌽files
-      :EndIf
-
+          ⎕USING,←⊂'OpenQA.Selenium.Support,',path,'netstandard2.0\WebDriver.support.dll'
+      :Else
+          :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
+              ⎕USING,←⊂',',⊃⌽files
+          :Else
+              ⎕USING,←⊂'OpenQA.Selenium.Support,',path,'net47\',⊃⌽files
+          :EndIf
+     
       :EndIf
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
@@ -719,11 +688,99 @@ BROWSER.GetScreenshot.SaveAsFile⊂ ToFile
       }
 
     SourcePath←{⊃1⎕nparts SourceFile ⍵}  ⍝ just the path of the SourceFile in questions
+    :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
+    :section SETTINGS
     ∇ R←GetSettings
       R←⎕JSON 1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
+      R←Flatten R
     ∇
 
-   ⍝ Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load) ⍝ cadidate for removal...
-    :EndSection ───────────────────────────────────────────────────────────────────────────────────
+    ∇ R←{flavours_vars_mem}Flatten ns;vars;flavours;n;nl;z;AddVar;mem;v;f;f∆;ref
+ ⍝ process tree-structures settings into a "flattened" structure
+      mem←0
+      :If 0=⎕NC'flavours_vars_mem'
+          vars←flavours←0 2⍴''
+      :ElseIf 2=≢flavours_vars_mem
+          (flavours vars)←flavours_vars_mem
+      :Else
+          (flavours vars mem)←flavours_vars_mem
+      :EndIf
+     
+      vars←vars AddVars ns
+     
+      :For n :In (ns.⎕NL-9)~⊂'Flavours'
+          flavours v←(flavours vars)Flatten ns⍎n
+          :If mem
+              flavours[flavours[;1]⍳⊂n;2]←⊂v
+          :EndIf
+      :EndFor
+     
+      :If 9=ns.⎕NC'Flavours'
+          z←~(nl←ns.Flavours.⎕NL ¯9)∊flavours[;1]
+          z←z∧nl≢¨⊂'Flavours'
+          flavours⍪←(,[1.5]z/nl),⊂vars
+          flavours←1⊃(flavours vars 1)Flatten ns.Flavours
+      :EndIf
+     
+      :If 0=⎕NC'flavours_vars_mem'    ⍝ top-level
+          R←#.⎕NS''
+          :For v :In ↓vars
+              R.{⍎(1⊃⍵),'←0⎕json 2⊃⍵'}v
+          :EndFor
+          :For f :In ⍳1↑⍴flavours
+              ref←R.⎕NS''
+              :For v :In ↓2⊃flavours[f;]
+                  ref.{⍎(1⊃⍵),'←0⎕JSON 2⊃⍵'}v
+              :EndFor
+              ref R.{(1⊃⍵)⎕NS ⍺}flavours[f;]
+          :EndFor
+      :Else
+          R←flavours vars
+      :EndIf
+    ∇
+
+    ∇ vars←vars AddVars ns;n;i
+     
+      :For n :In ns.⎕NL-2
+          :If (≢vars)<i←vars[;1]⍳⊂n
+              vars←vars⍪2↑⊂n
+          :EndIf
+          vars[i;2]←⊂1 ⎕JSON ns⍎n
+      :EndFor
+    ∇
+
+    ∇ R←ApplySettings name;settings;ref
+     
+      settings←GetSettings
+      ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
+      :If ref≡''
+          ('Settings "',name,'" not found!')⎕SIGNAL 11
+          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
+      :EndIf
+      :For go :In 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
+          :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
+          :AndIf 2=settings.⎕NC go
+              ⍎'ref.',go,'←settings.',go
+          :EndIf
+      :EndFor
+      SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
+      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
+      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
+      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      BROWSEROPTIONS←⍬  ⍝ no options found...
+      :If 9=ref.⎕NC'Options'
+          BROWSEROPTIONS←ref.Options
+      :EndIf
+     
+      ⍝ are settings plausible?
+      ⎕USING←'System'
+    ⍝   :If 4=Environment.Version.Major  ⍝ .net Framework
+    ⍝       :If '4'=⊢/DLLPATH ⋄ 'Can not use WebDriver4 with .net Framework!'⎕SIGNAL 11 ⋄ :EndIf
+    ⍝   :Else
+    ⍝       :If '3'=⊢/DLLPATH ⋄ 'Can not use WebDriver3 with .NET Core!'⎕SIGNAL 11 ⋄ :EndIf
+    ⍝   :EndIf
+    ∇
+
+    :endsection SETTINGS
 :EndNamespace
