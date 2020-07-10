@@ -5,7 +5,7 @@
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 ⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
-⍝ 2020 07 10 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings
+⍝ 2020 07 10 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
 
     :Section ADOC
 
@@ -69,7 +69,7 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts
+    ∇ InitBrowser browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
@@ -92,29 +92,24 @@
 ⍝              drv←(⎕C browser),'driver',suffix
               drv←(0(819⌶)browser),'driver',suffix
           :EndIf
-          :If 2=SETTINGS.⎕NC'DRIVERS' ⋄ path←SETTINGS.DRIVERS ⋄ :EndIf
+          :If 2=SETTINGS.⎕NC'DRIVER' ⋄ path←SETTINGS.DRIVER ⋄ :EndIf
           pth←path
           :If '.'=⊃pth
           :AndIf (2⊃pth)∊'\/'
               pth←∊1 ⎕NPARTS(SourcePath ⎕THIS),2↓pth
           :EndIf
-          :If ~(⎕NEXISTS⍠1)pth,drv        ⍝ will this work on Linux?
+          :If ~(⎕NEXISTS⍠1)pth,drv
           :AndIf (⎕NEXISTS⍠1)pth,subF,drv
               pth←pth,subF   ⍝ pick subfolder depending on platform
           :ElseIf (⎕NEXISTS⍠1)pth,(subF←subF,((1+∨/'64'⍷1⊃'.'⎕WG'APLVersion')⊃'32' '64'),'/'),drv   ⍝ test adding bits to folder (see folder-structure for Edge/Win!)
               pth←pth,subF   ⍝ pick subfolder depending on platform
           :EndIf
-     
-          :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
+          :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
           :AndIf 0<≢BROWSEROPTIONS
-              :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON BROWSEROPTIONS ⋄ :EndIf
               options←InitOptions browser
-              ∘∘∘∘
               :For opt :In BROWSEROPTIONS.⎕NL-2
-                  ⍎'options.',opt,'←opts.',opt
+                  ⍎'options.',(∊opt),'←BROWSEROPTIONS.',,∊opt
               :EndFor
-            ⍝   :ElseIf 0<≢BROWSEROPTIONS
-            ⍝       options←⎕NEW⍎BROWSEROPTIONS
           :EndIf
           :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
           :AndIf 0 ⍝ not yet ripe for production!
@@ -123,7 +118,6 @@
                   options.AddAdditionalCapability(cap.name)(cap.value)
               :EndFor
           :EndIf
-⍝          ∘∘∘
           :If 2=SETTINGS.⎕NC'AddArguments'
               :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
               :For opt :In SETTINGS.AddArguments
@@ -139,7 +133,7 @@
               :EndFor
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
-          :Trap 0/0  ⍝ ###TEMP### remove after testing
+          :Trap 0
               BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
               :Trap 90
                   z←1⊣BSVC.IsRunning
@@ -155,8 +149,6 @@
               :If options≡''
                   BROWSER←⎕NEW(⍎browser,'Driver')BSVC
               :Else
-                ⍝  ∘∘∘
-                ⍝  options.SetLoggingPreference(LogType.Browser 0)
                   BROWSER←⎕NEW(⍎browser,'Driver')(BSVC options)
               :EndIf
           :Else
@@ -235,9 +227,9 @@
               :If stop⌊×≢r
                   ⎕←'test for ',file,' failed:'
                   ⎕←r
-                  ⎕←'Rerun:'
-                  ⎕←'      Test ⍬'
-                  ∘∘∘
+                  ⎕←'      Test ⍬    ⍝ to Rerun'     
+                  ⎕←'      →⎕LC      ⍝ to continue'
+                  (⎕LC[1]+1)⎕STOP 1⊃⎕SI
               :EndIf
           :Else
               r←'Trapped error: ',,⍕⎕DMX.EN
@@ -648,30 +640,23 @@
       :EndIf
     ∇
 
-    ∇ {files}←browser SetUsing path ⍝ Set the path to the Selenium DLLs
+    ∇ {files}←browser SetUsing path;net ⍝ Set the path to the Selenium DLLs
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-    ⍝   :If ~⎕NEXISTS path,'WebDriver.dll'
-    ⍝       path,←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
-    ⍝   :EndIf
-      path←('/'⎕R'\\')path
-      files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.' ⍝ 3.141
       ⎕USING←0⍴⎕USING
-      ⎕USING,←⊂'OpenQA.Selenium,',⊃files
-      ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
-      ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
+
       :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-          ⎕USING,←⊂∊'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-netstandard2.0/Newtonsoft.Json.dll'
-          ⎕USING,←⊂'OpenQA.Selenium.Support,',path,'netstandard2.0\WebDriver.support.dll'
+          net←'netstandard2.0\'
       :Else
-          :If ⎕NEXISTS⊃⌽files   ⍝ no WebDriver.Support.dll with v4.⍺
-              ⎕USING,←⊂',',⊃⌽files
-          :Else
-              ⎕USING,←⊂'OpenQA.Selenium.Support,',path,'net47\',⊃⌽files
-          :EndIf
-     
+          net←'net47\'
       :EndIf
+      files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
+      ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
+      ⎕USING,←⊂'OpenQA.Selenium,',⊃files
+      ⎕USING,←⊂'OpenQA.Selenium.',browser,',', ⊃files
+      ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
+    ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
           ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
@@ -750,7 +735,7 @@
       :EndFor
     ∇
 
-    ∇ R←ApplySettings name;settings;ref
+    ∇ R←ApplySettings name;settings;ref;go
      
       settings←GetSettings
       ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
@@ -758,28 +743,17 @@
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
       :EndIf
-      :For go :In 'DLLPATH' 'PORT'  ⍝ transfer config-params that are set on a global level into the selected config
-          :If 0=ref.⎕NC go   ⍝ DLLPATH can also be set on a global level...
-          :AndIf 2=settings.⎕NC go
-              ⍎'ref.',go,'←settings.',go
-          :EndIf
-      :EndFor
       SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
       DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
       BROWSEROPTIONS←⍬  ⍝ no options found...
-      :If 9=ref.⎕NC'Options'
-          BROWSEROPTIONS←ref.Options
-      :EndIf
+      :Select ref.⎕NC'Options'
+      :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
+      :CaseList ,¨2 9 ⋄ BROWSEROPTIONS←1⊃ref.Options   ⍝ not too happy with this one - but I haven't found a better way to deal with HTMLRenderer's Options
+      :EndSelect
      
-      ⍝ are settings plausible?
       ⎕USING←'System'
-    ⍝   :If 4=Environment.Version.Major  ⍝ .net Framework
-    ⍝       :If '4'=⊢/DLLPATH ⋄ 'Can not use WebDriver4 with .net Framework!'⎕SIGNAL 11 ⋄ :EndIf
-    ⍝   :Else
-    ⍝       :If '3'=⊢/DLLPATH ⋄ 'Can not use WebDriver3 with .NET Core!'⎕SIGNAL 11 ⋄ :EndIf
-    ⍝   :EndIf
     ∇
 
     :endsection SETTINGS
