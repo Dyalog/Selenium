@@ -5,7 +5,7 @@
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 ⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
-⍝ 2020 07 10 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
+⍝ 2020 07 11 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
 
     :Section ADOC
 
@@ -227,7 +227,7 @@
               :If stop⌊×≢r
                   ⎕←'test for ',file,' failed:'
                   ⎕←r
-                  ⎕←'      Test ⍬    ⍝ to Rerun'     
+                  ⎕←'      Test ⍬    ⍝ to Rerun'
                   ⎕←'      →⎕LC      ⍝ to continue'
                   (⎕LC[1]+1)⎕STOP 1⊃⎕SI
               :EndIf
@@ -645,7 +645,7 @@
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
       ⎕USING←0⍴⎕USING
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
-
+     
       :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
           net←'netstandard2.0\'
       :Else
@@ -654,9 +654,9 @@
       files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
       ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
-      ⎕USING,←⊂'OpenQA.Selenium.',browser,',', ⊃files
+      ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-    ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
+      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
           ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
@@ -695,9 +695,14 @@
       vars←vars AddVars ns
      
       :For n :In (ns.⎕NL-9)~⊂'Flavours'
-          flavours v←(flavours vars)Flatten ns⍎n
-          :If mem
-              flavours[flavours[;1]⍳⊂n;2]←⊂v
+          :If 2=(ns⍎n).⎕NC'isDriverParam'
+              ns.⎕EX n,'.isDriverParam'
+              vars←vars⍪(n)(⎕JSON ns⍎n)
+          :Else
+              flavours v←(flavours vars)Flatten ns⍎n
+              :If mem
+                  flavours[flavours[;1]⍳⊂n;2]←⊂v
+              :EndIf
           :EndIf
       :EndFor
      
@@ -748,9 +753,8 @@
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
       BROWSEROPTIONS←⍬  ⍝ no options found...
-      :Select ref.⎕NC'Options'
+      :Select ⍬⍴ref.⎕NC'Options'
       :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
-      :CaseList ,¨2 9 ⋄ BROWSEROPTIONS←1⊃ref.Options   ⍝ not too happy with this one - but I haven't found a better way to deal with HTMLRenderer's Options
       :EndSelect
      
       ⎕USING←'System'

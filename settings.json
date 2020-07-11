@@ -48,10 +48,11 @@
                             "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
                             "cmnt2": "HTMLRenderer is a flavour of Chrome79!",
                             "SITEROOT": "http://dyalog_root",
-                            "Options_cmnt1":"Options is an array of namespaces - this is necessary to distinguish it from possibly nested flavours. 1st element only will be processed",
-                            "Options": [{
-                                "DebuggerAddress": "127.0.0.1:8080"
-                            }]
+                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options spefies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
+                            "Options": {
+                                "DebuggerAddress": "127.0.0.1:8080",
+                                "isDriverParam":true
+                            }
                         }
                     }
                 },
