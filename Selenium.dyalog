@@ -342,22 +342,31 @@
       r←BROWSER.ExecuteScript script ⍬
     ∇
 
-    ∇ r←{level}GetLogs types;lb;e;entry
+    ∇ r←{level}GetLogs types;lb;e;entry;tit;r∆;type
     ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
+    ⍝ level ∊ 'Info' 'Severe'
+    ⍝ types ∊ 'Browser'
+    ⍝ These values depend on the browser that's used!
+    ⍝ TODO: Document this!
       r←''
-      :For type :In BROWSER.Manage.Logs.AvailableLogTypes
-          :If 0<≢types ⋄ :AndIf ~(⊂type)∊⊆types ⋄ :Continue ⋄ :EndIf
+     
+      types←types{0=≢⍺:⍵ ⋄ (⊆⍺)∩⍵}⊃⌷¨BROWSER.Manage.Logs.AvailableLogTypes
+      :For type :In types
           lb←BROWSER.Manage.Logs.GetLog⊂type
-          r,←⊂'Log: ',type
+          tit←'Log: ',type,' ('
+          r∆←⍬
           :If 0<lb.Count
-              r,←⊂(⍕lb.Count),' entries:'
               :For e :In ⍳lb.Count
-              entry←e⌷lb
-                  :If 2=⎕NC'level' ⋄ :AndIf 0<≢level ⋄ :AndIf ~(⊂entry.Level)∊⊆level ⋄ :Continue ⋄ :EndIf
-                  r,←⊂' ',' ',⍕entry
+                  entry←e⌷lb
+                  :If 2=⎕NC'level' ⋄ :AndIf 0<≢level ⋄ :AndIf ~(⊂⍕entry.Level)∊⊆level ⋄ :Continue
+                  :EndIf
+                  r∆,←⊂' ',' ',⍕entry
               :EndFor
+          :EndIf
+          :If 0<≢r∆
+              r←r,(⊂tit,(⍕≢r∆),' entries)'),r∆
           :Else
-              r[≢r]←⊂((≢r)⊃r),': no entries'
+              r←r,⊂tit,,'(no entries)'
           :EndIf
       :EndFor
     ∇
@@ -472,6 +481,8 @@
       :EndIf
       r←(~(⍎f)Retry ⍬)/msg
     ∇
+
+    IsVisible←{(Find ⍵).Displayed}  ⍝ test if given element is Displayed (useful if combined with Retry to wait till control is accessible)
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section RIDE-IN-BROWSER QA SCRIPT UTILITIES
