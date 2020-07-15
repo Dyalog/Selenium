@@ -32,7 +32,7 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test
+    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test  ⍝TODO: update comment
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -69,15 +69,14 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z
+    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :Else
-          :If 0=⎕NC'SETTINGS' ⋄ ApplySettings browser ⋄ :EndIf
+          :If 0=⎕NC'SETTINGS' ⋄ ApplySettings settings ⋄ :EndIf
       :EndIf
-     
-      :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
+      browser←SETTINGS.BROWSER
       files←browser SetUsing path←DLLPATH
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
@@ -153,10 +152,10 @@
               :EndIf
           :Else
               msg←'Could not load '
-              len←≢path
-              msg,←len↓⊃files
-              msg,←' and ',len↓⊃⌽files
-              msg,←' from ',path,' ─ they may be '
+              msg,←∊1↓⎕NPARTS⊃files
+              msg,←' and ',∊1↓⎕NPARTS⊃⌽files
+              msg,←' from ',pth,' ─ they may be '
+              ⎕←msg ⋄ ∘∘∘
               :If 1 1≡⎕NEXISTS¨files
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
@@ -343,16 +342,19 @@
       r←BROWSER.ExecuteScript script ⍬
     ∇
 
-    ∇ r←GetLogs
+    ∇ r←{level}GetLogs types;lb;e;entry
     ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
       r←''
       :For type :In BROWSER.Manage.Logs.AvailableLogTypes
+          :If 0<≢types ⋄ :AndIf ~(⊂type)∊⊆types ⋄ :Continue ⋄ :EndIf
           lb←BROWSER.Manage.Logs.GetLog⊂type
           r,←⊂'Log: ',type
           :If 0<lb.Count
               r,←⊂(⍕lb.Count),' entries:'
               :For e :In ⍳lb.Count
-                  r,←⊂' ',' ',⍕e⌷lb
+              entry←e⌷lb
+                  :If 2=⎕NC'level' ⋄ :AndIf 0<≢level ⋄ :AndIf ~(⊂entry.Level)∊⊆level ⋄ :Continue ⋄ :EndIf
+                  r,←⊂' ',' ',⍕entry
               :EndFor
           :Else
               r[≢r]←⊂((≢r)⊃r),': no entries'
