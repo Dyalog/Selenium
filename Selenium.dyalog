@@ -1,11 +1,14 @@
-:Namespace Selenium ⍝ V 2.10
+﻿:Namespace Selenium ⍝ V 2.10
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
 ⍝ 2017 05 23 Adam: now gives helpful messages for DLL problems, harmonised ADOC utils
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
+⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
+⍝ 2020 07 11 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
 
     :Section ADOC
+
     ∇ t←Describe
       t←1↓∊(⎕UCS 10),¨{⍵/⍨∧\(⊂'')≢¨⍵}Comments ⎕SRC ⎕THIS ⍝ first block of non-empty comment lines
     ∇
@@ -29,7 +32,7 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test - wish we could initialize this with SourceFile!
+    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test  ⍝TODO: update comment
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -58,75 +61,104 @@
       BROWSER.Quit
     ∇
 
-    ∇ R←ApplySettings name;settings;ref
-     
-      settings←GetSettings
-      ref←settings{6::'' ⋄ ⍺⍎⍵}name
-      :If ref≡''
-          ('Settings "',name,'" not found!')⎕SIGNAL 11
-          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
-      :EndIf
-      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
-      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
-      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
-      :If 2=ref.⎕NC'OptionsInstanceOf'
-      :AndIf 9=ref.⎕NC'Options'
-          BROWSEROPTIONS←ref.(OptionsInstanceOf Options)
-      :Else
-          BROWSEROPTIONS←⍬  ⍝ no options found...
-      :EndIf
-     
-    ∇
-
-
     ∇ path←base NormalizePath path
       path base←{('/'@{'\'=⍵})⍵}¨path base
       base←base,('/'≠⊃⌽base)/'/'
       :If './'≡2↑path ⋄ path←base,2↓path   ⍝ relative path
-      :ElseIf ⍝ are there any more cases to consider???
+ ⍝     :ElseIf... ⍝ are there any more cases to consider???
       :EndIf
     ∇
 
-    ∇ InitBrowser browser;files;msg;path;len;options;opt
+    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z
       options←''
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
-      :EndIf                      
-            files←SetUsing path←DLLPATH
-
-      :If 0=⍴browser ⋄ browser←DEFAULTBROWSER ⋄ :EndIf       ⍝ Empty rarg => Use DEFAULTBROWSER
+      :Else
+          :If 0=⎕NC'SETTINGS' ⋄ ApplySettings settings ⋄ :EndIf
+      :EndIf
+      browser←SETTINGS.BROWSER
+      files←browser SetUsing path←DLLPATH
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
-          :If 2=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
-          :AndIf 2=≢BROWSEROPTIONS   ⍝ and is a 2-element vector
-          opts←2⊃BROWSEROPTIONS
-           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'    ⋄ ⎕←'Processing browseroptions',(⎕UCS 13),⎕JSON opts ⋄:endif
-              options←⎕NEW⍎1⊃BROWSEROPTIONS
-              :For opt :In opts.⎕NL-2
-                  ⍎'options.',opt,'←opts.',opt
+          subF←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
+          suffix←('W'=1 1⊃'.'⎕WG'APLVersion')/'.exe'
+          :If 2=SETTINGS.⎕NC'Executable'
+              drv←SETTINGS.Executable,suffix
+          :Else
+⍝              drv←(⎕C browser),'driver',suffix
+              drv←(0(819⌶)browser),'driver',suffix
+          :EndIf
+          :If 2=SETTINGS.⎕NC'DRIVER' ⋄ path←SETTINGS.DRIVER ⋄ :EndIf
+          pth←path
+          :If '.'=⊃pth
+          :AndIf (2⊃pth)∊'\/'
+              pth←∊1 ⎕NPARTS(SourcePath ⎕THIS),2↓pth
+          :EndIf
+          :If ~(⎕NEXISTS⍠1)pth,drv
+          :AndIf (⎕NEXISTS⍠1)pth,subF,drv
+              pth←pth,subF   ⍝ pick subfolder depending on platform
+          :ElseIf (⎕NEXISTS⍠1)pth,(subF←subF,((1+∨/'64'⍷1⊃'.'⎕WG'APLVersion')⊃'32' '64'),'/'),drv   ⍝ test adding bits to folder (see folder-structure for Edge/Win!)
+              pth←pth,subF   ⍝ pick subfolder depending on platform
+          :EndIf
+          :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
+          :AndIf 0<≢BROWSEROPTIONS
+              options←InitOptions browser
+              :For opt :In BROWSEROPTIONS.⎕NL-2
+                  ⍎'options.',(∊opt),'←BROWSEROPTIONS.',,∊opt
+              :EndFor
+          :EndIf
+          :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
+          :AndIf 0 ⍝ not yet ripe for production!
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              :For cap :In SETTINGS.AdditionalCapabilities
+                  options.AddAdditionalCapability(cap.name)(cap.value)
+              :EndFor
+          :EndIf
+          :If 2=SETTINGS.⎕NC'AddArguments'
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              :For opt :In SETTINGS.AddArguments
+                  options.AddArgument⊂opt
+              :EndFor
+          :EndIf
+          :If 2=SETTINGS.⎕NC'LoggingPreferences'
+              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+              cap←options.ToCapabilities
+     
+              :For p :In SETTINGS.LoggingPreferences
+                  options.SetLoggingPreference p.type(⍎p.level)
               :EndFor
           :EndIf
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
           :Trap 0
-              :If options≡''
-                  BROWSER←⎕NEW⍎'OpenQA.Selenium.',browser,'.',browser,'Driver'
+              BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
+              :Trap 90
+                  z←1⊣BSVC.IsRunning
               :Else
-                  BROWSER←⎕NEW(⍎'OpenQA.Selenium.',browser,'.',browser,'Driver')options
+                  z←0
+              :EndTrap
+              :If ~z
+                  ⎕←'Could not create instance of ',browser,'DriverService.'
+                  ⎕←'You may have to adjust file-permissions to make this file executable:'
+                  ⎕←⎕SH'ls -l ',pth,drv
+                  'Could not create DriverService - check msg in session'⎕SIGNAL 11
+              :EndIf
+              :If options≡''
+                  BROWSER←⎕NEW(⍎browser,'Driver')BSVC
+              :Else
+                  BROWSER←⎕NEW(⍎browser,'Driver')(BSVC options)
               :EndIf
           :Else
               msg←'Could not load '
-              len←≢path
-              msg,←len↓⊃files
-              msg,←' and ',len↓⊃⌽files
-              msg,←' from ',path,' ─ they may be '
+              msg,←∊1↓⎕NPARTS⊃files
+              msg,←' and ',∊1↓⎕NPARTS⊃⌽files
+              msg,←' from ',pth,' ─ they may be '
               :If 1 1≡⎕NEXISTS¨files
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
-                  msg,←(1=2⊃⎕VFI 2 ⎕NQ'.' 'GetEnvironment' 'DYALOG_NETCORE')/(⎕UCS 13),'*** Please not that DYALOG_NETCORE=1 can also cause these symptoms! (Probably a Selenium-Issue and hopefully fixed sooon...)'
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
@@ -140,6 +172,13 @@
               BROWSER.Manage.Window.Maximize
           :EndTrap
       :EndIf
+    ∇
+    ∇ options←InitOptions browser
+      options←⎕NEW⍎browser,'Options'
+    ∇
+
+    ∇ SaveScreenshot ToFile
+      BROWSER.GetScreenshot.SaveAsFile⊂ToFile
     ∇
 
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
@@ -186,9 +225,9 @@
               :If stop⌊×≢r
                   ⎕←'test for ',file,' failed:'
                   ⎕←r
-                  ⎕←'Rerun:'
-                  ⎕←'      Test ⍬'
-                  ∘∘∘
+                  ⎕←'      Test ⍬    ⍝ to Rerun'
+                  ⎕←'      →⎕LC      ⍝ to continue'
+                  (⎕LC[1]+1)⎕STOP 1⊃⎕SI
               :EndIf
           :Else
               r←'Trapped error: ',,⍕⎕DMX.EN
@@ -230,13 +269,31 @@
      ⍝ To get A,Ctrl+X use 'A'(Control 'X')
       ok←1
       q←Find obj
-      text←eis text
-      i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
-      :For k :In i
-          (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
-      :EndFor
-      q.SendKeys,¨text~Keys.(Shift Control Alt)
-     
+      :If q≢0  ⍝ make sure that we found it!
+          text←eis text
+          i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
+          ACTIONS.Reset
+          :For k :In i
+              (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
+          :EndFor
+          q.SendKeys,¨text~Keys.(Shift Control Alt)
+      :EndIf
+    ∇
+
+
+    ∇ {ok}←id SetInputValue text;s;i;r
+⍝ Set the value of an input control to text.
+      :If ∨/i←text='"'
+          text←(1+i)/text
+          text[(⍸i)+(0,¯1↓+\i)[⍸i]]←'\'
+      :EndIf
+      s←'document.getElementById("',id,'").value= "',text,'";'
+      ok←1
+      :Trap 0
+          r←ExecuteScript s
+      :Else
+          ok←0
+      :EndTrap
     ∇
 
     ∇ {ok}←{type}Click id;b;ok;time
@@ -244,7 +301,7 @@
       ok←1
       'type'DefaultTo'Id'
       b←type Find id
-      ('Control "',id,'" not found')⎕SIGNAL(0=b)/11
+      ('Control "',id,'" not found')⎕SIGNAL(0≡b)/11
       b.Click
     ∇
 
@@ -252,6 +309,7 @@
      ⍝ Drag and Drop
       ok←1
       (from to)←Find¨fromid toid
+      ACTIONS.Reset
       (ACTIONS.DragAndDrop from to).Perform
     ∇
 
@@ -259,6 +317,7 @@
      ⍝ Drag
       ok←1
       from←Find fromid
+      ACTIONS.Reset
       (ACTIONS.DragAndDropToOffset from,xy).Build.Perform
     ∇
 
@@ -267,6 +326,7 @@
      ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
       ok←1
       (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
+      ACTIONS.Reset
       (ACTIONS.MoveToElement args).Build.Perform
       ⎕DL 0.1
       :If 2=⎕NC'action'
@@ -279,7 +339,36 @@
     ∇
 
     ∇ {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
-      r←BROWSER.ExecuteScript script #
+      r←BROWSER.ExecuteScript script ⍬
+    ∇
+
+    ∇ r←{level}GetLogs types;lb;e;entry;tit;r∆;type
+    ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
+    ⍝ level ∊ 'Info' 'Severe'
+    ⍝ types ∊ 'Browser'
+    ⍝ These values depend on the browser that's used!
+    ⍝ TODO: Document this!
+      r←''
+     
+      types←types{0=≢⍺:⍵ ⋄ (⊆⍺)∩⍵}⊃⌷¨BROWSER.Manage.Logs.AvailableLogTypes
+      :For type :In types
+          lb←BROWSER.Manage.Logs.GetLog⊂type
+          tit←'Log: ',type,' ('
+          r∆←⍬
+          :If 0<lb.Count
+              :For e :In ⍳lb.Count
+                  entry←e⌷lb
+                  :If 2=⎕NC'level' ⋄ :AndIf 0<≢level ⋄ :AndIf ~(⊂⍕entry.Level)∊⊆level ⋄ :Continue
+                  :EndIf
+                  r∆,←⊂' ',' ',⍕entry
+              :EndFor
+          :EndIf
+          :If 0<≢r∆
+              r←r,(⊂tit,(⍕≢r∆),' entries)'),r∆
+          :Else
+              r←r,⊂tit,,'(no entries)'
+          :EndIf
+      :EndFor
     ∇
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
@@ -318,7 +407,7 @@
           :ElseIf '~'=1↑item
               se.DeselectByText⊂1↓item
           :Else
-              se.SelectByText⊂,item
+              se.SelectByText item 1   ⍝ signature changed in WebDriver4 - do we need to distinguish?
           :EndIf
       :EndFor
     ∇
@@ -350,9 +439,13 @@
           :Until ok∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second
           :If ok
           :AndIf search
-              elms←⌷r
-              :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
-                  r←⊃mask/elms
+              :If 0<r.Count
+                  elms←⌷r
+                  :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
+                      r←⊃mask/elms
+                  :EndIf
+              :Else
+                  r←0   ⍝ nothing found!
               :EndIf
           :EndIf
       :EndIf
@@ -374,10 +467,12 @@
       ok←×⎕DL msec÷1000
     ∇
 
-    ∇ r←element WaitFor args;f;text;msg
+    ∇ r←larg WaitFor args;f;text;msg;element
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
-      :If 9≠⎕NC'element' ⋄ element←Find element ⋄ :EndIf
+      :If 9≠⎕NC'larg' ⋄ element←Find larg ⋄ :EndIf
+      :If larg≡0 ⋄ r←'Did not find element "',(⍕larg),'"' ⋄ →0 ⋄ :EndIf
+      element←larg
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
       f←'{∨/''',((1+text='''')/text),'''','≡⍷'[1+×⍴,text]
@@ -388,6 +483,8 @@
       :EndIf
       r←(~(⍎f)Retry ⍬)/msg
     ∇
+
+    IsVisible←{(Find ⍵).Displayed}  ⍝ test if given element is Displayed (useful if combined with Retry to wait till control is accessible)
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section RIDE-IN-BROWSER QA SCRIPT UTILITIES
@@ -498,8 +595,31 @@
 
     Split←,⊂⍨⊣=, ⍝ Split ⍵ at separator ⍺, but keep the separators as prefixes to each section
 
-    ∇ {ok}←GoTo url ⍝ Ask the browser to navigate to a URL and check that it did it
+    ∇ r←lc R  ⍝ lowercase
+      :If 18≤2⊃⎕VFI 2↑2⊃'.'⎕WG'aplversion'
+          r←⎕C R
+      :Else
+          r←0(819⌶)R
+      :EndIf
+    ∇
+
+    ∇ {ok}←GoTo url;z;base ⍝ Ask the browser to navigate to a URL and check that it did it
       ok←1
+      :If 'http'≢lc 4↑url  ⍝ it's probably a relative URL (does this text need be more detailed?)
+          base←BROWSER.Url
+          :While (≢url)>z←url⍳'/'
+              :If z=1
+                  base←((2≥+\base='/')/base),'/'
+              :ElseIf '../'≡z↑url
+                  base←()↑base
+              :ElseIf './'≡z↑url  ⍝ do nothing
+              :Else
+                  base←base,z↑url
+              :EndIf
+              url←z↓url
+          :EndWhile
+          url←base,url
+      :EndIf
       BROWSER.Navigate.GoToUrl⊂url
       :Trap 90
           ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
@@ -535,24 +655,125 @@
       :EndIf
     ∇
 
-    ∇ {files}←SetUsing path ⍝ Set the path to the Selenium DLLs
-      :If path≡'' ⋄ path←1⊃1 ⎕NPARTS SourceFile ⎕THIS ⋄ :EndIf
-      files←'dll' 'Support.dll',¨⍨⊂path,'WebDriver.'
+    ∇ {files}←browser SetUsing path;net ⍝ Set the path to the Selenium DLLs
+      :If path≡'' ⋄ path←SourcePath ⎕THIS
+      :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
       ⎕USING←0⍴⎕USING
-      ⎕USING,←⊂('/'⎕R'\\')'OpenQA.Selenium,',⊃files
-      ⎕USING,←⊂('/'⎕R'\\')',',⊃⌽files
+      ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
+     
+      :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+          net←'netstandard2.0\'
+      :Else
+          net←'net47\'
+      :EndIf
+      files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
+      ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
+      ⎕USING,←⊂'OpenQA.Selenium,',⊃files
+      ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
+      ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
+      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1⎕nparts ¯1↓path),'more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
+      ⍝ make sure we use the correct path-separator (⎕USING)
+      :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
+          ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
+      :Else
+          ⎕USING←{'/'@('\'∘=)⍵}¨⎕USING
+      :EndIf
+     
     ∇
 
-      SourceFile←{ ⍝ Get pathname to sourcefile for ref ⍵
+      SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
           file←4⊃5179⌶⍵ ⍝ ⎕FIX
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
 
+    SourcePath←{⊃1⎕nparts SourceFile ⍵}  ⍝ just the path of the SourceFile in questions
+    :EndSection ───────────────────────────────────────────────────────────────────────────────────
+
+    :section SETTINGS
     ∇ R←GetSettings
-      R←⎕JSON 1⊃⎕NGET(⊃⎕NPARTS SourceFile ⎕THIS),'settings.json'
+      R←⎕JSON 1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
+      R←Flatten R
     ∇
 
-    Local←{⍵,⍨PathOf 1↓⊃('§'∘=⊂⊢)⊃⌽⎕NR'Test'} ⍝ Path of currently running Test function (may need updating if ⎕FIX is used instead of ⎕SE.SALT.Load)
-    :EndSection ───────────────────────────────────────────────────────────────────────────────────
+    ∇ R←{flavours_vars_mem}Flatten ns;vars;flavours;n;nl;z;AddVar;mem;v;f;f∆;ref
+ ⍝ process tree-structures settings into a "flattened" structure
+      mem←0
+      :If 0=⎕NC'flavours_vars_mem'
+          vars←flavours←0 2⍴''
+      :ElseIf 2=≢flavours_vars_mem
+          (flavours vars)←flavours_vars_mem
+      :Else
+          (flavours vars mem)←flavours_vars_mem
+      :EndIf
+     
+      vars←vars AddVars ns
+     
+      :For n :In (ns.⎕NL-9)~⊂'Flavours'
+          :If 2=(ns⍎n).⎕NC'isDriverParam'
+              ns.⎕EX n,'.isDriverParam'
+              vars←vars⍪(n)(⎕JSON ns⍎n)
+          :Else
+              flavours v←(flavours vars)Flatten ns⍎n
+              :If mem
+                  flavours[flavours[;1]⍳⊂n;2]←⊂v
+              :EndIf
+          :EndIf
+      :EndFor
+     
+      :If 9=ns.⎕NC'Flavours'
+          z←~(nl←ns.Flavours.⎕NL ¯9)∊flavours[;1]
+          z←z∧nl≢¨⊂'Flavours'
+          flavours⍪←(,[1.5]z/nl),⊂vars
+          flavours←1⊃(flavours vars 1)Flatten ns.Flavours
+      :EndIf
+     
+      :If 0=⎕NC'flavours_vars_mem'    ⍝ top-level
+          R←#.⎕NS''
+          :For v :In ↓vars
+              R.{⍎(1⊃⍵),'←0⎕json 2⊃⍵'}v
+          :EndFor
+          :For f :In ⍳1↑⍴flavours
+              ref←R.⎕NS''
+              :For v :In ↓2⊃flavours[f;]
+                  ref.{⍎(1⊃⍵),'←0⎕JSON 2⊃⍵'}v
+              :EndFor
+              ref R.{(1⊃⍵)⎕NS ⍺}flavours[f;]
+          :EndFor
+      :Else
+          R←flavours vars
+      :EndIf
+    ∇
+
+    ∇ vars←vars AddVars ns;n;i
+     
+      :For n :In ns.⎕NL-2
+          :If (≢vars)<i←vars[;1]⍳⊂n
+              vars←vars⍪2↑⊂n
+          :EndIf
+          vars[i;2]←⊂1 ⎕JSON ns⍎n
+      :EndFor
+    ∇
+
+    ∇ R←ApplySettings name;settings;ref;go
+     
+      settings←GetSettings
+      ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
+      :If ref≡''
+          ('Settings "',name,'" not found!')⎕SIGNAL 11
+          ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
+      :EndIf
+      SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
+      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
+      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
+      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      BROWSEROPTIONS←⍬  ⍝ no options found...
+      :Select ⍬⍴ref.⎕NC'Options'
+      :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
+      :EndSelect
+     
+      ⎕USING←'System'
+    ∇
+
+    :endsection SETTINGS
 :EndNamespace

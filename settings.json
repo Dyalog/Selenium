@@ -1,26 +1,97 @@
 {
-    "_doc": "This file contains settings for some browser-configs that were current at the time it was composed.",
-    "_usage": "Simply refer to the name of a config in ⍺ of the Test-fn",
-    "_usage2": "i.e. Test'./MS3' '' 'Chrome80'",
-    "_usage3": "or use `Selenium.ApplySettings'Chrom80'` in your own test-function",
-    "Chrome80": {
-        "DLLPATH": "./Drivers/ChromeDriver80/",
-        "BROWSER": "Chrome",
-        "PORT": 8080
-    },
-    "Firefox73": {
-        "DLLPATH": "./Drivers/geckodriver026/",
-        "BROWSER": "Firefox",
-        "PORT": 8080
-    },
-    "HTMLRenderer": {
-        "DLLPATH": "./Drivers/ChromeDriver79/",
-        "BROWSER": "Chrome",
-        "PORT": 8080,
-        "OptionsInstanceOf": "Chrome.ChromeOptions",
-        "Options": {
-            "DebuggerAddress":"127.0.0.1:8080"
+    "cmnt1": "This file contains settings for some browser-configs that were current at the time it was composed.",
+    "cmnt2": "Simply refer to the name of a config in ⍺ of the Test-fn",
+    "cmnt3": "i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the \"default\"-Config will used if you don't explicitely select a config",
+    "cmnt4": "or use `Selenium.ApplySettings'Chrome80'` in your own test-function",
+    "Chromium": {
+        "LoggingPreferences": [{
+                "type": "browser",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "driver",
+                "level": "LogLevel.All"
+            },
+            {
+                "type": "performance",
+                "level": "LogLevel.All"
+            }
+        ],
+        "AddArguments": [
+            "--verbose"
+        ],
+        "Flavours": {
+            "Edge": {
+                "BROWSER": "Edge",
+                "Executable": "msedgedriver",
+                "URL":"https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads",
+                "Flavours": {
+                    "Edge83": {
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver83/"
+                    },
+                    "Edge84": {
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver84/"
+                    },
+                    "Edge85": {
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver85/"
+                    }
+                }
+
+            },
+            "BROWSER": "Chrome",
+            "URL":"https://sites.google.com/a/chromium.org/chromedriver/",
+            "Flavours": {
+                "Chrome79": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver79/",
+                    "Flavours": {
+                        "HTMLRenderer": {
+                            "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
+                            "cmnt2": "HTMLRenderer is a flavour of Chrome79!",
+                            "SITEROOT": "http://dyalog_root",
+                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options spefies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
+                            "Options": {
+                                "DebuggerAddress": "127.0.0.1:8080",
+                                "isDriverParam":true
+                            }
+                        }
+                    }
+                },
+                "Chrome80": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver80/"
+                },
+                "Chrome81": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver81/"
+                },
+                "Chrome83": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver83/"
+                },
+                "Chrome84": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver84/"
+                }
+            }
         }
     },
-    "default": "Firefox73"
+    "Firefox": {
+        "Flavours": {
+            "Firefox60ff": {
+                "cmnt1":"Not updated for every single version of Firefox - this one for 60 and following",
+                "URL":"https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html",
+                "DRIVER": "c:/devt/Selenium/DRIVERS/geckodriver026/",
+                "BROWSER": "Firefox",
+                "Executable": "geckodriver",
+                "LoggingPreferences": [{
+                        "type": "Browser",
+                        "level": "LogLevel.All"
+                    },
+                    {
+                        "type": "Driver",
+                        "level": "LogLevel.All"
+                    }
+                ]
+            }
+        }
+    },
+    "PORT": 8080,
+    "default": "Chrome83",
+    "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4"
 }
