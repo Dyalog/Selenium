@@ -155,7 +155,6 @@
               msg,←∊1↓⎕NPARTS⊃files
               msg,←' and ',∊1↓⎕NPARTS⊃⌽files
               msg,←' from ',pth,' ─ they may be '
-              ⎕←msg ⋄ ∘∘∘
               :If 1 1≡⎕NEXISTS¨files
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
@@ -270,14 +269,15 @@
      ⍝ To get A,Ctrl+X use 'A'(Control 'X')
       ok←1
       q←Find obj
-      text←eis text
-      i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
-      ACTIONS.Reset
-      :For k :In i
-          (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
-      :EndFor
-      q.SendKeys,¨text~Keys.(Shift Control Alt)
-     
+      :If q≢0  ⍝ make sure that we found it!
+          text←eis text
+          i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
+          ACTIONS.Reset
+          :For k :In i
+              (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
+          :EndFor
+          q.SendKeys,¨text~Keys.(Shift Control Alt)
+      :EndIf
     ∇
 
 
@@ -467,10 +467,12 @@
       ok←×⎕DL msec÷1000
     ∇
 
-    ∇ r←element WaitFor args;f;text;msg
+    ∇ r←larg WaitFor args;f;text;msg;element
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
-      :If 9≠⎕NC'element' ⋄ element←Find element ⋄ :EndIf
+      :If 9≠⎕NC'larg' ⋄ element←Find larg ⋄ :EndIf
+      :If larg≡0 ⋄ r←'Did not find element "',(⍕larg),'"' ⋄ →0 ⋄ :EndIf
+      element←larg
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
       f←'{∨/''',((1+text='''')/text),'''','≡⍷'[1+×⍴,text]
