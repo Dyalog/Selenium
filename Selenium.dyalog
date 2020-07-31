@@ -470,7 +470,7 @@
     ∇ r←larg WaitFor args;f;text;msg;element
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
-      :If 9≠⎕NC'larg' ⋄ element←Find larg ⋄ :EndIf
+      :If 9≠⎕NC'larg' ⋄ larg←Find larg ⋄ :EndIf
       :If larg≡0 ⋄ r←'Did not find element "',(⍕larg),'"' ⋄ →0 ⋄ :EndIf
       element←larg
       args←eis args
