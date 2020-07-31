@@ -8,14 +8,15 @@ and other browsers.
 
 ## Required DLLs
 
-Depending on the browser you are using, you  may need different drivers. We provide the most common ones in the repository, if you need others,
-the "Browser"-Section of the [Downloads-page](https://www.selenium.dev/downloads/) is a good starting-point.
+Depending on the browser you are using, you  may need different drivers.
+Note that Dyalog are not distributing these drivers, you'll have to get the appropriate versions yourself.
+The "Browser"-Section of the [Downloads-page](https://www.selenium.dev/downloads/) is a good starting-point.
 
 **Note that in recent versions of Microsoft Windows, you will need to "Unblock" them after downloading them, before Windows will allow you to use them.**
 
 ### Folder-Layout
 
-The folder-structure of the repository allows us to provide recent DLLs for most browsers. If you need different versions, feel free to create appropriate folders to contribute those files.
+The following folder-structure has proven to be useful.
 
 ````language=text
 Drivers--+-->Chrome81---+->Linux
@@ -36,7 +37,7 @@ Drivers--+-->Edge83----+->Linux
                             +->64
 ````
 
-When looking for a driver, we will first look in the `DRIVERS`-folder that the corresponding entry in settings.json points to.
+When looking for a driver, we will first look in the `Drivers`-folder that the corresponding entry in settings.json points to.
 If we do not find the driver there, we'll look for a platform-specific subfolder and possibly look for the appropriate bits-folder.
 The filename of the driver is by default composed using the `BROWSER`-Entry to the corresponding setting prefixed to the text "Driver". On Windows, the extension `.exe` is appended.
 You will need to pick the appropriate driver for the browsers you're testing against. (With Chrome, for example, click `⁞` at the right edge of the URL-bar to open a menu with more
@@ -53,8 +54,7 @@ The file settings.json holds the configuration of drivers and spexcifies associa
 * a numeric field "**PORT**" defining the port that the browser uses to retrieve data
 * named configurations (settings of parameters) with these elements:
   * **BROWSER**: the name of the brower
-  * **DRIVER**: specifies the path where the driver-files are stored. (You may use relative path with "`./`" being the
-      same path settings.json is read from). If drivers are available for different platforms, create subdirectories named `Linux`, `Win` and/or `Mac`..
+  * **DRIVER**: specifies the path where the driver-files are stored.  If drivers are available for different platforms, create subdirectories named `Linux`, `Win` and/or `Mac`..
   * [**PORT**]: while the first 2 settings are mandatory for a browser-configuration, this parameter
     as well as the following ones are optional.
   * [**Executable**]: we assume that the required driverfile is BROWSER (lowercace),"driver". If this does not apply
@@ -91,7 +91,7 @@ See "[Selenium from Dyalog.pdf](./Selenium%20from%20Dyalog.pdf)" (docx source in
 * occassionally the client may throw an error similar to the following one when creating a Selenium-Instance:
 
 ```language=text
-Could not load webdriver.dll and webdriver.support.dll from c:/git/Selenium/Drivers/ChromeDriver79/ ─ they may be blocked (Properties>General>Unblock)
+Could not load webdriver.dll and webdriver.support.dll from c:/Selenium/Drivers/ChromeDriver79/ ─ they may be blocked (Properties>General>Unblock)
 
 Test[..] Selenium.InitBrowser''
          ∧

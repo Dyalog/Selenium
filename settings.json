@@ -27,13 +27,13 @@
                 "URL":"https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads",
                 "Flavours": {
                     "Edge83": {
-                        "DRIVER": "./DRIVERS/EdgeDriver83/"
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver83/"
                     },
                     "Edge84": {
-                        "DRIVER": "./DRIVERS/EdgeDriver84/"
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver84/"
                     },
                     "Edge85": {
-                        "DRIVER": "./DRIVERS/EdgeDriver85/"
+                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver85/"
                     }
                 }
 
@@ -42,7 +42,7 @@
             "URL":"https://sites.google.com/a/chromium.org/chromedriver/",
             "Flavours": {
                 "Chrome79": {
-                    "DRIVER": "./DRIVERS/ChromeDriver79/",
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver79/",
                     "Flavours": {
                         "HTMLRenderer": {
                             "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
@@ -57,16 +57,16 @@
                     }
                 },
                 "Chrome80": {
-                    "DRIVER": "./DRIVERS/ChromeDriver80/"
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver80/"
                 },
                 "Chrome81": {
-                    "DRIVER": "./DRIVERS/ChromeDriver81/"
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver81/"
                 },
                 "Chrome83": {
-                    "DRIVER": "./DRIVERS/ChromeDriver83/"
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver83/"
                 },
                 "Chrome84": {
-                    "DRIVER": "./DRIVERS/ChromeDriver84/"
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver84/"
                 }
             }
         }
@@ -76,7 +76,7 @@
             "Firefox60ff": {
                 "cmnt1":"Not updated for every single version of Firefox - this one for 60 and following",
                 "URL":"https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html",
-                "DRIVER": "./DRIVERS/geckodriver026/",
+                "DRIVER": "c:/devt/Selenium/DRIVERS/geckodriver026/",
                 "BROWSER": "Firefox",
                 "Executable": "geckodriver",
                 "LoggingPreferences": [{
@@ -93,5 +93,5 @@
     },
     "PORT": 8080,
     "default": "Chrome83",
-    "DLLPATH": "./DRIVERS/WebDriver4"
+    "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4"
 }

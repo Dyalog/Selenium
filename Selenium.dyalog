@@ -671,7 +671,7 @@
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS(SourcePath ⎕THIS)),'Drivers/more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
+      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1⎕nparts ¯1↓path),'more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
           ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
