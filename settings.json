@@ -93,5 +93,7 @@
     },
     "PORT": 8080,
     "default": "Chrome83",
-    "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4"
+    "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4",
+    "Newtonpath":"more/newtonsoft_120r3-",
+    "Newtonpath_cmnt":"path needs to be a SUBFOLDER of DLLPATH!"
 }

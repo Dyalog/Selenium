@@ -77,7 +77,7 @@
           :If 0=⎕NC'SETTINGS' ⋄ ApplySettings settings ⋄ :EndIf
       :EndIf
       browser←SETTINGS.BROWSER
-      files←browser SetUsing path←DLLPATH
+      files←browser SetUsing (path←DLLPATH)SETTINGS.Newtonpath
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
@@ -655,7 +655,8 @@
       :EndIf
     ∇
 
-    ∇ {files}←browser SetUsing path;net ⍝ Set the path to the Selenium DLLs
+    ∇ {files}←browser SetUsing path;net ⍝ S)SETTINGS:Newtonpathet the path to the Selenium DLLs
+    (path Newtonpath)←path
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
       ⎕USING←0⍴⎕USING
@@ -671,7 +672,7 @@
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1⎕nparts ¯1↓path),'more/newtonsoft_120r3-',net,'Newtonsoft.Json.dll' ⍝ one additional library required with .Net Core
+      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1⎕nparts ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll' 
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
           ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
@@ -768,6 +769,7 @@
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
       BROWSEROPTIONS←⍬  ⍝ no options found...
+      NEWTONPATH←settings.Newtonpath
       :Select ⍬⍴ref.⎕NC'Options'
       :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
       :EndSelect
