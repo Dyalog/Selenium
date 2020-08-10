@@ -25,7 +25,10 @@ Drivers--+-->Chrome81---+->Linux
          +-->Chrome80...
          +-->WebDriver3
          +-->WebDriver4
+         +-->more-------+---->newtonsoft-120r3net47
+                        +---->newtonsoft_120r3-netstandard2.0
 ````
+NB: depending on your use of .Net, you may only need one of the two folders for (Newtonsoft)[https://www.newtonsoft.com/json]. Seleniums does not require a specific version of it (but needs at least ≥12.0 ) and the path (below DRIVER) is configureable in settings.json.
 
 With Microsoft Egde, the structure gets another level of differentiation, as Egde has different drivers for Windows-32 and Windows-64:
 
@@ -51,6 +54,7 @@ The file settings.json holds the configuration of drivers and spexcifies associa
 * a char-field "**DLLPATH**" which holds the path for the WebDriver to use. Currently WebDriver3 is 2yrs old while WebDriver4
   is being developed, but still in alpha-stage. Which driver you use depends on whether you're using the .net Framework (WebDriver3)
   or .NET Core (WebDriver4).
+  * **Newtonpath**: name of a subfolder (below DLLPATH= that has the DLLs for (Newtonsoft)[https://www.newtonsoft.com/json] (a dependency of Selenium)
 * a numeric field "**PORT**" defining the port that the browser uses to retrieve data
 * named configurations (settings of parameters) with these elements:
   * **BROWSER**: the name of the brower
