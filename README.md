@@ -9,8 +9,9 @@ and other browsers.
 ## Required DLLs
 
 Depending on the browser you are using, you  may need different drivers.
-Note that Dyalog are not distributing these drivers, you'll have to get the appropriate versions yourself.
-The "Browser"-Section of the [Downloads-page](https://www.selenium.dev/downloads/) is a good starting-point.
+We have collected various versions of drivers for Chrome, Firefox end Edge
+which are available in the folder-layout documented here on the [Downloads](https://github.com/Dyalog/Selenium/releases/latest) page of this repository.
+If you need to find other versions, the "Browser"-Section of the [Selenium Downloads-page](https://www.selenium.dev/downloads/) is a good starting-point.
 
 **Note that in recent versions of Microsoft Windows, you will need to "Unblock" them after downloading them, before Windows will allow you to use them.**
 
