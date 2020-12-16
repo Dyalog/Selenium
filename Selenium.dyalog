@@ -77,7 +77,7 @@
           :If 0=⎕NC'SETTINGS' ⋄ ApplySettings settings ⋄ :EndIf
       :EndIf
       browser←SETTINGS.BROWSER
-      files←browser SetUsing (path←DLLPATH)SETTINGS.Newtonpath
+      files←browser SetUsing(path←DLLPATH)SETTINGS.Newtonpath
       'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
       ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
@@ -159,6 +159,7 @@
                   msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
                   msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
                   msg,←⎕EXCEPTION.Message
+                  :If options≢'' ⋄ msg,←(⎕UCS 13 13),'options:',⍕options ⋄ :EndIf
                   msg ⎕SIGNAL 19
               :Else
                   (msg,'missing')⎕SIGNAL 22
@@ -263,6 +264,12 @@
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :Section COVER FUNCTIONS
+    ∇ ClearInput obj;q
+      :If 0≢q←Find obj
+          q.Clear
+      :EndIf
+    ∇
+
     ∇ {ok}←obj SendKeys text;q;i;k
      ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
      ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
@@ -656,7 +663,7 @@
     ∇
 
     ∇ {files}←browser SetUsing path;net ⍝ S)SETTINGS:Newtonpathet the path to the Selenium DLLs
-    (path Newtonpath)←path
+      (path Newtonpath)←path
       :If path≡'' ⋄ path←SourcePath ⎕THIS
       :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
       ⎕USING←0⍴⎕USING
@@ -672,7 +679,7 @@
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
       ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1⎕nparts ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll' 
+      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll'
       ⍝ make sure we use the correct path-separator (⎕USING)
       :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
           ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
