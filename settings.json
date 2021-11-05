@@ -42,20 +42,7 @@
             "URL":"https://sites.google.com/a/chromium.org/chromedriver/",
             "Flavours": {
                 "Chrome79": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver79/",
-                    "Flavours": {
-                        "HTMLRenderer": {
-                            "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
-                            "cmnt2": "HTMLRenderer is a flavour of Chrome79!",
-                            "SITEROOT": "http://dyalog_root",
-                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options spefies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
-                            "Options": {
-                                "DebuggerAddress": "127.0.0.1:8080",
-                                "isDriverParam":true
-                            }
-                        }
-                    }
-                },
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver79/"                },
                 "Chrome80": {
                     "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver80/"
                 },
@@ -67,6 +54,35 @@
                 },
                 "Chrome84": {
                     "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver84/"
+                },
+                "Chrome85": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver85/"
+                },
+                "Chrome86": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver86/"
+                },
+                "Chrome87": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver87/"
+                },
+                "Chrome89": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver89/",
+                    "Flavours": {
+                        "HTMLRenderer": {
+                            "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
+                            "cmnt2": "HTMLRenderer is a flavour of Chrome79!",
+                            "SITEROOT": "http://dyalog_root",
+                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options spefies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
+                            "Options": {
+                                "DebuggerAddress": "127.0.0.1:8080",
+                                "isDriverParam":true
+                            },
+                            "AddArguments": ["no-sandbox"]
+                        }
+                    }
+
+                },
+                "Chrome95": {
+                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver95/"
                 }
             }
         }
@@ -88,11 +104,27 @@
                         "level": "LogLevel.All"
                     }
                 ]
+            },
+            "Firefox78ff": {
+                "cmnt1":"Not updated for every single version of Firefox - this one for 78 and following",
+                "URL":"https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html",
+                "DRIVER": "c:/devt/Selenium/DRIVERS/geckodriver030/",
+                "BROWSER": "Firefox",
+                "Executable": "geckodriver",
+                "LoggingPreferences": [{
+                        "type": "Browser",
+                        "level": "LogLevel.All"
+                    },
+                    {
+                        "type": "Driver",
+                        "level": "LogLevel.All"
+                    }
+                ]
             }
         }
     },
     "PORT": 8080,
-    "default": "Chrome83",
+    "default": "Chrome86",
     "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4",
     "Newtonpath":"more/newtonsoft_120r3-",
     "Newtonpath_cmnt":"path needs to be a SUBFOLDER of DLLPATH!"
