@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.10
+﻿:Namespace Selenium ⍝ V 2.11.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -6,6 +6,8 @@
 ⍝ 2020 02 12 MBaas 2.10: updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)
 ⍝ 2020 05 08 MBaas: praparing for cross-platformness;new folder-structure for drivers
 ⍝ 2020 07 11 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
+⍝ 2021 11 15 MBaas: 2.11.0 settings.json may now use "SELENIUM_DRIVERPATH" to point to the folder with the downloaded drivers -
+⍝                   this way it becomes more generally usable and less platform-dependent. Changed to semantic versioning. Settings file now JSON5.
 
     :Section ADOC
 
@@ -17,7 +19,7 @@
       s←⎕SRC ⎕THIS
       f←Words⊃s                     ⍝ split first line
       n←2⊃f                         ⍝ ns name
-      v←'.0',⍨'V'~⍨⊃⌽f              ⍝ version number
+      v←'V'~⍨⊃⌽f                    ⍝ version number
       d←1↓∊'-',¨3↑Words⊃⌽Comments s ⍝ date
     ∇
 
@@ -699,8 +701,18 @@
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :section SETTINGS
-    ∇ R←GetSettings
-      R←⎕JSON 1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
+    ∇ R←GetSettings;v;varnam
+      R←1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
+      :For varnam :In ⊂'SELENIUM_DRIVERPATH'
+          :If ∨/('$',varnam)⍷R   ⍝ do json-settings refer to SELENIUM_DRIVERPATH?
+              :If 0=≢v←2 ⎕NQ'.' 'GetEnvironment'varnam
+                  ('Environment variable "',varnam,'" referred in settings.json, but not found in environment!')⎕SIGNAL 11
+              :EndIf
+              v←'/'@('\'∘=)v   ⍝ we don't require "/" in paths, so we need to replace'emn here to avoid invalid json
+              R←(('$',varnam)⎕R v⍠('Regex' 0))R
+          :EndIf
+      :EndFor
+      R←(⎕JSON⍠'Dialect' 'JSON5')R
       R←Flatten R
     ∇
 
