@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.11.0
+:Namespace Selenium ⍝ V 2.11.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -672,10 +672,11 @@
       ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
      
       :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-          net←'netstandard2.0\'
+          net←'netstandard2.0'
       :Else
-          net←'net47\'
+          net←'net47'
       :EndIf
+          net,←⎕se.SALTUtils.FS
       files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
       ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
       ⎕USING,←⊂'OpenQA.Selenium,',⊃files
@@ -683,11 +684,8 @@
       ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
       ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll'
       ⍝ make sure we use the correct path-separator (⎕USING)
-      :If 'W'=1⊃1⊃'.'⎕WG'APLVersion'
-          ⎕USING←{'\'@('/'∘=)⍵}¨⎕USING
-      :Else
-          ⎕USING←{'/'@('\'∘=)⍵}¨⎕USING
-      :EndIf
+
+              ⎕USING←{⎕se.SALTUtils.FS@('/'∘=)⍵}¨⎕USING
      
     ∇
 
@@ -776,9 +774,8 @@
     ∇
 
     ∇ R←ApplySettings name;settings;ref;go
-     
       settings←GetSettings
-      ref←settings{6::'' ⋄ 0=≢⍵:⍺⍎⍺.default ⋄ ⍺⍎⍵}name
+      ref←settings{6::'' ⋄ d←2⎕nq'.' 'GetEnvironment' 'SELENIUM_DRIVER'⋄ (0=≢⍵)∧0=≢d:⍺⍎⍺.default ⋄ (0=≢⍵): d ⋄ ⍺⍎⍵}name
       :If ref≡''
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
