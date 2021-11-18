@@ -48,6 +48,11 @@ You will need to pick the appropriate driver for the browsers you're testing aga
 options, select "Help" and "About Chrome". If that version is not included, [download the file chromedriver.exe](https://chromedriver.chromium.org/downloads) and
 put it into a folder within that structure.)
 
+### M1 compatibility
+
+chromedriver is also available in a M1 edition. This is currently (18.2) not needed, as the Dyalog process
+on M1 machines runs with Rosetta and can't access the M1 environment.(Don't misunderstand: it works fine on M1!)
+
 ### Configuration (settings.json)
 
 The file settings.json holds the configuration of drivers and spexcifies associated details such as location of required files. It has the following mandatory components:
@@ -69,7 +74,13 @@ The file settings.json holds the configuration of drivers and spexcifies associa
   * [**Options**]: when OptionsInstanceOf is used, this parameter is mandatory. It contains a JSON-description of an
     array with one or more options of the specific driver. (See [this link](https://www.selenium.dev/selenium/docs/api/dotnet/html/T_OpenQA_Selenium_Chrome_ChromeOptions.htm) for an example of ChromeOptions)
 
+In order to avoid the need of editing this file, we introduced environment variables (or .dcfg-params, ofc) that help
+to generalize the file content:
 
+* `SELENIUM_DRIVERPATH` - should point to the folder "Drivers" (including that folder itself)
+
+* `SELENIUM_DRIVER` - the name of ther driver you want to use (by default), i.e. `Chrome89` (for Dyalog 18.2)
+   You can ofc use any driver by not passsing a empty right argument to #.Selenium.InitBrowser)
 
 ## Demos or Samples
 
@@ -103,3 +114,15 @@ Test[..] Selenium.InitBrowser''
 ```
 
 "Unblocking" as described may help (the first time). However, since other reasons may cause this problem as well, we also show exceptions (usually .net-Exceptions give clear indication of the problem, though they may be verbose at times...)
+
+* a smiliar issue may appear on MacOS
+
+Open Terminal., navigate to the location of the driver you are using within the Drivers folder and execute the following:
+````
+Execute xattr -d com.apple.quarantine {NameOfDriver}
+````
+
+It might be necessary to repeat this within the `more`folder as well as `WebDriver4`.
+
+Also, open MacOS' settings page and have a look at "Security & Privacy" > "General". That page may show a button
+"Open anyway" at the bottom of the page. Check if the driver is listed there and if so, enable it.
