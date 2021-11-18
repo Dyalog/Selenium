@@ -1,8 +1,14 @@
 {
-    "cmnt1": "This file contains settings for some browser-configs that were current at the time it was composed.",
-    "cmnt2": "Simply refer to the name of a config in ⍺ of the Test-fn",
-    "cmnt3": "i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the \"default\"-Config will used if you don't explicitely select a config",
-    "cmnt4": "or use `Selenium.ApplySettings'Chrome80'` in your own test-function",
+    /***
+     This file contains settings for some browser-configs that were current at the time it was composed.
+     Simply refer to the name of a config in ⍺ of the Test-fn
+    i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the "default"-Config will used if you don't explicitely select a config
+    or use `Selenium.ApplySettings'Chrome80'` in your own test-function
+
+    You will need to set up an Environment Variable "SELENIUM_DRIVERPATH that holds the name of the local folder in which you store
+    the various drivers for Selenium (as contained in SeleniumDrivers on the release page of this repo @ https://github.com/Dyalog/Selenium/releases)
+
+    ***/
     "Chromium": {
         "LoggingPreferences": [{
                 "type": "browser",
@@ -27,13 +33,13 @@
                 "URL":"https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads",
                 "Flavours": {
                     "Edge83": {
-                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver83/"
+                        "DRIVER": "$SELENIUM_DRIVERPATH/EdgeDriver83/"
                     },
                     "Edge84": {
-                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver84/"
+                        "DRIVER": "$SELENIUM_DRIVERPATH/EdgeDriver84/"
                     },
                     "Edge85": {
-                        "DRIVER": "c:/devt/Selenium/DRIVERS/EdgeDriver85/"
+                        "DRIVER": "$SELENIUM_DRIVERPATH/EdgeDriver85/"
                     }
                 }
 
@@ -42,36 +48,36 @@
             "URL":"https://sites.google.com/a/chromium.org/chromedriver/",
             "Flavours": {
                 "Chrome79": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver79/"                },
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver79/"                },
                 "Chrome80": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver80/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver80/"
                 },
                 "Chrome81": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver81/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver81/"
                 },
                 "Chrome83": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver83/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver83/"
                 },
                 "Chrome84": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver84/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver84/"
                 },
                 "Chrome85": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver85/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver85/"
                 },
                 "Chrome86": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver86/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver86/"
                 },
                 "Chrome87": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver87/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver87/"
                 },
                 "Chrome89": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver89/",
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver89/",
                     "Flavours": {
                         "HTMLRenderer": {
                             "cmnt1": "Run ]version -e and look for the version of chrome_elf.dll it should match the version-number used for the DRIVER-Folder",
-                            "cmnt2": "HTMLRenderer is a flavour of Chrome79!",
+                            "cmnt2": "HTMLRenderer is a flavour of Chrome89 (v18.0: 79)!",
                             "SITEROOT": "http://dyalog_root",
-                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options spefies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
+                            "Options_cmnt1":"NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
                             "Options": {
                                 "DebuggerAddress": "127.0.0.1:8080",
                                 "isDriverParam":true
@@ -82,7 +88,10 @@
 
                 },
                 "Chrome95": {
-                    "DRIVER": "c:/devt/Selenium/DRIVERS/ChromeDriver95/"
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver95/"
+                },
+                "Chrome96": {
+                    "DRIVER": "$SELENIUM_DRIVERPATH/ChromeDriver96/"
                 }
             }
         }
@@ -92,7 +101,7 @@
             "Firefox60ff": {
                 "cmnt1":"Not updated for every single version of Firefox - this one for 60 and following",
                 "URL":"https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html",
-                "DRIVER": "c:/devt/Selenium/DRIVERS/geckodriver026/",
+                "DRIVER": "$SELENIUM_DRIVERPATH/geckodriver026/",
                 "BROWSER": "Firefox",
                 "Executable": "geckodriver",
                 "LoggingPreferences": [{
@@ -108,7 +117,7 @@
             "Firefox78ff": {
                 "cmnt1":"Not updated for every single version of Firefox - this one for 78 and following",
                 "URL":"https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html",
-                "DRIVER": "c:/devt/Selenium/DRIVERS/geckodriver030/",
+                "DRIVER": "$SELENIUM_DRIVERPATH/geckodriver030/",
                 "BROWSER": "Firefox",
                 "Executable": "geckodriver",
                 "LoggingPreferences": [{
@@ -125,7 +134,6 @@
     },
     "PORT": 8080,
     "default": "Chrome86",
-    "DLLPATH": "c:/devt/Selenium/Drivers/WebDriver4",
-    "Newtonpath":"more/newtonsoft_120r3-",
-    "Newtonpath_cmnt":"path needs to be a SUBFOLDER of DLLPATH!"
+    "DLLPATH": "$SELENIUM_DRIVERPATH/WebDriver4",
+    "Newtonpath":"more/newtonsoft_120r3-" /** path needs to be a SUBFOLDER of DLLPATH! ***/
 }
