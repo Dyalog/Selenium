@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.11.0
+﻿:Namespace Selenium ⍝ V 2.11.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -8,6 +8,14 @@
 ⍝ 2020 07 11 MBaas: lots of changes to make it working on ALL platforms;revised structure of settings (AND names of parameter DRIVERS → DRIVER)
 ⍝ 2021 11 15 MBaas: 2.11.0 settings.json may now use "SELENIUM_DRIVERPATH" to point to the folder with the downloaded drivers -
 ⍝                   this way it becomes more generally usable and less platform-dependent. Changed to semantic versioning. Settings file now JSON5.
+⍝ 2021 02 22 MBaas: MAJOR UPDATE
+⍝                   now using WebDriver4 and NuGet. This removes the need to distribute DLLs. (started development on branch "WebDriver4")
+⍝                   - removed all paths from settings.json      
+⍝                   - we're aiming to kewep all changes "under the cover". Selenium should behave as before.
+⍝ WIP:   There has been a change wrt FindElements - this needs to be fully implemented...
+⍝        No other outstanding items atm...(more testing needed)
+⍝        Not yet cross-platform (BHC is on it...)
+⍝ 
 
     :Section ADOC
 
@@ -34,7 +42,6 @@
     ⎕WX←3
 
     DEFAULTBROWSER←'Chrome'
-    DLLPATH←'' ⍝  might be overridden through ⍺[4] when calling Test  ⍝TODO: update comment
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
 
     EXT←'.dyalog'
@@ -71,104 +78,130 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z
+    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f
       options←''
+      :If 0=##.⎕NC'NugetConsum'
+          :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
+          :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
+          :AndIf 0=⎕NEXISTS src←'/git/Selenium/NugetConsum.dyalog'
+              'No idea where you loaded me from...(and where to load NugetConsum from)!'⎕SIGNAL 11
+          :EndIf
+          home←1⊃⎕NPARTS src
+          0 ## ⎕SE.SALT.Load home,'NugetConsum.dyalog'
+      :Else
+          ⎕SE.UCMD'Get  https://github.com/Dyalog/Selenium/blob/ImprovedSettings/NugetConsum.dyalog  -target=',⍕##    ⍝ TODO: fix path when this goes into "main"
+      :EndIf
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
-      :Else
-          :If 0=⎕NC'SETTINGS' ⋄ ApplySettings settings ⋄ :EndIf
       :EndIf
-      browser←SETTINGS.BROWSER
-      files←browser SetUsing(path←DLLPATH)SETTINGS.Newtonpath
-      'CURRENTBROWSER'DefaultTo'' ⍝ Avoid VALUE ERRORs
-      ⎕EX'BROWSER'/⍨browser≢CURRENTBROWSER     ⍝ We want to switch or need a new one
+⍝      :If 0=⎕NC'SETTINGS'
+      ApplySettings settings
+ ⍝     :EndIf
+      browser←SETTINGS.Browser.ns  ⍝ ns is also the "name" of the browser...
+      pckgs←0 4⍴⍬
+     
+     
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
-          subF←(('WLM'⍳1 1⊃'.'⎕WG'APLVersion')⊃'Win' 'Linux' 'Mac'),'/'  ⍝ subfolder for platform-specific driver files
-          suffix←('W'=1 1⊃'.'⎕WG'APLVersion')/'.exe'
-          :If 2=SETTINGS.⎕NC'Executable'
-              drv←SETTINGS.Executable,suffix
+     
+          pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
+          pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
+      ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
+          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
+              p←SETTINGS.Components.optional⍎nm
+              :If 0=p.⎕NC'enabled'
+              :OrIf p.enabled∊1(⊂'true')
+                  pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
+              :EndIf
+          :EndFor
+          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
+          :Select SETTINGS.Browser.o
+          :Case 'ChromeDriver'
+              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
+          :EndSelect
+     
+          pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂f  ⍝ VALUE ERROR indicates we don't know your browser!
+⍝ ⎕←pckgs
+⍝      pckgs⍪←'Selenium.WebDriver.ChromeDriver' '98.0.4758.8000'⎕NULL chromedriver
+⍝      pckgs⍪←'Newtonsoft.Json' '12.0.1' '' ''
+     
+     
+          slnm←⎕NEW ##.NugetConsum.Project'Selenium'
+     
+          {slnm.Add ⎕NEW ##.NugetConsum.Package ⍵}¨↓pckgs
+     
+          slnm.Restore
+     
+          ⎕USING←(⊂'System'),slnm.Using
+     
+⍝      drv←⎕NEW(⍎SETTINGS.Browser.o)⍬
+          f←(slnm.Packages{(⍺.id⍳⊂⍵)⊃⍺}SETTINGS.Browser.n).FullPath   ⍝ get path from package def
+          f1←∊1↓⎕NPARTS f
+          pth←1⊃⎕NPARTS f
+          BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService(pth)(f1)
+          BSVC.Start
+          :Trap 90
+              z←1⊣BSVC.IsRunning
           :Else
-⍝              drv←(⎕C browser),'driver',suffix
-              drv←(0(819⌶)browser),'driver',suffix
-          :EndIf
-          :If 2=SETTINGS.⎕NC'DRIVER' ⋄ path←SETTINGS.DRIVER ⋄ :EndIf
-          pth←path
-          :If '.'=⊃pth
-          :AndIf (2⊃pth)∊'\/'
-              pth←∊1 ⎕NPARTS(SourcePath ⎕THIS),2↓pth
-          :EndIf
-          :If ~(⎕NEXISTS⍠1)pth,drv
-          :AndIf (⎕NEXISTS⍠1)pth,subF,drv
-              pth←pth,subF   ⍝ pick subfolder depending on platform
-          :ElseIf (⎕NEXISTS⍠1)pth,(subF←subF,((1+∨/'64'⍷1⊃'.'⎕WG'APLVersion')⊃'32' '64'),'/'),drv   ⍝ test adding bits to folder (see folder-structure for Edge/Win!)
-              pth←pth,subF   ⍝ pick subfolder depending on platform
-          :EndIf
+              z←0
+          :EndTrap
+     
+          options←InitOptions browser
           :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
           :AndIf 0<≢BROWSEROPTIONS
-              options←InitOptions browser
               :For opt :In BROWSEROPTIONS.⎕NL-2
                   ⍎'options.',(∊opt),'←BROWSEROPTIONS.',,∊opt
               :EndFor
           :EndIf
-          :If 2=SETTINGS.⎕NC'AdditionalCapabilities'
+
+          :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
           :AndIf 0 ⍝ not yet ripe for production!
-              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
-              :For cap :In SETTINGS.AdditionalCapabilities
+              :For cap :In SETTINGS.Browser.AdditionalCapabilities
                   options.AddAdditionalCapability(cap.name)(cap.value)
               :EndFor
           :EndIf
-          :If 2=SETTINGS.⎕NC'AddArguments'
-              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
-              :For opt :In SETTINGS.AddArguments
+          :If 2=SETTINGS.Browser.⎕NC'AddArguments'
+              :For opt :In SETTINGS.Browser.AddArguments
                   options.AddArgument⊂opt
               :EndFor
           :EndIf
-          :If 2=SETTINGS.⎕NC'LoggingPreferences'
-              :If options≡'' ⋄ options←InitOptions browser ⋄ :EndIf
+          :If 2=SETTINGS.Browser.⎕NC'LoggingPreferences'
               cap←options.ToCapabilities
      
-              :For p :In SETTINGS.LoggingPreferences
+              :For p :In SETTINGS.Browser.LoggingPreferences
                   options.SetLoggingPreference p.type(⍎p.level)
               :EndFor
           :EndIf
-          :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
-          :Trap 0
-              BSVC←(⍎browser,'DriverService').CreateDefaultService(pth)(drv)
-              :Trap 90
-                  z←1⊣BSVC.IsRunning
+⍝          :If 0<SETTINGS.Browser{0::0⍴' ' ⋄ ≢⍺(⍎⍵).⎕NL ¯2}'Options'
+⍝              :For opt :In SETTINGS.Browser.Options.⎕NL ¯2
+⍝                  options⍎opt,'←',{' '⎕DR⍥=⍵:'''',⍵,'''' ⋄ ⍕⍵}SETTINGS.Browser.Options⍎opt
+⍝              :EndFor
+⍝          :EndIf
+     
+     
+          :If ~z
+              ⎕←'Could not create instance of ',browser,'DriverService.'
+              ⎕←'You may have to adjust file-permissions to make this file executable:'
+              :If 'w'=1⊃av
+                  ⎕←⎕SH'icacls ',f
               :Else
-                  z←0
-              :EndTrap
-              :If ~z
-                  ⎕←'Could not create instance of ',browser,'DriverService.'
-                  ⎕←'You may have to adjust file-permissions to make this file executable:'
-                  ⎕←⎕SH'ls -l ',pth,drv
-                  'Could not create DriverService - check msg in session'⎕SIGNAL 11
+                  ⎕←⎕SH'ls -l ',f
               :EndIf
-              :If options≡''
-                  BROWSER←⎕NEW(⍎browser,'Driver')BSVC
-              :Else
-                  BROWSER←⎕NEW(⍎browser,'Driver')(BSVC options)
-              :EndIf
+              'Could not create DriverService - check msg in session'⎕SIGNAL 11
+          :EndIf
+          :If options≡''
+              BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
           :Else
-              msg←'Could not load '
-              msg,←∊1↓⎕NPARTS⊃files
-              msg,←' and ',∊1↓⎕NPARTS⊃⌽files
-              msg,←' from ',pth,' ─ they may be '
-              :If 1 1≡⎕NEXISTS¨files
-                  msg,←'blocked (Properties>General>Unblock)',⎕UCS 13
-                  msg,←'Or maybe something else is wrong. Here are the details of the exception:',⎕UCS 13
-                  msg,←⎕EXCEPTION.Message
-                  :If options≢'' ⋄ msg,←(⎕UCS 13 13),'options:',⍕options ⋄ :EndIf
-                  msg ⎕SIGNAL 19
-              :Else
-                  (msg,'missing')⎕SIGNAL 22
-              :EndIf
-          :EndTrap
+              BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+          :EndIf
+     
+     
           CURRENTBROWSER←browser
-          ACTIONS←⎕NEW OpenQA.Selenium.Interactions.Actions BROWSER
+          ACTIONS←⎕NEW Selenium.Interactions.Actions BROWSER
+     
+          :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
+     
       :End
       :If ~×#.⎕NC'MAX'
           :Trap 90           ⍝ can't do that with CEF
@@ -432,9 +465,9 @@
               type,←('s'=¯1↑type)↓'s'
           :EndIf
           :If 's'=¯1↑type ⍝ The call FindElements*
-              f←⍎'BROWSER.FindElementsBy',¯1↓type
+              f←BROWSER.FindElements(By.⍎¯1↓type)
           :Else
-              f←⍎'BROWSER.FindElementBy',type
+              f←BROWSER.FindElement(By.⍎type)
           :EndIf
           time←⎕AI[3]
           :Repeat ⍝ Other functions use Retry operator, but we need to collect the result
@@ -664,33 +697,33 @@
       :EndIf
     ∇
 
-    ∇ {files}←browser SetUsing path;net ⍝ S)SETTINGS:Newtonpathet the path to the Selenium DLLs
-      (path Newtonpath)←path
-      :If path≡'' ⋄ path←SourcePath ⎕THIS
-      :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-      ⎕USING←0⍴⎕USING
-      ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
-     
-      :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-          net←'netstandard2.0'
-      :Else
-          net←'net47'
-      :EndIf
-          net,←⎕se.SALTUtils.FS
-      files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
-      ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
-      ⎕USING,←⊂'OpenQA.Selenium,',⊃files
-      ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
-      ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-      ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll'
-      ⍝ make sure we use the correct path-separator (⎕USING)
+    ⍝ ∇ {files}←browser SetUsing path;net ⍝ S)SETTINGS:Newtonpathet the path to the Selenium DLLs
+    ⍝   (path Newtonpath)←path
+    ⍝   :If path≡'' ⋄ path←SourcePath ⎕THIS
+    ⍝   :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
+    ⍝   ⎕USING←0⍴⎕USING
+    ⍝   ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
 
-              ⎕USING←{⎕se.SALTUtils.FS@('/'∘=)⍵}¨⎕USING
-     
-    ∇
+    ⍝   :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
+    ⍝       net←'netstandard2.0'
+    ⍝   :Else
+    ⍝       net←'net47'
+    ⍝   :EndIf
+    ⍝       net,←⎕se.SALTUtils.FS
+    ⍝   files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
+    ⍝   ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
+    ⍝   ⎕USING,←⊂'OpenQA.Selenium,',⊃files
+    ⍝   ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
+    ⍝   ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
+    ⍝   ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll'
+    ⍝   ⍝ make sure we use the correct path-separator (⎕USING)
+
+    ⍝           ⎕USING←{⎕se.SALTUtils.FS@('/'∘=)⍵}¨⎕USING
+
+    ⍝ ∇
 
       SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
-          file←4⊃5179⌶⍵ ⍝ ⎕FIX
+          file←50 ⎕ATX⍕⍵ ⍝ ⎕FIX
           ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
           file
       }
@@ -700,18 +733,18 @@
 
     :section SETTINGS
     ∇ R←GetSettings;v;varnam
-      R←1⊃⎕NGET(SourcePath ⎕THIS),'settings.json'
-      :For varnam :In ⊂'SELENIUM_DRIVERPATH'
-          :If ∨/('$',varnam)⍷R   ⍝ do json-settings refer to SELENIUM_DRIVERPATH?
-              :If 0=≢v←2 ⎕NQ'.' 'GetEnvironment'varnam
-                  ('Environment variable "',varnam,'" referred in settings.json, but not found in environment!')⎕SIGNAL 11
-              :EndIf
-              v←'/'@('\'∘=)v   ⍝ we don't require "/" in paths, so we need to replace'emn here to avoid invalid json
-              R←(('$',varnam)⎕R v⍠('Regex' 0))R
-          :EndIf
-      :EndFor
+      R←1⊃⎕NGET(SourcePath ⎕THIS),'settings.json5'
+⍝      :For varnam :In ⊂'SELENIUM_DRIVERPATH'
+⍝          :If ∨/('$',varnam)⍷R   ⍝ do json-settings refer to SELENIUM_DRIVERPATH?
+⍝              :If 0=≢v←2 ⎕NQ'.' 'GetEnvironment'varnam
+⍝                  ('Environment variable "',varnam,'" referred in settings.json, but not found in environment!')⎕SIGNAL 11
+⍝              :EndIf
+⍝              v←'/'@('\'∘=)v   ⍝ we don't require "/" in paths, so we need to replace'emn here to avoid invalid json
+⍝              R←(('$',varnam)⎕R v⍠('Regex' 0))R
+⍝          :EndIf
+⍝      :EndFor
       R←(⎕JSON⍠'Dialect' 'JSON5')R
-      R←Flatten R
+      R.Browsers←Flatten R.Browsers
     ∇
 
     ∇ R←{flavours_vars_mem}Flatten ns;vars;flavours;n;nl;z;AddVar;mem;v;f;f∆;ref
@@ -773,19 +806,25 @@
       :EndFor
     ∇
 
-    ∇ R←ApplySettings name;settings;ref;go
+
+    ∇ ApplySettings name;settings;ref;go
       settings←GetSettings
-      ref←settings{6::'' ⋄ d←2⎕nq'.' 'GetEnvironment' 'SELENIUM_DRIVER'⋄ (0=≢⍵)∧0=≢d:⍺⍎⍺.default ⋄ (0=≢⍵): d ⋄ ⍺⍎⍵}name
+      ref←settings{
+          6::''
+          d←2 ⎕NQ'.' 'GetEnvironment' 'SELENIUM_DRIVER'
+          ⍺.Browsers⍎{(⊃⍸≢¨⍵)⊃⍵}⍵ d ⍺.Browser
+      }name
       :If ref≡''
           ('Settings "',name,'" not found!')⎕SIGNAL 11
           ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
       :EndIf
-      SETTINGS←ref  ⍝ memorize them in the NS (in case we need them again...)
-      DLLPATH←(1⊃⎕NPARTS SourceFile ⎕THIS)NormalizePath ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'DLLPATH'DLLPATH
-      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'BROWSER'DEFAULTBROWSER
-      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'PORT'PORT
+      SETTINGS←⎕JSON ⎕JSON settings  ⍝ clone it (don't create a ref)
+      SETTINGS.Browser←⎕JSON ⎕JSON ref
+      SETTINGS.⎕EX'Browsers'
+     
+      DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Browser'DEFAULTBROWSER
+      PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Port'PORT
       BROWSEROPTIONS←⍬  ⍝ no options found...
-      NEWTONPATH←settings.Newtonpath
       :Select ⍬⍴ref.⎕NC'Options'
       :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
       :EndSelect
