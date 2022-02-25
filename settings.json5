@@ -14,26 +14,33 @@
             ns: "Chrome", // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
             v: "98.0.4758.8000", // version. This will always point to the latest know version...
             Flavours: {
-                "HtmlRenderer": {
-                    v: "89.0.4389.2300",
+                "CEFinDyalog": {
                     "SITEROOT": "http://dyalog_root",
                     "Options_cmnt1": "NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
                     "Options": {
                         "DebuggerAddress": "127.0.0.1:8080",
                         "isDriverParam": true
                     },
-                    "AddArguments": ["no-sandbox"]
+                    "AddArguments": ["no-sandbox"],
+                    "Flavours": {
+                        HtmlRenderer: {
+                            v: "90.0.4430.2400"
+                        },
+                        "HtmlRenderer182beta": {
+                            v: "89.0.4389.2300",
+                        }
+                    },
                 },
                 "Chrome98": { // we use ALL settings from the parent (because the currently apply...)
                 },
                 "LatestChrome": { // we use ALL settings from the parent
                 },
-            }
+            },
         },
     },
 
     "Port": 8080,
-    "Browser": "Chrome98",
+    "Browser": "HtmlRenderer182beta", // fortunately WD89 will also work with Chromium90
     "Components": {
         "WebDriver": {
             n: "Selenium.WebDriver", // name of NiGet package

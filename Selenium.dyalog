@@ -10,12 +10,12 @@
 ⍝                   this way it becomes more generally usable and less platform-dependent. Changed to semantic versioning. Settings file now JSON5.
 ⍝ 2021 02 22 MBaas: MAJOR UPDATE
 ⍝                   now using WebDriver4 and NuGet. This removes the need to distribute DLLs. (started development on branch "WebDriver4")
-⍝                   - removed all paths from settings.json      
+⍝                   - removed all paths from settings.json
 ⍝                   - we're aiming to kewep all changes "under the cover". Selenium should behave as before.
 ⍝ WIP:   There has been a change wrt FindElements - this needs to be fully implemented...
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
-⍝ 
+⍝
 
     :Section ADOC
 
@@ -84,12 +84,12 @@
           :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
           :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
           :AndIf 0=⎕NEXISTS src←'/git/Selenium/NugetConsum.dyalog'
-              'No idea where you loaded me from...(and where to load NugetConsum from)!'⎕SIGNAL 11
+              {}⎕SE.UCMD'Get  https://github.com/Dyalog/Selenium/blob/ImprovedSettings/NugetConsum.dyalog  -target=',⍕##    ⍝ TODO: fix path when this goes into "main"
+          :Else
+              home←1⊃⎕NPARTS src
+              0 ## ⎕SE.SALT.Load home,'NugetConsum.dyalog'
           :EndIf
-          home←1⊃⎕NPARTS src
-          0 ## ⎕SE.SALT.Load home,'NugetConsum.dyalog'
       :Else
-          ⎕SE.UCMD'Get  https://github.com/Dyalog/Selenium/blob/ImprovedSettings/NugetConsum.dyalog  -target=',⍕##    ⍝ TODO: fix path when this goes into "main"
       :EndIf
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
@@ -128,11 +128,11 @@
      
      
           slnm←⎕NEW ##.NugetConsum.Project'Selenium'
-     
+          slnm.Quiet←0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'
           {slnm.Add ⎕NEW ##.NugetConsum.Package ⍵}¨↓pckgs
      
-          slnm.Restore
-     
+          {}slnm.Restore
+          nugetPackage←slnm
           ⎕USING←(⊂'System'),slnm.Using
      
 ⍝      drv←⎕NEW(⍎SETTINGS.Browser.o)⍬
@@ -154,7 +154,7 @@
                   ⍎'options.',(∊opt),'←BROWSEROPTIONS.',,∊opt
               :EndFor
           :EndIf
-
+     
           :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
           :AndIf 0 ⍝ not yet ripe for production!
               :For cap :In SETTINGS.Browser.AdditionalCapabilities
@@ -284,10 +284,10 @@
      ⍝ Make sure that a control, within an accordiontab, is visible or not
       ok←1
       'open'DefaultTo 1
-      :If open≠(BROWSER.FindElementById⊂ctlId).Displayed ⍝ If it doesn't have the desired state
+      :If open≠(BROWSER.FindElement(By.Id⊂ctlId)).Displayed ⍝ If it doesn't have the desired state
           'LinkText'Click tabText
           {(open ctlId)←⍵
-              open=(BROWSER.FindElementById⊂ctlId).Displayed}Retry open ctlId
+              open=(BROWSER.FindElement(By.Id⊂ctlId)).Displayed}Retry open ctlId
       :EndIf
     ∇
 
@@ -442,7 +442,7 @@
      ⍝ Each item can be deselected by preceding it with '-'.
      ⍝ A single '-' deselects all
       ok←1
-      se←⎕NEW OpenQA.Selenium.Support.UI.SelectElement,⊂Find selectId
+      se←⎕NEW SelectElement,⊂Find selectId
       :For item :In eis itemsText
           :If item≡'~'
               se.DeselectAll
@@ -734,15 +734,6 @@
     :section SETTINGS
     ∇ R←GetSettings;v;varnam
       R←1⊃⎕NGET(SourcePath ⎕THIS),'settings.json5'
-⍝      :For varnam :In ⊂'SELENIUM_DRIVERPATH'
-⍝          :If ∨/('$',varnam)⍷R   ⍝ do json-settings refer to SELENIUM_DRIVERPATH?
-⍝              :If 0=≢v←2 ⎕NQ'.' 'GetEnvironment'varnam
-⍝                  ('Environment variable "',varnam,'" referred in settings.json, but not found in environment!')⎕SIGNAL 11
-⍝              :EndIf
-⍝              v←'/'@('\'∘=)v   ⍝ we don't require "/" in paths, so we need to replace'emn here to avoid invalid json
-⍝              R←(('$',varnam)⎕R v⍠('Regex' 0))R
-⍝          :EndIf
-⍝      :EndFor
       R←(⎕JSON⍠'Dialect' 'JSON5')R
       R.Browsers←Flatten R.Browsers
     ∇
@@ -820,7 +811,6 @@
       :EndIf
       SETTINGS←⎕JSON ⎕JSON settings  ⍝ clone it (don't create a ref)
       SETTINGS.Browser←⎕JSON ⎕JSON ref
-      SETTINGS.⎕EX'Browsers'
      
       DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Browser'DEFAULTBROWSER
       PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Port'PORT
