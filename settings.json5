@@ -9,14 +9,14 @@
 
     Browsers: {
         Chromium: {
-            o: "ChromeDriver", // name of object that will be instiated
+            o: "ChromeDriver",   // name of object that will be instiated
             n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
-            ns: "Chrome", // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
+            ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
             v: "98.0.4758.8000", // version. This will always point to the latest know version...
             Flavours: {
                 "CEFinDyalog": {
                     "SITEROOT": "http://dyalog_root",
-                    "Options_cmnt1": "NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!",
+                    // NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!
                     "Options": {
                         "DebuggerAddress": "127.0.0.1:8080",
                         "isDriverParam": true
@@ -40,13 +40,13 @@
     },
 
     "Port": 8080,
-    "Browser": "HtmlRenderer182beta", // fortunately WD89 will also work with Chromium90
+    "Browser": "HtmlRenderer182beta",         // fortunately WD89 will also work with Chromium90
     "Components": {
         "WebDriver": {
-            n: "Selenium.WebDriver", // name of NiGet package
-            v: "4.1.0", // version
+            n: "Selenium.WebDriver",          // name of NuGet package
+            v: "4.1.0",                       // version
             u: ["OpenQA", "OpenQA.Selenium"], // "things" we are using
-            f: "WebDriver.dll" // reference to the file
+            f: "WebDriver.dll",               // reference to the file
         },
         "optional": {
             "Support": {
