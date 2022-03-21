@@ -13,9 +13,13 @@
 ⍝                   - removed all paths from settings.json
 ⍝                   - we're aiming to kewep all changes "under the cover". Selenium should behave as before.
 ⍝ WIP:   There has been a change wrt FindElements - this needs to be fully implemented...
+⍝      {}S.BROWSER.FindElementByClassName⊂'abc'
+⍝  needs to be changed to
+⍝      {}S.(BROWSER.FindElement(By.ClassName⊂'abc'))
+
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
-⍝
+⍝ NB: if you previously did   ApplySettings 'foo' followed by InitBrowser'', you should now combine these calls with InitBrowser 'foo'
 
     :Section ADOC
 
@@ -426,15 +430,17 @@
     ∇
 
     ∇ {ok}←selectId Select itemText;sp;se;type
-      ⍝ Select an item in a select element
+      ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch)
+      ⍝ partialMatch is a boolean indicating whether partial matches are acceped (1) or whether we're looking for full match (0, DEFAULT)
       ok←1
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
       :If 2=≡selectId ⋄ (type selectId)←selectId
       :Else ⋄ type←'Id'
       :EndIf
       'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
-      se←⎕NEW OpenQA.Selenium.Support.UI.SelectElement sp
-      se.SelectByText⊂,itemText
+      se←⎕NEW Selenium.Support.UI.SelectElement sp
+      :If ' '=⍥⎕DR itemText ⋄ itemText←(,itemText)(0) ⋄ :EndIf
+      se.SelectByText itemText
     ∇
 
     ∇ {ok}←selectId SelectItemText itemsText;item;se
