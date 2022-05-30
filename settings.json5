@@ -12,7 +12,7 @@
             o: "ChromeDriver",   // name of object that will be instiated
             n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
             ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-            v: "99.0.4844.5100", // version. This will always point to the latest know version...
+            v: "102.0.5005.61", // version. This will always point to the latest know version...
             Flavours: {
                 "CEFinDyalog": {
                     "SITEROOT": "http://dyalog_root",
@@ -23,7 +23,10 @@
                     },
                     "AddArguments": ["no-sandbox"],
                     "Flavours": {
-                        HtmlRenderer: {
+                        HtmlRenderer: {// DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
+                            v: "90.0.4430.2400"
+                        },
+                        HtmlRenderer182: {
                             v: "90.0.4430.2400"
                         },
                         "HtmlRenderer182beta": {
@@ -31,7 +34,7 @@
                         }
                     },
                 },
-                "Chrome99": { // we use ALL settings from the parent (because the currently apply...)
+                "Chrome100": { // we use ALL settings from the parent (because the currently apply...)
                 },
                 "LatestChrome": { // we use ALL settings from the parent
                 },
@@ -40,7 +43,7 @@
     },
 
     "Port": 8080,
-    "Browser": "HtmlRenderer182beta",         // fortunately WD89 will also work with Chromium90
+    "Browser": "HtmlRenderer182",         // fortunately WD89 will also work with Chromium90
     "Components": {
         "WebDriver": {
             n: "Selenium.WebDriver",          // name of NuGet package
