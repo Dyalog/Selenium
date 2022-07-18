@@ -16,6 +16,7 @@
 ⍝      {}S.BROWSER.FindElementByClassName⊂'abc'
 ⍝  needs to be changed to
 ⍝      {}S.(BROWSER.FindElement(By.ClassName⊂'abc'))
+⍝ or:   'ClassName'S.Find'abc'
 
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
@@ -339,6 +340,7 @@
           r←ExecuteScript s
       :Else
           ok←0
+          ⎕←(⎕JSON ⎕OPT'Compact' 0)⎕DMX
       :EndTrap
     ∇
 
@@ -429,10 +431,10 @@
       :EndIf
     ∇
 
-    ∇ {ok}←selectId Select itemText;sp;se;type
+    ∇ {ok}←selectId Select itemText;sp;se;type;reTry
       ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch)
       ⍝ partialMatch is a boolean indicating whether partial matches are acceped (1) or whether we're looking for full match (0, DEFAULT)
-      ok←1
+      ok←0
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
       :If 2=≡selectId ⋄ (type selectId)←selectId
       :Else ⋄ type←'Id'
@@ -440,7 +442,16 @@
       'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
       se←⎕NEW Selenium.Support.UI.SelectElement sp
       :If ' '=⍥⎕DR itemText ⋄ itemText←(,itemText)(0) ⋄ :EndIf
-      se.SelectByText itemText
+      reTry←0
+      :Repeat
+          :Trap 90
+              se.SelectByText itemText
+              ok←1
+          :Else
+              reTry+←1
+              ⎕DL 1
+          :EndTrap
+      :Until ok∨reTry>3
     ∇
 
     ∇ {ok}←selectId SelectItemText itemsText;item;se
