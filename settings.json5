@@ -4,7 +4,7 @@
      Simply refer to the name of a config in ⍺ of the Test-fn
     i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the "default"-Config will used if you don't explicitely select a config
     or use `Selenium.ApplySettings'Chrome80'` (or: Selenium.InitBrowser'HtmlRenderer') in your own test-function. 
-    NB: you may also pass an empty string as ⍵ to use the default. Or use the (not so appropriately names envvar SELENIUM_DRIVER to pass that name)
+    NB: you may also pass an empty string as ⍵ to use the default. Or use the (not so appropriately named envvar SELENIUM_DRIVER to pass that name)
     ***/
 
     Browsers: {
@@ -12,7 +12,7 @@
             o: "ChromeDriver",   // name of object that will be instiated
             n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
             ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-            v: "103.0.5060.5300", // version. This will always point to the latest know version...
+            v: "107.0.5304.88", // version. This will always point to the latest know version...
             Flavours: {
                 "CEFinDyalog": {
                     "SITEROOT": "http://dyalog_root",
@@ -34,7 +34,7 @@
                         }
                     },
                 },
-                "Chrome100": { // we use ALL settings from the parent (because the currently apply...)
+                "Chrome107": { // we use ALL settings from the parent (because they currently apply...)
                 },
                 "LatestChrome": { // we use ALL settings from the parent
                 },
