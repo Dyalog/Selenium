@@ -1,4 +1,4 @@
-﻿:Namespace Selenium ⍝ V 2.11.0
+:Namespace Selenium ⍝ V 2.11.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -88,6 +88,7 @@
       :If 0=##.⎕NC'NugetConsum'
           :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
           :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
+          :AndIf 0=≢src←{0::'' ⋄ ⍵.SALT_Data.SourceFile}⎕THIS
           :AndIf 0=⎕NEXISTS src←'/git/Selenium/NugetConsum.dyalog'
               {}⎕SE.UCMD'Get  https://github.com/Dyalog/Selenium/blob/ImprovedSettings/NugetConsum.dyalog  -target=',⍕##    ⍝ TODO: fix path when this goes into "main"
           :Else
