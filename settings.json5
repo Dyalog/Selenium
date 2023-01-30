@@ -12,7 +12,7 @@
             o: "ChromeDriver",   // name of object that will be instiated
             n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
             ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-            v: "108.0.5359.7100", // version. This will always point to the latest known version...
+            v: "109.0.5414.7400", // version. This will always point to the latest known version...
             Flavours: {
                 "CEFinDyalog": {
                     "SITEROOT": "http://dyalog_root",
@@ -35,6 +35,7 @@
                     },
                 },
                 "Chrome108": { // we use ALL settings from the parent (because they currently apply...)
+                    v: "108.0.5359.7100", // version. This will always point to the latest known version...
                 },
                 "Chrome107": {
                     v: "107.0.5304.6200", // version. This will always point to the latest know version...
@@ -50,14 +51,14 @@
     "Components": {
         "WebDriver": {
             n: "Selenium.WebDriver",          // name of NuGet package
-            v: "4.7.0",                       // version
+            v: "4.8.0",                       // version
             u: ["OpenQA", "OpenQA.Selenium"], // "things" we are using
             f: "WebDriver.dll",               // reference to the file
         },
         "optional": {
             "Support": {
                 "n": "Selenium.Support",
-                "v": "4.7.0",
+                "v": "4.8.0",
                 "u": ["OpenQA.Selenium.Support", "OpenQA.Selenium.Support.UI"],
                 "f": "WebDriver.Support.dll"
             },

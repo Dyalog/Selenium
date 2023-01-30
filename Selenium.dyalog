@@ -62,7 +62,7 @@
       ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
       ⍝ config: points to an entry of your settinghs.json-Foöe
       'stop_site_match_config'DefaultTo 0
-      :If 82=⎕DR stop_site_match_config  ⍝ handle mode where just the name of a config is given
+      :If isChar stop_site_match_config  ⍝ handle mode where just the name of a config is given
           stop_site_match_config←0 0 0,⊂stop_site_match_config
       :EndIf
       :If 0<≢4⊃4↑stop_site_match_config
@@ -345,13 +345,21 @@
       :EndTrap
     ∇
 
-    ∇ {ok}←{type}Click id;b;ok;time
+    ∇ {ok}←{type}Click id;b;ok;time;reTry
      ⍝ Click on an element, by default identified by id. See "Find" for options
-      ok←1
       'type'DefaultTo'Id'
-      b←type Find id
+      ok←reTry←0
+      :Repeat
+          :Trap 90
+              b←type Find id
+              b.Click
+              ok←1
+          :Else
+              reTry+←1
+              ⎕DL 1
+          :EndTrap
+      :Until ok∨reTry>3
       ('Control "',id,'" not found')⎕SIGNAL(0≡b)/11
-      b.Click
     ∇
 
     ∇ {ok}←fromid DragAndDrop toid;from;to
@@ -442,7 +450,7 @@
       :EndIf
       'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
       se←⎕NEW Selenium.Support.UI.SelectElement sp
-      :If ' '=⍥⎕DR itemText ⋄ itemText←(,itemText)(0) ⋄ :EndIf
+      :If isChar itemText ⋄ itemText←(,itemText)(0) ⋄ :EndIf
       reTry←0
       :Repeat
           :Trap 90
@@ -701,6 +709,8 @@
     PathOf←{⍵↓⍨1-⌊/'/\'⍳⍨⌽⍵} ⍝ Extract path from path/filename.ext
 
     eis←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵} ⍝ Enlose (even scalars) If Simple
+
+    isChar←{0 2∊⍨10|⎕DR ⍵}
 
     Urlify←{0''⍬∊⍨⊂⍵:∇ PORT ⋄ ⍬≡0⍴⍵:'http://127.0.0.1:',⍕⍵ ⋄ ⍵} ⍝ Ensure URL even if given just port number
 
