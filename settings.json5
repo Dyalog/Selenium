@@ -1,5 +1,5 @@
 {
-    /***
+  /***
      This file contains settings for some browser-configs that were current at the time it was composed.
      Simply refer to the name of a config in ⍺ of the Test-fn
     i.e. Test'./MS3' '' 'Chrome80' - of course that is optional, the "default"-Config will used if you don't explicitely select a config
@@ -7,69 +7,81 @@
     NB: you may also pass an empty string as ⍵ to use the default. Or use the (not so appropriately named envvar SELENIUM_DRIVER to pass that name)
     ***/
 
-    Browsers: {
-        Chromium: {
-            o: "ChromeDriver",   // name of object that will be instiated
-            n: "Selenium.WebDriver.ChromeDriver", // name of Nuget package
-            ns: "Chrome",        // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-            v: "109.0.5414.7400", // version. This will always point to the latest known version...
-            Flavours: {
-                "CEFinDyalog": {
-                    "SITEROOT": "http://dyalog_root",
-                    // NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!
-                    "Options": {
-                        "DebuggerAddress": "127.0.0.1:8080",
-                        "isDriverParam": true
-                    },
-                    "AddArguments": ["no-sandbox"],
-                    "Flavours": {
-                        HtmlRenderer: {// DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
-                            v: "90.0.4430.2400"
-                        },
-                        HtmlRenderer182: {
-                            v: "90.0.4430.2400"
-                        },
-                        "HtmlRenderer182beta": {
-                            v: "89.0.4389.2300",
-                        }
-                    },
-                },
-                "Chrome108": { // we use ALL settings from the parent (because they currently apply...)
-                    v: "108.0.5359.7100", // version. This will always point to the latest known version...
-                },
-                "Chrome107": {
-                    v: "107.0.5304.6200", // version. This will always point to the latest know version...
-                },
-                "LatestChrome": { // we use ALL settings from the parent
-                },
+  Browsers: {
+    Chromium: {
+      o: 'ChromeDriver', // name of object that will be instiated
+      n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
+      ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
+      v: '111.0.5563.4100', // version. This will always point to the latest known version...
+      Flavours: {
+        CEFinDyalog: {
+          SITEROOT: 'http://dyalog_root',
+          // NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!
+          Options: {
+            DebuggerAddress: '127.0.0.1:8080',
+            isDriverParam: true
+          },
+          AddArguments: ['no-sandbox'],
+          Flavours: {
+            HtmlRenderer: {
+              // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
+              v: '90.0.4430.2400'
             },
-        },
-    },
-
-    "Port": 8080,
-    "Browser": "HtmlRenderer182",         // fortunately WD89 will also work with Chromium90
-    "Components": {
-        "WebDriver": {
-            n: "Selenium.WebDriver",          // name of NuGet package
-            v: "4.8.0",                       // version
-            u: ["OpenQA", "OpenQA.Selenium"], // "things" we are using
-            f: "WebDriver.dll",               // reference to the file
-        },
-        "optional": {
-            "Support": {
-                "n": "Selenium.Support",
-                "v": "4.8.0",
-                "u": ["OpenQA.Selenium.Support", "OpenQA.Selenium.Support.UI"],
-                "f": "WebDriver.Support.dll"
+            HtmlRenderer182: {
+              v: '90.0.4430.2400'
             },
-            "Newtonsoft": {
-                "n": "Newtonsoft.Json",
-                "v": "13.0.1",
-            },
-            "WaitHelpers":{
-                "n":"SeleniumExtras.WaitHelpers",
-                "v":"1.0.2"
+            HtmlRenderer182beta: {
+              v: '89.0.4389.2300'
             }
+          }
+        },
+        Chrome111: {
+          v: '111.0.5563.4100'
+        },
+        Chrome110: {
+          v: '110.0.5481.7700'
+        },
+        Chrome109: {
+          v: '109.0.5414.7400'
+        },
+        Chrome108: {
+          // we use ALL settings from the parent (because they currently apply...)
+          v: '108.0.5359.7100'
+        },
+        Chrome107: {
+          v: '107.0.5304.6200'
+        },
+        LatestChrome: {
+          // we use ALL settings from the parent
         }
+      }
     }
+  },
+
+  Port: 8080,
+  Browser: 'HtmlRenderer182', // fortunately WD89 will also work with Chromium90
+  Components: {
+    WebDriver: {
+      n: 'Selenium.WebDriver', // name of NuGet package
+      v: '4.8.0', // version
+      u: ['OpenQA', 'OpenQA.Selenium'], // "things" we are using
+      f: 'WebDriver.dll' // reference to the file
+    },
+    optional: {
+      Support: {
+        n: 'Selenium.Support',
+        v: '4.8.0',
+        u: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
+        f: 'WebDriver.Support.dll'
+      },
+      Newtonsoft: {
+        n: 'Newtonsoft.Json',
+        v: '13.0.1'
+      },
+      WaitHelpers: {
+        n: 'SeleniumExtras.WaitHelpers',
+        v: '1.0.2'
+      }
+    }
+  }
 }
