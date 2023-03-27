@@ -440,9 +440,9 @@
       :EndIf
     ∇
 
-    ∇ {ok}←selectId Select itemText;sp;se;type;reTry
-      ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch)
-      ⍝ partialMatch is a boolean indicating whether partial matches are acceped (1) or whether we're looking for full match (0, DEFAULT)
+    ∇ {ok}←selectId Select itemText;sp;se;type;reTry;op;value
+      ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch) OR (criteria)(Index|PartialText|Text|Value|CssSelector)
+      ⍝ partialMatch is a boolean indicating whether partial matches are accepted (1) or whether we're looking for full match (0, DEFAULT)
       ok←0
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
       :If 2=≡selectId ⋄ (type selectId)←selectId
@@ -450,11 +450,31 @@
       :EndIf
       'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
       se←⎕NEW Selenium.Support.UI.SelectElement sp
-      :If isChar itemText ⋄ itemText←(,itemText)(0) ⋄ :EndIf
+      :If isChar itemText
+          itemText←(,itemText)(0)
+      :EndIf
       reTry←0
       :Repeat
           :Trap 90
-              se.SelectByText itemText
+              :If isChar 2⊃itemText
+                  :Select 2⊃itemText
+                  :Case 'Index'
+                      se.SelectByIndex 1⊃itemText
+                  :Case 'PartialText'
+                      se.SelectByIndex(1⊃itemText)(1)
+                  :Case 'Text'
+                      se.SelectByIndex 1⊃itemText
+                  :Case 'Value'
+                      se.SelectByValue itemText[1]
+                  :Case 'CssSelector'
+                      value←sp.(FindElement(By.CssSelector itemText[1])).GetAttribute⊂'value'
+                      se.SelectByValue⊃value
+                  :Else
+                      ('Invalid element in ⍵[2]: "',(2⊃itemText),'"')⎕SIGNAL 11
+                  :EndSelect
+              :Else
+                  se.SelectByText itemText
+              :EndIf
               ok←1
           :Else
               reTry+←1
