@@ -467,7 +467,7 @@
                   :Case 'Value'
                       se.SelectByValue itemText[1]
                   :Case 'CssSelector'
-                      value←sp.(FindElement(By.CssSelector itemText[1])).GetAttribute⊂'value'
+                      value←sp.{(FindElement(By.CssSelector ⍵)).GetAttribute⊂'value'}itemText[1]
                       se.SelectByValue⊃value
                   :Else
                       ('Invalid element in ⍵[2]: "',(2⊃itemText),'"')⎕SIGNAL 11
