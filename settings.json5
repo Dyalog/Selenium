@@ -21,7 +21,7 @@
             DebuggerAddress: '127.0.0.1:8080',
             isDriverParam: true
           },
-          AddArguments: ['no-sandbox'],
+          AddArguments: ['--no-sandbox'],
           Flavours: {
             HtmlRenderer: {
               // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
@@ -53,6 +53,10 @@
         },
         LatestChrome: {
           // we use ALL settings from the parent
+        },
+        HeadlessChrome: {
+          // uses same defaults as LatestChrome and runs in headless mode
+          AddArguments: ['--headless']
         }
       }
     }
