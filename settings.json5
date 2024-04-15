@@ -21,11 +21,14 @@
             DebuggerAddress: '127.0.0.1:8080',
             isDriverParam: true
           },
-          AddArguments: ['--no-sandbox'],
+          AddArguments: ['--no-sandbox','--remote-debugging-port=8080'],
           Flavours: {
             HtmlRenderer: {
               // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
               v: '90.0.4430.2400'
+            },
+            HtmlRenderer190: {
+              v: '121.0.6167.18400'
             },
             HtmlRenderer182: {
               v: '90.0.4430.2400'
@@ -74,7 +77,7 @@
         },
         HeadlessChrome: {
           // uses same defaults as LatestChrome and runs in headless mode
-          AddArguments: ['--headless']
+          AddArguments: ['--headless window-size=1920,1080']
         }
       }
     }

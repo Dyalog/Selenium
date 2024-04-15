@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.11.0
+:Namespace Selenium ⍝ V 2.12.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -11,13 +11,16 @@
 ⍝ 2021 02 22 MBaas: MAJOR UPDATE
 ⍝                   now using WebDriver4 and NuGet. This removes the need to distribute DLLs. (started development on branch "WebDriver4")
 ⍝                   - removed all paths from settings.json
-⍝                   - we're aiming to kewep all changes "under the cover". Selenium should behave as before.
+⍝                   - we're aiming to keep all changes "under the cover". Selenium should behave as before.
 ⍝ WIP:   There has been a change wrt FindElements - this needs to be fully implemented...
 ⍝      {}S.BROWSER.FindElementByClassName⊂'abc'
 ⍝  needs to be changed to
 ⍝      {}S.(BROWSER.FindElement(By.ClassName⊂'abc'))
 ⍝ or:   'ClassName'S.Find'abc'
-
+⍝ 2024 04 15 + replaced BHC's NugetConsum with the Dyalog's "officiat" NuGet package
+⍝              (this should really be a Tatin dependency and will soon be changed)
+⍝            + enhanced WaitFor to not only WaitFor a text to appear but also to
+⍝              wait for the element itself to appear
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
 ⍝ NB: if you previously did   ApplySettings 'foo' followed by InitBrowser'', you should now combine these calls with InitBrowser 'foo'
@@ -48,6 +51,7 @@
 
     DEFAULTBROWSER←'Chrome'
     RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
+    HOME←''    ⍝ the home folder of this ns in the filesystem
 
     EXT←'.dyalog'
     RIDEEXT←'.ridetest'
@@ -83,19 +87,23 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f
-      options←''
-      :If 0=##.⎕NC'NugetConsum'
+    ∇ home←_HOME;src
+      :If 0<≢HOME
+          home←HOME
+      :Else
           :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
           :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
           :AndIf 0=≢src←{0::'' ⋄ ⍵.SALT_Data.SourceFile}⎕THIS
-          :AndIf 0=⎕NEXISTS src←'/git/Selenium/NugetConsum.dyalog'
-              {}⎕SE.UCMD'Get  https://github.com/Dyalog/Selenium/blob/ImprovedSettings/NugetConsum.dyalog  -target=',⍕##    ⍝ TODO: fix path when this goes into "main"
-          :Else
-              home←1⊃⎕NPARTS src
-              0 ## ⎕SE.SALT.Load home,'NugetConsum.dyalog'
+              'Unable to determine home-directory and HOME is emppty!'⎕SIGNAL 11
           :EndIf
-      :Else
+          HOME←1⊃⎕NPARTS src
+      :EndIf
+    ∇
+
+    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul
+      options←''
+      :If 0=##.⎕NC'NuGet'  ⍝ this may happen if user just loaed Selenium.dyalog
+          ⎕SE.Link.Import ##(_HOME,'Nuget')
       :EndIf
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
@@ -122,30 +130,18 @@
               :EndIf
           :EndFor
           av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
-          :Select SETTINGS.Browser.o
-          :Case 'ChromeDriver'
-              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
-          :EndSelect
+⍝          :Select SETTINGS.Browser.o
+⍝          :Case 'ChromeDriver'
+⍝              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
+⍝          :EndSelect
      
-          pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂f  ⍝ VALUE ERROR indicates we don't know your browser!
-⍝ ⎕←pckgs
-⍝      pckgs⍪←'Selenium.WebDriver.ChromeDriver' '98.0.4758.8000'⎕NULL chromedriver
-⍝      pckgs⍪←'Newtonsoft.Json' '12.0.1' '' ''
+          pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
      
-     
-          slnm←⎕NEW ##.NugetConsum.Project'Selenium'
-          slnm.Quiet←0{6::⍺ ⋄ ⍎⍵}'QUIETMODE'
-          {slnm.Add ⎕NEW ##.NugetConsum.Package ⍵}¨↓pckgs
-     
-          {}slnm.Restore
-          nugetPackage←slnm
-          ⎕USING←(⊂'System'),slnm.Using
-     
-⍝      drv←⎕NEW(⍎SETTINGS.Browser.o)⍬
-          f←(slnm.Packages{(⍺.id⍳⊂⍵)⊃⍺}SETTINGS.Browser.n).FullPath   ⍝ get path from package def
-          f1←∊1↓⎕NPARTS f
-          pth←1⊃⎕NPARTS f
-          BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService(pth)(f1)
+          ##.NuGet.Setup sldir←(739⌶0),'/Selenium'
+          nul←{##.NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
+          ⎕USING←(⊂'System'),('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+          path←(##.NuGet.BinFolder sldir),'/'
+          BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
           BSVC.Start
           :Trap 90
               z←1⊣BSVC.IsRunning
@@ -505,7 +501,8 @@
           r←id ⍝ Already an object
       :Else
           'type'DefaultTo'Id'
-          ⍝ See auto-complete on BROWSER.F for a list of possible ways to find things
+          ⍝ See #.S.BROWSER.By.⎕nl-3 for a list of possible ways to find things
+          ⍝ ClassName CssSelector Id Name TagName XPath
           (id attr value)←{3↑⍵,(⍴⍵)↓'' '' ''}eis id
           :If search←~0∊⍴attr
               type,←('s'=¯1↑type)↓'s'
@@ -539,7 +536,7 @@
       :EndIf
     ∇
 
-    ∇ {ok}←(fn Retry)arg;time;z
+    ∇ {ok}←(fn Retry)arg;time;z;⎕TRAP
      ⍝ Retry fn for a while
       ok←0 ⋄ time←⎕AI[3]
       :Repeat
@@ -558,18 +555,36 @@
     ∇ r←larg WaitFor args;f;text;msg;element
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
-      :If 9≠⎕NC'larg' ⋄ larg←Find larg ⋄ :EndIf
+    ⍝ larg ist either an object or the [left and] right argument of Find.
+    ⍝ ie.         MyLabel WaitFor'MyText'
+    ⍝ or         'MyLabel'WaitFor'MyText'
+    ⍝ or  ('id' 'MyLabel')WaitFor'MyText'
+    ⍝ are all possible!
+
+      :If 9≠⎕NC'larg'
+          oLarg←larg
+          :If 2=≡larg
+          :AndIf 2=≢larg
+              larg←(1⊃larg)Find 2⊃larg
+          :Else
+              larg←Find larg
+          :EndIf
+      :EndIf
       :If larg≡0 ⋄ r←'Did not find element "',(⍕larg),'"' ⋄ →0 ⋄ :EndIf
       element←larg
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
       f←'{∨/''',((1+text='''')/text),'''','≡⍷'[1+×⍴,text]
-      :If element.TagName≡'input'
-          f,←'element.GetAttribute⊂''value''}'
+      :If ({0<≢⍵.TagName})Retry element  ⍝ check if we can query TagName w/o errors...
+          :If element.TagName≡'input'
+              f,←'element.GetAttribute⊂''value''}'
+          :Else
+              f,←'element.Text}'
+          :EndIf
+          r←(~(⍎f)Retry ⍬)/msg
       :Else
-          f,←'element.Text}'
+          r←msg
       :EndIf
-      r←(~(⍎f)Retry ⍬)/msg
     ∇
 
     IsVisible←{(Find ⍵).Displayed}  ⍝ test if given element is Displayed (useful if combined with Retry to wait till control is accessible)
@@ -745,43 +760,11 @@
       :EndIf
     ∇
 
-    ⍝ ∇ {files}←browser SetUsing path;net ⍝ S)SETTINGS:Newtonpathet the path to the Selenium DLLs
-    ⍝   (path Newtonpath)←path
-    ⍝   :If path≡'' ⋄ path←SourcePath ⎕THIS
-    ⍝   :Else ⋄ path←path,(~'/\'∊⍨⊢/path)/'/' ⋄ :EndIf
-    ⍝   ⎕USING←0⍴⎕USING
-    ⍝   ⎕USING,←⊂''  ⍝ VC 200513 via mail to MB
-
-    ⍝   :If 4≠System.Environment.Version.Major  ⍝ if not .NET 4, it is likely Core!
-    ⍝       net←'netstandard2.0'
-    ⍝   :Else
-    ⍝       net←'net47'
-    ⍝   :EndIf
-    ⍝       net,←⎕se.SALTUtils.FS
-    ⍝   files←'dll' 'Support.dll',¨⍨⊂path,net,'WebDriver.'
-    ⍝   ⎕USING,←⊂'OpenQA,',⊃files ⍝ if we need to dig into deeper into Selenium...
-    ⍝   ⎕USING,←⊂'OpenQA.Selenium,',⊃files
-    ⍝   ⎕USING,←⊂'OpenQA.Selenium.',browser,',',⊃files
-    ⍝   ⎕USING,←⊂'OpenQA.Selenium.Support,',⊃⌽files
-    ⍝   ⎕USING,←⊂'Newtonsoft.Json,',(1⊃1 ⎕NPARTS ¯1↓path),Newtonpath,net,'Newtonsoft.Json.dll'
-    ⍝   ⍝ make sure we use the correct path-separator (⎕USING)
-
-    ⍝           ⎕USING←{⎕se.SALTUtils.FS@('/'∘=)⍵}¨⎕USING
-
-    ⍝ ∇
-
-      SourceFile←{ ⍝ Get full pathname of sourcefile for ref ⍵
-          file←50 ⎕ATX⍕⍵ ⍝ ⎕FIX
-          ''≡file~' ':⍵.SALT_Data.SourceFile ⍝ SALT
-          file
-      }
-
-    SourcePath←{⊃1⎕nparts SourceFile ⍵}  ⍝ just the path of the SourceFile in questions
     :EndSection ───────────────────────────────────────────────────────────────────────────────────
 
     :section SETTINGS
     ∇ R←GetSettings;v;varnam
-      R←1⊃⎕NGET(SourcePath ⎕THIS),'settings.json5'
+      R←1⊃⎕NGET _HOME,'settings.json5'
       R←(⎕JSON⍠'Dialect' 'JSON5')R
       R.Browsers←Flatten R.Browsers
     ∇
@@ -836,7 +819,6 @@
     ∇
 
     ∇ vars←vars AddVars ns;n;i
-     
       :For n :In ns.⎕NL-2
           :If (≢vars)<i←vars[;1]⍳⊂n
               vars←vars⍪2↑⊂n

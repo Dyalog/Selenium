@@ -1,0 +1,2 @@
+findfile←{0::''  ⍝ error trapping in case file or dir does not exist
+    {(1=≢⍵)/⊃⍵}⊃0 ⎕NINFO⍠1⊢⍵} ⍝ File name if exactly one found, else ''
