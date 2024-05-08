@@ -24,7 +24,8 @@
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
 ⍝ NB: if you previously did   ApplySettings 'foo' followed by InitBrowser'', you should now combine these calls with InitBrowser 'foo'
-⍝ 2024 05 08: optional ⍺ to ReInitBrowser to support re-initialization of the browser (useful to reconnect when HtmlRenderer was closed and re-opened)
+⍝ 2024 05 08: + optional ⍺ to ReInitBrowser to support re-initialization of the browser (useful to reconnect when HtmlRenderer was closed and re-opened)
+⍝             - SetInputValue did not work as expected - fixed. (NB: it now clear the control before setting text)
 
     :Section ADOC
 
@@ -337,14 +338,8 @@
           text←(1+i)/text
           text[(⍸i)+(0,¯1↓+\i)[⍸i]]←'\'
       :EndIf
-      s←'document.getElementById("',id,'").value= "',text,'";'
-      ok←1
-      :Trap 0
-          r←ExecuteScript s
-      :Else
-          ok←0
-          ⎕←(⎕JSON ⎕OPT'Compact' 0)⎕DMX
-      :EndTrap
+      (Find id).Click
+      id SendKeys Keys.Delete,text
     ∇
 
     ∇ {ok}←{type}Click id;b;ok;time;reTry
