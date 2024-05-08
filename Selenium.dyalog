@@ -1,4 +1,4 @@
-:Namespace Selenium ⍝ V 2.12.0
+:Namespace Selenium ⍝ V 2.13.0
 ⍝ This namespace allows scripted browser actions. Use it to QA websites, inluding RIDE.
 ⍝
 ⍝ 2017 05 09 Adam: Version info added
@@ -24,6 +24,7 @@
 ⍝        No other outstanding items atm...(more testing needed)
 ⍝        Not yet cross-platform (BHC is on it...)
 ⍝ NB: if you previously did   ApplySettings 'foo' followed by InitBrowser'', you should now combine these calls with InitBrowser 'foo'
+⍝ 2024 05 08: optional ⍺ to ReInitBrowser to support re-initialization of the browser (useful to reconnect when HtmlRenderer was closed and re-opened)
 
     :Section ADOC
 
@@ -100,7 +101,9 @@
       :EndIf
     ∇
 
-    ∇ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul
+    ∇ {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul
+       ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+      Re←{6::0 ⋄ ⍎⍵}'Re'
       options←''
       :If 0=##.⎕NC'NuGet'  ⍝ this may happen if user just loaed Selenium.dyalog
           ⎕SE.Link.Import ##(_HOME,'Nuget')
@@ -108,9 +111,9 @@
       :If ×⎕NC'BROWSER' ⍝ close any open browser
           BROWSER.Quit
       :EndIf
-⍝      :If 0=⎕NC'SETTINGS'
-      ApplySettings settings
- ⍝     :EndIf
+      :If ~Re
+          ApplySettings settings
+      :EndIf
       browser←SETTINGS.Browser.ns  ⍝ ns is also the "name" of the browser...
       pckgs←0 4⍴⍬
      
@@ -118,28 +121,31 @@
       :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
           {}BROWSER.Url
       :Else
-     
-          pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
-          pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
+          :If ~Re
+              pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
+              pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
       ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
-          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
-              p←SETTINGS.Components.optional⍎nm
-              :If 0=p.⎕NC'enabled'
-              :OrIf p.enabled∊1(⊂'true')
-                  pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
-              :EndIf
-          :EndFor
-          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
+              :For nm :In SETTINGS.Components.optional.⎕NL ¯9
+                  p←SETTINGS.Components.optional⍎nm
+                  :If 0=p.⎕NC'enabled'
+                  :OrIf p.enabled∊1(⊂'true')
+                      pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
+                  :EndIf
+              :EndFor
+              av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
 ⍝          :Select SETTINGS.Browser.o
 ⍝          :Case 'ChromeDriver'
 ⍝              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
 ⍝          :EndSelect
      
-          pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
+              pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
      
-          ##.NuGet.Setup sldir←(739⌶0),'/Selenium'
-          nul←{##.NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
-          ⎕USING←(⊂'System'),('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+              ##.NuGet.Setup sldir←(739⌶0),'/Selenium'
+              nul←{##.NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
+              ⎕USING←(⊂'System'),('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+          :Else
+              sldir←(739⌶0),'/Selenium'
+          :EndIf
           path←(##.NuGet.BinFolder sldir),'/'
           BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
           BSVC.Start
@@ -552,7 +558,7 @@
       ok←×⎕DL msec÷1000
     ∇
 
-    ∇ r←larg WaitFor args;f;text;msg;element
+    ∇ r←larg WaitFor args;f;text;msg;element;oLarg
     ⍝ Retry until text/value of element begins with text
     ⍝ Return msg on failure, '' on success
     ⍝ larg ist either an object or the [left and] right argument of Find.
@@ -560,7 +566,6 @@
     ⍝ or         'MyLabel'WaitFor'MyText'
     ⍝ or  ('id' 'MyLabel')WaitFor'MyText'
     ⍝ are all possible!
-
       :If 9≠⎕NC'larg'
           oLarg←larg
           :If 2=≡larg
