@@ -12,7 +12,7 @@
       o: 'ChromeDriver', // name of object that will be instiated
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-      v: '126.0.6478.5500', // version. This will always point to the latest known version...
+      v: '126.0.6478.6100 ', // version. This will always point to the latest known version...
       Flavours: {
         CEFinDyalog: {
           SITEROOT: 'http://dyalog_root',
@@ -39,7 +39,7 @@
           }
         },
         Chrome126: {
-          v: '126.0.6478.5500'
+          v: '126.0.6478.6100 '
         },
         Chrome125: {
           v: '125.0.6422.14100'
