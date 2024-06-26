@@ -570,7 +570,7 @@
               larg←Find larg
           :EndIf
       :EndIf
-      :If larg≡0 ⋄ r←'Did not find element "',(⍕larg),'"' ⋄ →0 ⋄ :EndIf
+      :If larg≡0 ⋄ r←'Did not find element "',(⍕oLarg),'"' ⋄ →0 ⋄ :EndIf
       element←larg
       args←eis args
       (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
@@ -723,10 +723,11 @@
           :EndWhile
           url←base,url
       :EndIf
-      BROWSER.Navigate.GoToUrl⊂url
       :Trap 90
+          BROWSER.Navigate.GoToUrl⊂url
           ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
       :Else
+          ⎕TRAP←0 'S' ⋄ (⎕LC[1]+1)⎕STOP 1⊃⎕SI
           ('Alert running "',url,'": ',⎕EXCEPTION.Message)⎕SIGNAL 11
       :EndTrap
     ∇
