@@ -199,12 +199,16 @@
               :EndIf
               'Could not create DriverService - check msg in session'⎕SIGNAL 11
           :EndIf
-          :If options≡''
-              BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+          :Trap 90
+              :If options≡''
+                  BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+              :Else
+                  BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+              :EndIf
           :Else
-              BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
-          :EndIf
-     
+              ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
+              ⎕←⍕⎕EXCEPTION
+          :EndTrap
      
           CURRENTBROWSER←browser
           ACTIONS←⎕NEW Selenium.Interactions.Actions BROWSER
