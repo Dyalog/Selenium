@@ -102,7 +102,7 @@
       :EndIf
     ∇
 
-    ∇ {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul
+    ∇ {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul;sz
        ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
       Re←{6::0 ⋄ ⍎⍵}'Re'
       options←''
@@ -143,7 +143,7 @@
      
               ##.NuGet.Setup sldir←(739⌶0),'/Selenium'
               nul←{##.NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
-              ⎕USING←(⊂'System'),('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+              ⎕USING←'System,mscorlib.dll' 'System.IO,System.IO.dll',('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
           :Else
               sldir←(739⌶0),'/Selenium'
           :EndIf
@@ -216,10 +216,17 @@
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
      
       :End
+      ⎕TRAP←0 'S' ⋄ (⎕LC[1]+1)⎕STOP 1⊃⎕XSI
+      sz←1024 768
+      :If 2=SETTINGS.⎕NC'WindowSize'
+          sz←SETTINGS.WindowSize
+      :EndIf
       :If ~×#.⎕NC'MAX'
           :Trap 90           ⍝ can't do that with CEF
               BROWSER.Manage.Window.Maximize
           :EndTrap
+      :Else
+          BROWSER.Manage.Window.Size←⎕NEW Drawing.Size sz
       :EndIf
     ∇
     ∇ options←InitOptions browser
@@ -228,6 +235,43 @@
 
     ∇ SaveScreenshot ToFile
       BROWSER.GetScreenshot.SaveAsFile⊂ToFile
+    ∇
+
+    ∇ R←{files}ScreenDiffersFrom file;getBaseName;bool;diff;fileStreamDifferenceMask;maskImage
+      ⎕TRAP←0 'S'
+     ⍝ files: optional 2 filenames.
+     ⍝ file is the name of the file containing the difference of the reference screenshot (file)
+     ⍝ files[1]: the current contents of the screen. (default: {file}-curr.png)
+     ⍝ files[2]: the difference file. (default: {file}-diff.png)
+     ⍝ R[1]: boolean: image differ =1, are equal =0
+     ⍝ R[2]: filename of current screenshot
+     
+     
+      getBaseName←{a b←2↑⎕NPARTS ⍵ ⋄ a,((⌽∨\⌽(~'-'∊b)∨⍵='-')/b)}   ⍝ compute base name of files (up to last "-" - or full name )
+      :If 0=⎕NC'files'
+          files←⍬
+      :EndIf
+      :If 0=≢files
+          files←⊂(getBaseName file),'-curr.png'
+      :EndIf
+      :If 1=≢files
+          files,←⊂(getBaseName 1⊃files),'-diff.png'
+      :EndIf
+      SaveScreenshot 1⊃files
+      :If bool←~Codeuctivity.ImageSharpCompare.ImageSharpCompare.ImagesAreEqual file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize
+          :Trap 90
+              diff←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiff file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize 0
+              fileStreamDifferenceMask←File.Create files[2]
+              maskImage←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiffMaskImage file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize 0
+              SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage fileStreamDifferenceMask)
+              R←bool,files[1]
+          :Else
+              R←¯1(⎕EXCEPTION.Message)
+          :EndTrap
+      :Else
+          ⎕NDELETE 1⊃files
+          R←bool''
+      :EndIf
     ∇
 
     ∇ failed←stop_site_match RunAllTests path_filter;files;maxlen;n;start;i;file;msg;time;path;filter;allfiles;hasfilter;shutUp;showMsg;prefix
