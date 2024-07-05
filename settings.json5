@@ -13,6 +13,9 @@
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
       v: '126.0.6478.6100 ', // version. This will always point to the latest known version...
+      Options: {
+        AddArguments: ['--window-size=1920,1080']
+      },
       Flavours: {
         CEFinDyalog: {
           SITEROOT: 'http://dyalog_root',
@@ -94,6 +97,7 @@
 
   Port: 8080,
   Browser: 'HtmlRenderer182', // fortunately WD89 will also work with Chromium90
+  WindowSize: [ 1024, 768 ],
   Components: {
     WebDriver: {
       n: 'Selenium.WebDriver', // name of NuGet package
@@ -115,6 +119,14 @@
       WaitHelpers: {
         n: 'SeleniumExtras.WaitHelpers',
         v: '1.0.2'
+      },
+      ImageSharp: {
+        n: 'SixLabors.ImageSharp',
+        v: '3.1.4'
+      },
+      ImageSharpCompare: {
+        n: 'Codeuctivity.ImageSharpCompare',
+        v: '4.0.258'
       }
     }
   }
