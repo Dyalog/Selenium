@@ -143,7 +143,8 @@
      
               ##.NuGet.Setup sldir←(739⌶0),'/Selenium'
               nul←{##.NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
-              ⎕USING←'System,mscorlib.dll' 'System.IO,System.IO.dll',('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+              ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
+              ⎕using,←('(includePrimary: 0)'##.NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
           :Else
               sldir←(739⌶0),'/Selenium'
           :EndIf
@@ -216,17 +217,16 @@
           :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
      
       :End
-      ⎕TRAP←0 'S' ⋄ (⎕LC[1]+1)⎕STOP 1⊃⎕XSI
-      sz←1024 768
+      sz←⍬
       :If 2=SETTINGS.⎕NC'WindowSize'
           sz←SETTINGS.WindowSize
       :EndIf
-      :If ~×#.⎕NC'MAX'
+      :If ×#.⎕NC'MAX'
           :Trap 90           ⍝ can't do that with CEF
               BROWSER.Manage.Window.Maximize
           :EndTrap
-      :Else
-          BROWSER.Manage.Window.Size←⎕NEW Drawing.Size sz
+      :Elseif sz≢⍬
+          BROWSER.Manage.Window.Size←⎕NEW Size sz
       :EndIf
     ∇
     ∇ options←InitOptions browser
