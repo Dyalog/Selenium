@@ -12,7 +12,7 @@
       o: 'ChromeDriver', // name of object that will be instiated
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-      v: '126.0.6478.6100 ', // version. This will always point to the latest known version...
+      v: '127.0.6533.7200', // version. This will always point to the latest known version...
       Options: {
         AddArguments: ['--window-size=1920,1080']
       },
@@ -40,6 +40,9 @@
               v: '89.0.4389.2300'
             }
           }
+        },
+        Chrome127: {
+          v: '127.0.6533.8800'
         },
         Chrome126: {
           v: '126.0.6478.6100 '
@@ -101,14 +104,14 @@
   Components: {
     WebDriver: {
       n: 'Selenium.WebDriver', // name of NuGet package
-      v: '4.8.0', // version
+      v: '4.23.0', // version
       u: ['OpenQA', 'OpenQA.Selenium'], // "things" we are using
       f: 'WebDriver' // reference to the file
     },
     optional: {
       Support: {
         n: 'Selenium.Support',
-        v: '4.8.0',
+        v: '4.23.0',
         u: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
         f: 'WebDriver.Support'
       },
