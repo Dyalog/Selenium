@@ -91,7 +91,7 @@
               drv←SETTINGS.Executable,suffix
           :Else
 ⍝              drv←(⎕C browser),'driver',suffix
-              drv←(0(819⌶)browser),'driver',suffix
+              drv←(lc browser),'driver',suffix
           :EndIf
           :If 2=SETTINGS.⎕NC'DRIVER' ⋄ path←SETTINGS.DRIVER ⋄ :EndIf
           pth←path
