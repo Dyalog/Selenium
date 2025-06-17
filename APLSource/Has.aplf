@@ -1,0 +1,9 @@
+      Has←{ ⍝ Location of pattern ⍵ in source ⍺
+          rot←,¯1⌽⍵
+          '$$'≡2↑rot:(2↓rot)⎕S 0⊢⍺
+          '$;$'≡3↑rot:('^',(rot[4]~'^'),4↓rot)⎕S 0⊢⍺
+          ';'=⊃⍵:0/⍨(1↓rot)≡⍺↑⍨¯1+≢⍵
+          loc←⍺⍷⍵
+          ∨/loc:loc⍳1
+          ¯1
+      }

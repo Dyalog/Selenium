@@ -1,0 +1,126 @@
+ {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul;sz
+       ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+ Re←{6::0 ⋄ ⍎⍵}'Re'
+ :If 0=⎕NC'DEFAULTBROWSER'
+     Init
+ :EndIf
+ options←''
+ :If ×⎕NC'BROWSER' ⍝ close any open browser
+     BROWSER.Quit
+ :EndIf
+ :If ~Re
+     ApplySettings settings
+ :EndIf
+ browser←SETTINGS.Browser.ns  ⍝ ns is also the "name" of the browser...
+ pckgs←0 4⍴⍬
+
+ :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
+     {}BROWSER.Url
+ :Else
+     :If ~Re
+         pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
+         pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
+      ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
+         :For nm :In SETTINGS.Components.optional.⎕NL ¯9
+             p←SETTINGS.Components.optional⍎nm
+             :If 0=p.⎕NC'enabled'
+             :OrIf p.enabled∊1(⊂'true')
+                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
+             :EndIf
+         :EndFor
+         av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
+⍝          :Select SETTINGS.Browser.o
+⍝          :Case 'ChromeDriver'
+⍝              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
+⍝          :EndSelect
+
+         pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
+
+         NuGet.Setup sldir←(739⌶0),'/Selenium'
+         nul←{NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
+         ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
+         ⎕USING,←('(includePrimary: 0)'NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
+     :Else
+         sldir←(739⌶0),'/Selenium'
+     :EndIf
+     path←(NuGet.BinFolder sldir),'/'
+     BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
+     BSVC.Start
+     :Trap 90
+         z←1⊣BSVC.IsRunning
+     :Else
+         z←0
+     :EndTrap
+
+     options←InitOptions browser
+     :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
+     :AndIf 0<≢BROWSEROPTIONS
+         :For opt :In BROWSEROPTIONS.⎕NL-2
+             ⍎'options.',(∊opt),'←BROWSEROPTIONS.',,∊opt
+         :EndFor
+     :EndIf
+
+     :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
+     :AndIf 0 ⍝ not yet ripe for production!
+         :For cap :In SETTINGS.Browser.AdditionalCapabilities
+             options.AddAdditionalCapability(cap.name)(cap.value)
+         :EndFor
+     :EndIf
+     :If 2=SETTINGS.Browser.⎕NC'AddArguments'
+         :For opt :In SETTINGS.Browser.AddArguments
+             options.AddArgument⊂opt
+         :EndFor
+     :EndIf
+     :If 2=SETTINGS.Browser.⎕NC'LoggingPreferences'
+         cap←options.ToCapabilities
+
+         :For p :In SETTINGS.Browser.LoggingPreferences
+             options.SetLoggingPreference p.type(⍎p.level)
+         :EndFor
+     :EndIf
+⍝          :If 0<SETTINGS.Browser{0::0⍴' ' ⋄ ≢⍺(⍎⍵).⎕NL ¯2}'Options'
+⍝              :For opt :In SETTINGS.Browser.Options.⎕NL ¯2
+⍝                  options⍎opt,'←',{' '⎕DR⍥=⍵:'''',⍵,'''' ⋄ ⍕⍵}SETTINGS.Browser.Options⍎opt
+⍝              :EndFor
+⍝          :EndIf
+
+
+     :If ~z
+         ⎕←'Could not create instance of ',browser,'DriverService.'
+         ⎕←'You may have to adjust file-permissions to make this file executable:'
+         :If 'w'=1⊃av
+             ⎕←⎕SH'icacls ',f
+         :Else
+             ⎕←⎕SH'ls -l ',f
+         :EndIf
+         'Could not create DriverService - check msg in session'⎕SIGNAL 11
+     :EndIf
+     :Trap 90
+         :If options≡''
+             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+         :Else
+             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+         :EndIf
+     :Else
+         ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
+         ⎕←⍕⎕EXCEPTION
+         ∘∘∘
+     :EndTrap
+
+     CURRENTBROWSER←browser
+     ACTIONS←⎕NEW Selenium.Interactions.Actions BROWSER
+
+     :If ~0{6::⍺ ⋄ ⍎⍵}'QUIETMODE' ⋄ ⎕←'Starting ',browser ⋄ :EndIf
+
+ :End
+ sz←⍬
+ :If 2=SETTINGS.⎕NC'WindowSize'
+     sz←SETTINGS.WindowSize
+ :EndIf
+ :If ×#.⎕NC'MAX'
+     :Trap 90           ⍝ can't do that with CEF
+         BROWSER.Manage.Window.Maximize
+     :EndTrap
+ :ElseIf sz≢⍬
+     BROWSER.Manage.Window.Size←⎕NEW Size sz
+ :EndIf

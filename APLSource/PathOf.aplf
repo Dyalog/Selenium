@@ -1,0 +1,1 @@
+PathOf←{⍵↓⍨1-⌊/'/\'⍳⍨⌽⍵} ⍝ Extract path from path/filename.ext

@@ -1,0 +1,1 @@
+Files←{(⊃(/⍨∘(2∘=))/)⍵} ⍝ Filter for files only

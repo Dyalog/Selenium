@@ -1,0 +1,9 @@
+    {ok}←id SetInputValue text;s;i;r
+⍝ Set the value of an input control to text.
+      :If ∨/i←text='"'
+          text←(1+i)/text
+          text[(⍸i)+(0,¯1↓+\i)[⍸i]]←'\'
+      :EndIf
+      (Find id).Click
+      id SendKeys Keys.Delete,text
+    

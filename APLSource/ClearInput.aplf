@@ -1,0 +1,5 @@
+     ClearInput obj;q
+      :If 0≢q←Find obj
+          q.Clear
+      :EndIf
+    

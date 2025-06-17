@@ -1,0 +1,1 @@
+Fix←{⍺←2 ⋄ Se((⍕⍺),'⎕FIX''file://',⍵,'''')Enter} ⍝ Execute ⎕FIX in Session

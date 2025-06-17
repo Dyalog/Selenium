@@ -1,0 +1,1 @@
+NlFmt←{1↓∊'¶',¨⍵} ⍝ Convert VTV to ¶-separated simple vector

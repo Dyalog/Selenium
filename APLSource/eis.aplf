@@ -1,0 +1,1 @@
+eis←{(≡⍵)∊0 1:,⊂,⍵ ⋄ ⍵} ⍝ Enlose (even scalars) If Simple

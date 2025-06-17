@@ -1,0 +1,16 @@
+     {ok}←{action}MoveToElement args;id;target
+     ⍝ Move to element with optional x & y offsets
+     ⍝ And perform optional action (Click|ClickAndHold|ContextClick|DoubleClick)
+      ok←1
+      (⊃args)←Find⊃args ⍝ Elements [2 3] optional x & y offsets (integers)
+      ACTIONS.Reset
+      (ACTIONS.MoveToElement args).Build.Perform
+      ⎕DL 0.1
+      :If 2=⎕NC'action'
+          :If (⊂action)∊'Click' 'ClickAndHold' 'ContextClick' 'DoubleClick'
+              ((ACTIONS⍎action)⍬).Build.Perform
+          :Else
+              ('Unsupported action: ',action)⎕SIGNAL 11
+          :EndIf
+      :EndIf
+    

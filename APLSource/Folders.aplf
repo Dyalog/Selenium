@@ -1,0 +1,1 @@
+ Folders←{(⊃(/⍨∘(1∘=))/)⍵} ⍝ Filter for folders only

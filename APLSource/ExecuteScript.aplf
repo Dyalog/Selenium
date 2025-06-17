@@ -1,0 +1,3 @@
+     {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
+      r←BROWSER.ExecuteScript script ⍬
+    

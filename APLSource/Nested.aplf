@@ -1,0 +1,1 @@
+Nested←{{(+/∨\' '≠⌽⍵)↑¨↓⍵}⊢⍴⍨¯2↑1,⍴⍵} ⍝ Vector of vectors from simple vector or matrix

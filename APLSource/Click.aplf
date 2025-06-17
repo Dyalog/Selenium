@@ -1,0 +1,16 @@
+     {ok}←{type}Click id;b;ok;time;reTry
+     ⍝ Click on an element, by default identified by id. See "Find" for options
+      'type'DefaultTo'Id'
+      ok←reTry←0
+      :Repeat
+          :Trap 90
+              b←type Find id
+              b.Click
+              ok←1
+          :Else
+              reTry+←1
+              ⎕DL 1
+          :EndTrap
+      :Until ok∨reTry>3
+      ('Control "',id,'" not found')⎕SIGNAL(0≡b)/11
+    

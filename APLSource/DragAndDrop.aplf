@@ -1,0 +1,7 @@
+     {ok}←fromid DragAndDrop toid;from;to
+     ⍝ Drag and Drop
+      ok←1
+      (from to)←Find¨fromid toid
+      ACTIONS.Reset
+      (ACTIONS.DragAndDrop from to).Perform
+    

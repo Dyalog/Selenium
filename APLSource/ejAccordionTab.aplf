@@ -1,0 +1,10 @@
+     {ok}←{open}ejAccordionTab(tabText ctlId)
+     ⍝ Make sure that a control, within an accordiontab, is visible or not
+      ok←1
+      'open'DefaultTo 1
+      :If open≠(BROWSER.FindElement(By.Id⊂ctlId)).Displayed ⍝ If it doesn't have the desired state
+          'LinkText'Click tabText
+          {(open ctlId)←⍵
+              open=(BROWSER.FindElement(By.Id⊂ctlId)).Displayed}Retry open ctlId
+      :EndIf
+    

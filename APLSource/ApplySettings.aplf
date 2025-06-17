@@ -1,0 +1,22 @@
+ ApplySettings name;settings;ref;go
+ settings←GetSettings
+ ref←settings{
+     6::''
+     d←2 ⎕NQ'.' 'GetEnvironment' 'SELENIUM_DRIVER'
+     ⍺.Browsers⍎{(⊃⍸≢¨⍵)⊃⍵}⍵ d ⍺.Browser
+ }name
+ :If ref≡''
+     ('Settings "',name,'" not found!')⎕SIGNAL 11
+     ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
+ :EndIf
+ SETTINGS←⎕JSON ⎕JSON settings  ⍝ clone it (don't create a ref)
+ SETTINGS.Browser←⎕JSON ⎕JSON ref
+
+ DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Browser'DEFAULTBROWSER
+ PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Port'PORT
+ BROWSEROPTIONS←⍬  ⍝ no options found...
+ :Select ⍬⍴ref.⎕NC'Options'
+ :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
+ :EndSelect
+
+ ⎕USING←'System'

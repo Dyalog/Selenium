@@ -1,0 +1,18 @@
+ (R msg)←Init
+⍝ R=0: no error initialising Selenium
+⍝ otherwise error code & message
+⍝ (not yet used, but might be one day...)
+
+ ⎕WX←3
+
+ DEFAULTBROWSER←'Chrome'
+ RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
+ HOME←''    ⍝ the home folder of this ns in the filesystem
+
+ EXT←'.dyalog'
+ RIDEEXT←'.ridetest'
+
+ PORT←8080
+
+ R←0
+ msg←''

@@ -1,0 +1,7 @@
+ed←EdRef ⍝ Get ref to Editor
+      :Trap 6 90 ⍝ VALUE (first use) EXCEPTION (stale = new editor)
+          {}Cache.ED.Displayed
+      :Else
+          Cache.ED←'CssSelector'Find'.ride_win_cm textarea'
+      :EndTrap
+      ed←Cache.ED

@@ -1,0 +1,9 @@
+     r←Text element;f
+    ⍝ Retrieves (visible) text of element
+      :If 9≠⎕NC'element' ⋄ element←Find element ⋄ :EndIf
+      :If element.TagName≡'input'
+          r←element.GetAttribute⊂'value'
+      :Else
+          r←element.Text
+      :EndIf
+    ∇

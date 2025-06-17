@@ -1,0 +1,5 @@
+{oks}←Lb glyphs ⍝ Click Language Bar buttons
+      :If 0∊Cache.⎕NC'LB' 'LB_Text'
+          Cache.LB_Text←(Cache.LB←⌷'CssSelectors'Find'#lb b').Text
+      :EndIf
+      oks←{Click Cache.LB⊃⍨Cache.LB_Text⍳⊂,⍵}¨glyphs

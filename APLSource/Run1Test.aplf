@@ -1,0 +1,27 @@
+     r←stop_site_match Run1Test(path file);name;Test;stop;site;match
+      stop site match←3↑stop_site_match
+      site←Urlify site
+      {~UrlIs ⍵:GoTo ⍵}site,'/',match/file↓⍨¯7×EXT≡¯7↑file
+      :Select ⊃⌽'.'Split file
+      :Case RIDEEXT
+          name←⎕FX'msg←Test dummy' 'RideScript','⍝',¨⊃⎕NGET(path,file)1 ⍝ Create Test function from raw RIDE script
+      :Case EXT
+          name←⎕SE.SALT.Load path,file
+      :EndSelect
+      :If ×⎕NC'name'
+      :AndIf 'Test'≡name
+          :Trap 0/⍨0=stop
+              'Test'⎕STOP⍨1/⍨2=stop ⍝ stop on line 1 if stop=2
+              r←Test ⍬
+              :If stop⌊×≢r
+                  ⎕←'test for ',file,' failed:'
+                  ⎕←r
+                  ⎕←'      Test ⍬    ⍝ to Rerun'
+                  ⎕←'      →⎕LC      ⍝ to continue'
+                  (⎕LC[1]+1)⎕STOP 1⊃⎕SI
+              :EndIf
+          :Else
+              r←'Trapped error: ',,⍕⎕DMX.EN
+          :EndTrap
+      :EndIf
+    

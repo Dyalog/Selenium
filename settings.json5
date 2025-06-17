@@ -12,7 +12,7 @@
       o: 'ChromeDriver', // name of object that will be instiated
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-      v: '127.0.6533.7200', // version. This will always point to the latest known version...
+      v: '137.0.7151.7000', // version. This will always point to the latest known version...
       Options: {
         AddArguments: ['--window-size=1920,1080']
       },
@@ -30,6 +30,10 @@
               // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
               v: '90.0.4430.2400'
             },
+            HtmlRenderer200: {
+              //v: '121.0.6167.18400'
+              v:'127.0.6533.7200', 
+            },
             HtmlRenderer190: {
               //v: '121.0.6167.18400'
               v:'127.0.6533.7200', // with v19.0. from 2024-08-07  onwards
@@ -41,6 +45,12 @@
               v: '89.0.4389.2300'
             }
           }
+        },
+        Chrome137: {
+          v: '137.0.7151.7000'
+        },
+        Chrome128: {
+          v: '128.0.6613.11900'
         },
         Chrome127: {
           v: '127.0.6533.8800'
@@ -100,7 +110,7 @@
   },
 
   Port: 8080,
-  Browser: 'HtmlRenderer182', // fortunately WD89 will also work with Chromium90
+  Browser: 'Chrome137', 
   WindowSize: [ 1024, 768 ],
   Components: {
     WebDriver: {
