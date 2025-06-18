@@ -8,7 +8,7 @@
     ***/
 
   Browsers: {
-    Chromium: {
+    Chromium: {// see https://www.nuget.org/packages/Selenium.WebDriver.ChromeDriver#versions-body-tab for latest versions
       o: 'ChromeDriver', // name of object that will be instiated
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
@@ -48,6 +48,30 @@
         },
         Chrome137: {
           v: '137.0.7151.7000'
+        },
+        Chrome136: {
+          v: '136.0.7103.11300'
+        },
+        Chrome135: {
+          v: '135.0.7049.11400'
+        },
+        Chrome134: {
+          v: '134.0.6998.16500'
+        },
+        Chrome133: {
+          v: '133.0.6943.14100'
+        },
+        Chrome132: {
+          v: '132.0.6834.15900'
+        },
+        Chrome131: {
+          v: '131.0.6778.26400'
+        },
+        Chrome130: {
+          v: '130.0.6723.11600'
+        },
+        Chrome129: {
+          v: '129.0.6668.10000'
         },
         Chrome128: {
           v: '128.0.6613.11900'
@@ -115,20 +139,20 @@
   Components: {
     WebDriver: {
       n: 'Selenium.WebDriver', // name of NuGet package
-      v: '4.23.0', // version
+      v: '4.33.0', // version
       u: ['OpenQA', 'OpenQA.Selenium'], // "things" we are using
       f: 'WebDriver' // reference to the file
     },
     optional: {
       Support: {
         n: 'Selenium.Support',
-        v: '4.23.0',
+        v: '4.33.0',
         u: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
         f: 'WebDriver.Support'
       },
       Newtonsoft: {
         n: 'Newtonsoft.Json',
-        v: '13.0.1'
+        v: '13.0.3'
       },
       WaitHelpers: {
         n: 'SeleniumExtras.WaitHelpers',
@@ -136,11 +160,11 @@
       },
       ImageSharp: {
         n: 'SixLabors.ImageSharp',
-        v: '3.1.4'
+        v: '3.1.10'
       },
       ImageSharpCompare: {
         n: 'Codeuctivity.ImageSharpCompare',
-        v: '4.0.258'
+        v: '4.1.342'
       }
     }
   }
