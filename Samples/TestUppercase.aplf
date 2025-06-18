@@ -1,16 +1,12 @@
-﻿:Namespace TestUppercase
-
-    ∇ r←Basic;S;path;demoText;expect
-      path←1⊃1⎕NPARTS{6::50 ⎕ATX ⍵ ⋄ SALT_Data.SourceFile}1⊃⎕SI   ⍝ where does this file come from?
-      11 ⎕signal (0=≢path)/'Unable to determine source path'
-      demoText←'Hello World!'
-      expect←1 ⎕C demoText
-      S←##.Selenium
-      S.InitBrowser''
-      S.GoTo'file:///',path,'text-uppercase.html'
-      'inputText'S.SendKeys demoText
-      (S.Find'transformButton').Click
-      r←'outputText'S.WaitFor expect'Did not find expected uppercased text!'
-    ∇
-
-:EndNamespace
+﻿ r←TestUppercase nul;S;path;demoText;expect;errMsg
+ path←1⊃1 ⎕NPARTS{6::50 ⎕ATX ⍵ ⋄ SALT_Data.SourceFile}1⊃⎕SI   ⍝ where does this file come from?
+ 11 ⎕SIGNAL(0=≢path)/'Unable to determine source path'
+ demoText←'Hello World!'
+ expect←1 ⎕C demoText
+ errMsg←'Did not find expected output!'
+ S←Selenium
+ S.InitBrowser'LatestChrome'
+ S.GoTo'file:///',path,'text-uppercase.html'
+ 'inputText'S.SendKeys demoText
+ (S.Find'transformButton').Click
+ r←'outputText'S.WaitFor expect errMsg
