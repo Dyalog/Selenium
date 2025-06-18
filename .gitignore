@@ -1,1 +1,4 @@
 selenium.dws
+deps/*.*
+venv/*
+dyalog-NuGet-0.2.2/*
