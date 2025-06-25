@@ -1,0 +1,10 @@
+ End
+ :Trap 0
+     BROWSER.Close
+ :EndTrap
+ :Trap 0
+     BROWSER.Dispose
+ :EndTrap
+ :Trap 0
+     1 ⎕NDELETE myNuGetFolder
+ :EndTrap
