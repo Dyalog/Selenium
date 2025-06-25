@@ -1,5 +1,6 @@
  home←_HOME;src
- :If 0<≢HOME
+ :If 2=⎕NC'HOME'
+ :AndIf 0<≢HOME
      home←HOME
  :Else
      :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
