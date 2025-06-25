@@ -1,2 +1,0 @@
- R←LastIs arg
- R←{Do:''≡msg,←EndsWith Nested ⍵ ⋄ 1}Retry arg ⍝ Check last non-empty line in session

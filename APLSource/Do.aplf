@@ -1,6 +1,0 @@
-     r←Do ⍝ Enables skipping to end if a problem has already occured
-      :If 0=⎕NC'msg'
-          msg←''
-      :EndIf
-      r←''≡msg
-    

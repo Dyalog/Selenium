@@ -1,2 +1,0 @@
-R←Tb arg
-R←{'ClassName'Click'tb_',⍵}Retry arg ⍝ click toolbar button

@@ -1,7 +1,0 @@
-se←SeRef ⍝ Get ref to Session
-      :Trap 2 6 90 ⍝ SYNTAX (not found) VALUE (first use) EXCEPTION (stale - probably won't happen)
-          {}Cache.SE.Displayed
-      :Else
-          Cache.SE←'CssSelector'Find'.ride_win textarea'
-      :EndTrap
-      se←Cache.SE

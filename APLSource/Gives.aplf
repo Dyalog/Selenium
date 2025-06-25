@@ -1,1 +1,0 @@
-Gives←{Do:r←LastIs¨eis ⍵⊣Se ⍺ Enter ⋄ r←1}
