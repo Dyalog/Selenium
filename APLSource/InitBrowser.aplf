@@ -1,6 +1,4 @@
- {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul;sz
-       ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
- Re←{6::0 ⋄ ⍎⍵}'Re'
+ InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz
  :If 0=⎕NC'DEFAULTBROWSER'
      Init
  :EndIf
@@ -8,49 +6,42 @@
  :If ×⎕NC'BROWSER' ⍝ close any open browser
      BROWSER.Quit
  :EndIf
- :If ~Re
      ApplySettings settings
- :EndIf
- browser←SETTINGS.Browser.ns  ⍝ ns is also the "name" of the browser...
- pckgs←0 4⍴⍬
+ browser←SETTINGS.Browser.ns
+ pckgs←0 3⍴⍬
 
  :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
      {}BROWSER.Url
  :Else
-     :If ~Re
-         pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
-         pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
+         pckgs⍪←SETTINGS.Components.WebDriver.(n v u)
+         pckgs[1;2]←⊂⍬  ⍝ no specific version → use latest
       ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
              p←SETTINGS.Components.optional⍎nm
              :If 0=p.⎕NC'enabled'
              :OrIf p.enabled∊1(⊂'true')
-                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
+                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvu'
              :EndIf
          :EndFor
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
-⍝          :Select SETTINGS.Browser.o
-⍝          :Case 'ChromeDriver'
-⍝              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
-⍝          :EndSelect
 
-         pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
-
-         NuGet.Setup sldir←(739⌶0),'/Selenium'
-         nul←{NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
+          pckgs⍪←SETTINGS.Browser.(n '' u)  ⍝ VALUE ERROR indicates we don't know your browser!
+         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'
+             :If 20≤1⊃⎕SE.SALTUtils.VERSION
+                 myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
+             :Else
+                 :While ⎕NEXISTS myNuGetFolder
+                     myNuGetFolder,←⎕A[?26]
+                 :EndWhile
+                 ⎕MKDIR myNuGetFolder
+             :EndIf
+         :EndIf
+         NuGet.Setup myNuGetFolder
+         nul←{NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
          ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
-         ⎕USING,←('(includePrimary: 0)'NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
-     :Else
-         sldir←(739⌶0),'/Selenium'
-     :EndIf
-     path←(NuGet.BinFolder sldir),'/'
-     BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
-     BSVC.Start
-     :Trap 90
-         z←1⊣BSVC.IsRunning
-     :Else
-         z←0
-     :EndTrap
+         ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
+         System.Environment.SetEnvironmentVariable('SE_MANAGER_PATH'(myNuGetFolder,'/published/selenium-manager/windows/selenium-manager.exe'))
+     path←(NuGet.BinFolder myNuGetFolder),'/'
 
      options←InitOptions browser
      :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
@@ -78,28 +69,12 @@
              options.SetLoggingPreference p.type(⍎p.level)
          :EndFor
      :EndIf
-⍝          :If 0<SETTINGS.Browser{0::0⍴' ' ⋄ ≢⍺(⍎⍵).⎕NL ¯2}'Options'
-⍝              :For opt :In SETTINGS.Browser.Options.⎕NL ¯2
-⍝                  options⍎opt,'←',{' '⎕DR⍥=⍵:'''',⍵,'''' ⋄ ⍕⍵}SETTINGS.Browser.Options⍎opt
-⍝              :EndFor
-⍝          :EndIf
 
-
-     :If ~z
-         ⎕←'Could not create instance of ',browser,'DriverService.'
-         ⎕←'You may have to adjust file-permissions to make this file executable:'
-         :If 'w'=1⊃av
-             ⎕←⎕SH'icacls ',f
-         :Else
-             ⎕←⎕SH'ls -l ',f
-         :EndIf
-         'Could not create DriverService - check msg in session'⎕SIGNAL 11
-     :EndIf
      :Trap 90
          :If options≡''
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)
          :Else
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(options)
          :EndIf
      :Else
          ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
