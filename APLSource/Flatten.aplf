@@ -1,47 +1,61 @@
-R←{flavours_vars_mem}Flatten ns;vars;flavours;n;nl;z;AddVar;mem;v;f;f∆;ref
+ R←{flavours_vars_mem}Flatten ns;vars;flavours;n;nl;z;AddVar;mem;v;f;f∆;ref;i;mem∆
  ⍝ convert tree-structured settings into a "flattened" structure
-      mem←0
-      :If 0=⎕NC'flavours_vars_mem'
-          vars←flavours←0 2⍴''
-      :ElseIf 2=≢flavours_vars_mem
-          (flavours vars)←flavours_vars_mem
-      :Else
-          (flavours vars mem)←flavours_vars_mem
-      :EndIf
-     
-      vars←vars AddVars ns
-     
-      :For n :In (ns.⎕NL-9)~⊂'Flavours'
-          :If 2=(ns⍎n).⎕NC'isDriverParam'
-              ns.⎕EX n,'.isDriverParam'
-              vars←vars⍪(n)(⎕JSON ns⍎n)
-          :Else
-              flavours v←(flavours vars)Flatten ns⍎n
-              :If mem
-                  flavours[flavours[;1]⍳⊂n;2]←⊂v
-              :EndIf
-          :EndIf
-      :EndFor
-     
-      :If 9=ns.⎕NC'Flavours'
-          z←~(nl←ns.Flavours.⎕NL ¯9)∊flavours[;1]
-          z←z∧nl≢¨⊂'Flavours'
-          flavours⍪←(,[1.5]z/nl),⊂vars
-          flavours←1⊃(flavours vars 1)Flatten ns.Flavours
-      :EndIf
-     
-      :If 0=⎕NC'flavours_vars_mem'    ⍝ top-level
-          R←#.⎕NS''
-          :For v :In ↓vars
-              R.{⍎(1⊃⍵),'←0⎕json 2⊃⍵'}v
-          :EndFor
-          :For f :In ⍳1↑⍴flavours
-              ref←R.⎕NS''
-              :For v :In ↓2⊃flavours[f;]
-                  ref.{⍎(1⊃⍵),'←0⎕JSON 2⊃⍵'}v
-              :EndFor
-              ref R.{(1⊃⍵)⎕NS ⍺}flavours[f;]
-          :EndFor
-      :Else
-          R←flavours vars
-      :EndIf
+ mem←0
+ :If 0=⎕NC'flavours_vars_mem'
+     vars←flavours←0 2⍴''
+ :ElseIf 2=≢flavours_vars_mem
+     (flavours vars)←flavours_vars_mem
+ :Else
+     (flavours vars mem)←flavours_vars_mem
+ :EndIf
+
+ vars←vars AddVars ns
+
+ :For n :In (ns.⎕NL-9)~⊂'Flavours'
+     :If 2=(ns⍎n).⎕NC'isDriverParam'
+         ns.⎕EX n,'.isDriverParam'
+         vars←vars⍪(n)(⎕JSON ns⍎n)
+     :Else
+         R←(flavours vars)Flatten ns⍎n
+         :If 0=(ns⍎n).⎕NC'Flavours'    ⍝ if we're on an entry that has no sublevels
+         :AndIf 0=⎕NC'flavours_vars_mem'   ⍝ AND we're not in a recursive call already...
+             v←2⊃R
+             mem∆←1
+         :Else
+             flavours v←R
+             mem∆←mem
+         :EndIf
+         :If mem∆
+             i←flavours[;1]⍳⊂n
+             :If i>≢flavours
+                 flavours⍪←⊂''
+                 flavours[i;1]←⊂n
+             :EndIf
+             flavours[i;2]←⊂v
+         :EndIf
+
+     :EndIf
+ :EndFor
+
+ :If 9=ns.⎕NC'Flavours'
+     z←~(nl←ns.Flavours.⎕NL ¯9)∊flavours[;1]
+     z←z∧nl≢¨⊂'Flavours'
+     flavours⍪←(,[1.5]z/nl),⊂vars
+     flavours←1⊃(flavours vars 1)Flatten ns.Flavours
+ :EndIf
+
+ :If 0=⎕NC'flavours_vars_mem'    ⍝ top-level
+     R←#.⎕NS''
+     :For v :In ↓vars
+         R.{⍎(1⊃⍵),'←0⎕json 2⊃⍵'}v
+     :EndFor
+     :For f :In ⍳1↑⍴flavours
+         ref←R.⎕NS''
+         :For v :In ↓2⊃flavours[f;]
+             ref.{⍎(1⊃⍵),'←0⎕JSON 2⊃⍵'}v
+         :EndFor
+         ref R.{(1⊃⍵)⎕NS ⍺}flavours[f;]
+     :EndFor
+ :Else
+     R←flavours vars
+ :EndIf
