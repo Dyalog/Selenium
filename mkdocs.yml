@@ -21,7 +21,10 @@ extra:
     provider: mike
 
 extra_css:
-  - css/main.css
+  - style/documentation-styles/css/main.css
+  - style/documentation-styles/css/extra.css
+  - style/documentation-styles/css/admonition-ucmdhelp.css
+
 
 plugins:
   - search
