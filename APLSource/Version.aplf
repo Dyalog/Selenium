@@ -25,10 +25,15 @@ version←Version
 ⍝ 2024 05 08: + optional ⍺ to ReInitBrowser to support re-initialization of the browser (useful to reconnect when HtmlRenderer was closed and re-opened)
 ⍝             - SetInputValue did not work as expected - fixed. (NB: it now clears the control before setting text)
 ⍝ 2025 06 17 MBaas: V2.0.0  (first commit, lots of WIP)
+⍝                   - in addition to Chrome, we now also support Firefox and Edge browsers
+⍝                   - Selenium should work with the browser version that's installed 
+⍝                     without any tweaking of settings...
 ⍝                   - uses Cider & Tatin
 ⍝                   - converted doc to be MkDocs based, updated it.
 ⍝                   - converted from scripted ns to individual files for the functions
 ⍝                   - GoTo now also supports file:// URLs
 ⍝                   - "WaitFor" was not working as expected with textarea-elements
+⍝                   - remove ⍺ from InitBrowser
+⍝                   - added "End" method to dispose .NET artifacts from memory and disc
 
 version←'2.0.0'
