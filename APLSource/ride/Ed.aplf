@@ -1,0 +1,2 @@
+R←Ed arg
+R←{Do:EdRef ##.SendKeys¨⊂⍣(1=≡,⍵)⊢⍵ ⋄ 1}##.Retry arg ⍝ SendKeys in Editor

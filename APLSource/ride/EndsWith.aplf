@@ -1,0 +1,6 @@
+ EndsWith←{ ⍝ last session line(s) contain patterns
+     h←-≢⍵
+     se←h↑¯1↓Session~⊂''
+     ∧/2</¯1,∊⍵ Has¨se:'' ⍝ last line is 6-space prompt
+     'Session had "',(NlFmt se),'"; expected "',(NlFmt ⍵),'". '
+ }

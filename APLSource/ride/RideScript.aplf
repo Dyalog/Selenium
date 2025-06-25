@@ -1,0 +1,31 @@
+ {r}←RideScript;lines;l;major;minor ⍝ Script processor
+ ⍝ To be called before one or more comment lines
+ ⍝ each script line may have one, two, or three major sections:
+ ⍝     command: results: timeout
+ ⍝ : is the major separator and ; is the minor separator for results
+ ⍝ command gets typed into the session, and then Enter is pressed
+ ⍝ if there is a "results", then (before the timemout) each of these must occur in the given order
+ ⍝ the first target in results specifies the beginning of the line (so skip this with :;)
+ ⍝ targets are RegEx when enclosed in Dollar signs ($)
+ ⍝ the timeout may be temporarily adjusted from the default by specifying a number of seconds
+ ⍝     var←6
+ ⍝ just enters the assignment in the session
+ ⍝     var×7: 42
+ ⍝ checks that the expected result is given.
+ ⍝     ⊢⎕DL 6:
+ lines←{⍵/⍨'⍝'≠⊃¨⍵}{1↓¨⍵/⍨∧\'⍝'=⊃¨⍵}{⍵{((∨\⍵)∧⌽∨\⌽⍵)/⍺}' '≠⍵}¨(1+2⊃⎕LC)↓⎕NR'Test'
+ msg←''
+ :For l :In lines/⍨'⍝'≠⊃¨lines
+     major←1↓¨':'Split l
+     :If 1=≢major
+         Se(⊃major)Enter
+     :Else
+         :If 3≤≢major
+             RETRYLIMIT←⊃∊(//⎕VFI⊃2↓major),##.DEFAULTRETRYLIMIT
+         :EndIf
+         minor←';'Split 2⊃major
+         (⊃minor)↓⍨←1
+         r←(⊃major)Gives minor
+     :EndIf
+     →0/⍨''≢msg
+ :EndFor
