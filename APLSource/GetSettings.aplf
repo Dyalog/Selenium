@@ -1,4 +1,7 @@
  R←GetSettings;v;varnam
+ :If 0=⎕NC'DEFAULTBROWSER'
+     Init
+ :EndIf
  R←1⊃⎕NGET(1⊃⎕NPARTS{(-'/'=⊢/⍵)↓⍵}_HOME),'settings.json5'
  R←(⎕JSON⍠'Dialect' 'JSON5')R
  R.Browsers←Flatten R.Browsers
