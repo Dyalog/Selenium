@@ -11,8 +11,8 @@
     Chromium: {// see https://www.nuget.org/packages/Selenium.WebDriver.ChromeDriver#versions-body-tab for latest versions
       o: 'ChromeDriver', // name of object that will be instiated
       n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
+      u: ['OpenQA.Selenium.Chrome'],
       ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-      v: '137.0.7151.7000', // version. This will always point to the latest known version...
       Options: {
         AddArguments: ['--window-size=1920,1080']
       },
@@ -28,10 +28,8 @@
           Flavours: {
             HtmlRenderer: {
               // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
-              v: '90.0.4430.2400'
             },
             HtmlRenderer200: {
-              //v: '121.0.6167.18400'
               v:'127.0.6533.7200', 
             },
             HtmlRenderer190: {
@@ -46,102 +44,43 @@
             }
           }
         },
-        Chrome137: {
-          v: '137.0.7151.7000'
-        },
-        Chrome136: {
-          v: '136.0.7103.11300'
-        },
-        Chrome135: {
-          v: '135.0.7049.11400'
-        },
-        Chrome134: {
-          v: '134.0.6998.16500'
-        },
-        Chrome133: {
-          v: '133.0.6943.14100'
-        },
-        Chrome132: {
-          v: '132.0.6834.15900'
-        },
-        Chrome131: {
-          v: '131.0.6778.26400'
-        },
-        Chrome130: {
-          v: '130.0.6723.11600'
-        },
-        Chrome129: {
-          v: '129.0.6668.10000'
-        },
-        Chrome128: {
-          v: '128.0.6613.11900'
-        },
-        Chrome127: {
-          v: '127.0.6533.8800'
-        },
-        Chrome126: {
-          v: '126.0.6478.6100 '
-        },
-        Chrome125: {
-          v: '125.0.6422.14100'
-        },
-        Chrome124: {
-          v: '124.0.6367.9100'
-        },
-        Chrome122: {
-          v: '122.0.6261.9400 '
-        },
-        Chrome120: {
-          v: '120.0.6099.10900'
-        },
-        Chrome117: {
-          v: '117.0.5938.9200'
-        },
-        Chrome115: {
-          v: '115.0.5790.10200'
-        },        
-        Chrome113: {
-          v: '113.0.5672.6300'
-        },
-        Chrome112: {
-          v: '112.0.5615.4900'
-        },
-        Chrome111: {
-          v: '111.0.5563.4100'
-        },
-        Chrome110: {
-          v: '110.0.5481.7700'
-        },
-        Chrome109: {
-          v: '109.0.5414.7400'
-        },
-        Chrome108: {
-          // we use ALL settings from the parent (because they currently apply...)
-          v: '108.0.5359.7100'
-        },
-        Chrome107: {
-          v: '107.0.5304.6200'
-        },
-        LatestChrome: {
-          // we use ALL settings from the parent
+        Chrome: {
+          // use all details of parent object
         },
         HeadlessChrome: {
           // uses same defaults as LatestChrome and runs in headless mode
           AddArguments: ['--headless window-size=1920,1080']
         }
       }
+    },
+    Firefox: {
+      o: 'FirefoxDriver',
+      n: 'Selenium.WebDriver.GeckoDriver',
+      u: ['OpenQA.Selenium.Firefox'],
+      ns: 'Firefox',
+      Options: {
+        AddArguments: ['--width=1920', '--height=1080']
+      },
+    },
+    Edge: {
+      o: 'EdgeDriver',
+      n: 'Selenium.WebDriver.EdgeDriver',
+      u:[ 'OpenQA.Selenium.Edge'],
+      ns: 'Edge',
+      Options: {
+        AddArguments: ['--window-size=1920,1080']
+      },
     }
   },
 
   Port: 8080,
-  Browser: 'Chrome137', 
-  WindowSize: [ 1024, 768 ],
+  Browser: 'Chrome', 
+  WindowSize: [ 1920, 1080 ],
   Components: {
     WebDriver: {
       n: 'Selenium.WebDriver', // name of NuGet package
       v: '4.33.0', // version
       u: ['OpenQA', 'OpenQA.Selenium'], // "things" we are using
-      f: 'WebDriver' // reference to the file
     },
     optional: {
       Support: {
