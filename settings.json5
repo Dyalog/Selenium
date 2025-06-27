@@ -80,7 +80,7 @@
     WebDriver: {
       n: 'Selenium.WebDriver', // name of NuGet package
       v: '4.33.0', // version
-      u: ['OpenQA', 'OpenQA.Selenium'], // "things" we are using
+      u: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.Keys'], // "things" we are using
     },
     optional: {
       Support: {
