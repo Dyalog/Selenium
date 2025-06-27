@@ -70,6 +70,7 @@ nav: # This 'nav:' MUST be at the very first column (no spaces before it)
     - 'Installation': 'install-selenium.md' # Indented by four spaces
   - Examples:           # Indented by two spaces
     - 'Simple Example': 'simple-example.md' # Indented by four spaces
+    - 'Testing RIDE': 'ride.md'
   - Command Reference:  # Indented by two spaces
     - 'InitBrowser': 'InitBrowser.md' # Indented by four spaces
   - About:              # Indented by two spaces
