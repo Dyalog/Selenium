@@ -6,8 +6,10 @@
  :EndIf
  S←##.##.Selenium
 
- RIDEPORT←4504
- proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:',⍕RIDEPORT))
+ RIDEPORT←4505
+ proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
+ ⎕←'→⎕LC+1 ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
+ ∘∘∘
 ⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> (dev todo: enable me to query that port) -> pass it back via a file -> read that file, get port
 ⍝ file←S._HOME,'../Samples/RIDE/tools/ReportRidePort.aplf'
 ⍝ proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:0'))
@@ -15,4 +17,4 @@
  S.InitBrowser''
  S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
 
- ⎕PATH←'S.ride'
+ ⎕PATH←'S S.ride'
