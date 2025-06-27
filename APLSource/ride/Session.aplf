@@ -1,2 +1,2 @@
  r←Session ⍝ Session text
- r←(⌷'CssSelectors'##.Find'.CodeMirror-line span').Text
+ r←(⌷'CssSelectors'##.Find'.view-line span').Text

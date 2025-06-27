@@ -13,7 +13,7 @@
  ⍝     var×7: 42
  ⍝ checks that the expected result is given.
  ⍝     ⊢⎕DL 6:
- lines←{⍵/⍨'⍝'≠⊃¨⍵}{1↓¨⍵/⍨∧\'⍝'=⊃¨⍵}{⍵{((∨\⍵)∧⌽∨\⌽⍵)/⍺}' '≠⍵}¨(1+2⊃⎕LC)↓⎕NR'Test'
+ lines←{⍵/⍨'⍝'≠⊃¨⍵}{1↓¨⍵/⍨∧\'⍝'=⊃¨⍵}{⍵{((∨\⍵)∧⌽∨\⌽⍵)/⍺}' '≠⍵}¨(1+2⊃⎕LC)↓(⊃⎕RSI).(⎕NR⊃1↓⎕SI)
  msg←''
  :For l :In lines/⍨'⍝'≠⊃¨lines
      major←1↓¨':'Split l
