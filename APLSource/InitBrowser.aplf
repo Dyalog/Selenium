@@ -97,5 +97,7 @@
          BROWSER.Manage.Window.Maximize
      :EndTrap
  :ElseIf sz≢⍬
-     BROWSER.Manage.Window.Size←⎕NEW Size sz
+     :Trap 90   ⍝ does not work with CEF
+         BROWSER.Manage.Window.Size←⎕NEW Size sz
+     :EndTrap
  :EndIf
