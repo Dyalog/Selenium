@@ -8,3 +8,4 @@
  :Trap 0
      1 ⎕NDELETE myNuGetFolder
  :EndTrap
+⎕ex'myNuGetFolder'
