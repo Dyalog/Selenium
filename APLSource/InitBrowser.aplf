@@ -1,21 +1,25 @@
- InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz
+ {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
  :If 0=⎕NC'DEFAULTBROWSER'
      Init
  :EndIf
+   ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+ Re←{6::0 ⋄ ⍎⍵}'Re'
  options←''
  :If ×⎕NC'BROWSER' ⍝ close any open browser
      BROWSER.Quit
  :EndIf
+ :If ~Re
      ApplySettings settings
+ :EndIf
  browser←SETTINGS.Browser.ns
  pckgs←0 3⍴⍬
 
  :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
      {}BROWSER.Url
  :Else
+     noBrowserVersion←0=SETTINGS.Browser.⎕NC'v'
+     :If ~Re
          pckgs⍪←SETTINGS.Components.WebDriver.(n v u)
-         pckgs[1;2]←⊂⍬  ⍝ no specific version → use latest
-      ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
              p←SETTINGS.Components.optional⍎nm
              :If 0=p.⎕NC'enabled'
@@ -25,8 +29,8 @@
          :EndFor
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
 
-          pckgs⍪←SETTINGS.Browser.(n '' u)  ⍝ VALUE ERROR indicates we don't know your browser!
-         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'
+         pckgs⍪←SETTINGS.Browser.(n({0::'' ⋄ ⍎⍵}'v')u)
+         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
              :If 20≤1⊃⎕SE.SALTUtils.VERSION
                  myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
              :Else
@@ -40,8 +44,22 @@
          nul←{NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
          ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
          ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
-         System.Environment.SetEnvironmentVariable('SE_MANAGER_PATH'(myNuGetFolder,'/published/selenium-manager/windows/selenium-manager.exe'))
+     :EndIf
      path←(NuGet.BinFolder myNuGetFolder),'/'
+     :If noBrowserVersion
+         :If ~Re
+             System.Environment.SetEnvironmentVariable('SE_MANAGER_PATH'(myNuGetFolder,'/published/selenium-manager/windows/selenium-manager.exe'))
+         :EndIf
+         BSVC←⍬
+     :Else
+         BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
+         BSVC.Start
+         :Trap 90
+             z←1⊣BSVC.IsRunning
+         :Else
+             z←0
+         :EndTrap
+     :EndIf
 
      options←InitOptions browser
      :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
@@ -58,6 +76,7 @@
          :EndFor
      :EndIf
      :If 2=SETTINGS.Browser.⎕NC'AddArguments'
+         ⎕←SETTINGS.Browser.AddArguments
          :For opt :In SETTINGS.Browser.AddArguments
              options.AddArgument⊂opt
          :EndFor
@@ -71,10 +90,18 @@
      :EndIf
 
      :Trap 90
-         :If options≡''
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)
+         :If BSVC≡⍬
+             :If options≡''
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)
+             :Else
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(options)
+             :EndIf
          :Else
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(options)
+             :If options≡''
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+             :Else
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+             :EndIf
          :EndIf
      :Else
          ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
