@@ -26,9 +26,6 @@
           },
           AddArguments: ['--no-sandbox','--remote-debugging-port=8080'],
           Flavours: {
-            HtmlRenderer: {
-              // DEPRECATED: this should be version specific - pls. move away from using the "plain" "HtmlRenderer"-config!
-            },
             HtmlRenderer200: {
               v:'127.0.6533.7200', 
             },
