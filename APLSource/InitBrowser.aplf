@@ -11,15 +11,15 @@
  :If ~Re
      ApplySettings settings
  :EndIf
- browser←SETTINGS.Browser.ns
+ browser←SETTINGS.Browser.wdns
  pckgs←0 3⍴⍬
 
  :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
      {}BROWSER.Url
  :Else
-     noBrowserVersion←0=SETTINGS.Browser.⎕NC'v'
+     noBrowserVersion←0=SETTINGS.Browser.⎕NC'version'
      :If ~Re
-         pckgs⍪←SETTINGS.Components.WebDriver.(n v u)
+         pckgs⍪←SETTINGS.Components.WebDriver.(nuget version using)
          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
              p←SETTINGS.Components.optional⍎nm
              :If 0=p.⎕NC'enabled'
@@ -29,7 +29,7 @@
          :EndFor
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
 
-         pckgs⍪←SETTINGS.Browser.(n({0::'' ⋄ ⍎⍵}'v')u)
+         pckgs⍪←SETTINGS.Browser.(nuget({0::'' ⋄ ⍎⍵}'version')using)
          :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
              :If 20≤1⊃⎕SE.SALTUtils.VERSION
                  myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
@@ -52,7 +52,7 @@
          :EndIf
          BSVC←⍬
      :Else
-         BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
+         BSVC←(⍎SETTINGS.Browser.driver,'Service').CreateDefaultService⊂(path)
          BSVC.Start
          :Trap 90
              z←1⊣BSVC.IsRunning
@@ -92,15 +92,15 @@
      :Trap 90
          :If BSVC≡⍬
              :If options≡''
-                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)
              :Else
-                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(options)
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)(options)
              :EndIf
          :Else
              :If options≡''
-                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)BSVC
              :Else
-                 BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)(BSVC options)
              :EndIf
          :EndIf
      :Else
