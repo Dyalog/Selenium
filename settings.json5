@@ -9,13 +9,13 @@
 
   Browsers: {
     Chromium: {// see https://www.nuget.org/packages/Selenium.WebDriver.ChromeDriver#versions-body-tab for latest versions
-      o: 'ChromeDriver', // name of object that will be instiated
-      n: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
-      u: ['OpenQA.Selenium.Chrome'],
-      ns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
-      Options: {
-        AddArguments: ['--window-size=1920,1080']
-      },
+      driver: 'ChromeDriver', // name of object that will be instiated
+      nuget: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
+      using: ['OpenQA.Selenium.Chrome'],
+      wdns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
+      // Options: {
+      //   AddArguments: ['--window-size=1920,1080']
+      // },
       Flavours: {
         CEFinDyalog: {
           SITEROOT: 'http://dyalog_root',
@@ -27,22 +27,22 @@
           AddArguments: ['--no-sandbox','--remote-debugging-port=8080'],
           Flavours: {
             HtmlRenderer200: {
-              v:'127.0.6533.7200', 
+              version:'127.0.6533.7200', 
             },
             HtmlRenderer190: {
-              //v: '121.0.6167.18400'
-              v:'127.0.6533.7200', // with v19.0. from 2024-08-07  onwards
+              //version: '121.0.6167.18400'
+              version:'127.0.6533.7200', // with v19.0. from 2024-08-07  onwards
             },
             HtmlRenderer182: {
-              v: '90.0.4430.2400'
+              version: '90.0.4430.2400'
             },
             HtmlRenderer182beta: {
-              v: '89.0.4389.2300'
+              version: '89.0.4389.2300'
             }
           }
         },
         Chrome: {
-          // use all details of parent object
+          // uses all details of parent object
         },
         HeadlessChrome: {
           // uses same defaults as LatestChrome and runs in headless mode
@@ -51,56 +51,50 @@
       }
     },
     Firefox: {
-      o: 'FirefoxDriver',
-      n: 'Selenium.WebDriver.GeckoDriver',
-      u: ['OpenQA.Selenium.Firefox'],
-      ns: 'Firefox',
-      Options: {
-        AddArguments: ['--width=1920', '--height=1080']
-      },
+      driver: 'FirefoxDriver',
+      nuget: 'Selenium.WebDriver.GeckoDriver',
+      using: ['OpenQA.Selenium.Firefox'],
+      wdns: 'Firefox',
     },
     Edge: {
-      o: 'EdgeDriver',
-      n: 'Selenium.WebDriver.EdgeDriver',
-      u:[ 'OpenQA.Selenium.Edge'],
-      ns: 'Edge',
-      Options: {
-        AddArguments: ['--window-size=1920,1080']
-      },
+      driver: 'EdgeDriver',
+      nuget: 'Selenium.WebDriver.EdgeDriver',
+      using:[ 'OpenQA.Selenium.Edge'],
+      wdns: 'Edge',
     }
   },
 
   Port: 8080,
   Browser: 'Chrome', 
-  WindowSize: [ 1920, 1080 ],
+  WindowSize: [ 1870, 900 ],
+  // WindowSize: [ 1920, 1080 ],
   Components: {
     WebDriver: {
-      n: 'Selenium.WebDriver', // name of NuGet package
-      v: '4.33.0', // version
-      u: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.Keys'], // "things" we are using
+      nuget: 'Selenium.WebDriver', // name of NuGet package
+      version: '4.33.0', // version
+      using: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.Keys'], // "things" we are using
     },
     optional: {
       Support: {
-        n: 'Selenium.Support',
-        v: '4.33.0',
-        u: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
-        f: 'WebDriver.Support'
+        nuget: 'Selenium.Support',
+        version: '4.33.0',
+        using: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
       },
       Newtonsoft: {
-        n: 'Newtonsoft.Json',
-        v: '13.0.3'
+        nuget: 'Newtonsoft.Json',
+        version: '13.0.3'
       },
       WaitHelpers: {
-        n: 'SeleniumExtras.WaitHelpers',
-        v: '1.0.2'
+        nuget: 'SeleniumExtras.WaitHelpers',
+        version: '1.0.2'
       },
       ImageSharp: {
-        n: 'SixLabors.ImageSharp',
-        v: '3.1.10'
+        nuget: 'SixLabors.ImageSharp',
+        version: '3.1.10'
       },
       ImageSharpCompare: {
-        n: 'Codeuctivity.ImageSharpCompare',
-        v: '4.1.342'
+        nuget: 'Codeuctivity.ImageSharpCompare',
+        version: '4.1.342'
       }
     }
   }
