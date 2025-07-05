@@ -1,19 +1,29 @@
- InitRIDE nul;z;path;f;file
+ InitRIDE nul;z;path;f;file;rpfile
 ⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##)
  :If 0=##.##.⎕NC'APLProcess'
      path←(2 ⎕NQ #'GetEnvironment' 'DYALOG'),'/Library/Core/'
      ⎕SE.Link.Import ##.##'APLProcess'
  :EndIf
  S←##.##.Selenium
-
- RIDEPORT←4505
- proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
- ⎕←'→⎕LC+1 ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
- ∘∘∘
+ :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
+     RIDEPORT←4505
+     proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
+     ⎕←'→⎕LC+1 ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
+     ∘∘∘
+ :Else
 ⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> (dev todo: enable me to query that port) -> pass it back via a file -> read that file, get port
-⍝ file←S._HOME,'../Samples/RIDE/tools/ReportRidePort.aplf'
-⍝ proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:0'))
+     file←S._HOME,'/Samples/RIDE/tools/ReportRidePort.aplf'
+     rpfile←∊(2↑⎕NPARTS file),'.rideport'
+     3 ⎕NDELETE rpfile
+     proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:0'))
 ⍝ todo: wait until file is available, then read it to get its value into RIDEPORT
+     :While ~⎕NEXISTS rpfile
+         ⎕DL 0.5
+     :EndWhile
+     ⎕DL 0.5
+     RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
+     3 ⎕NDELETE rpfile
+ :EndIf
  S.InitBrowser''
  S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
 

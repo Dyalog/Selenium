@@ -1,10 +1,5 @@
-ReportRidePort nul;z
-⍝
-∘∘∘
-pi←4075⌶⍬   ⍝ Platform Info
-⍝pi.Executable.RideConnected
-
-⍝ TODO: this should query what port we're currently listening on (not connected yet!) for ride connections
-⍝       and write that back into some file that "InitRIDE" will then pick up...
-⍝       That stuff is not yet available in the interpreters (as ROS and AB pointed out on June 26th, 2025).
-⍝       Once that has been implemented, continue here!
+ ReportRidePort nul;file;port
+ file←50 ⎕ATX 1⊃⎕SI
+ file←∊(2↑⎕NPARTS file),'.rideport'
+ port←(497⌶⍬)[1;4]
+ (⊂⍕port)⎕NPUT file 1
