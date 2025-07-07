@@ -6,9 +6,11 @@
  :EndIf
  S←##.##.Selenium
  :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
-     RIDEPORT←4505
+     RIDEPORT←4502
      proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
-     ⎕←'→⎕LC+1 ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
+     ⎕←''
+     ⎕←'RIDEPORT+←1 ⋄ →¯4+⊃⎕LC   ⍝ try with a alternate port if there is an error message during startup'
+     ⎕←'→1+⊃⎕LC                  ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
      ∘∘∘
  :Else
 ⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> (dev todo: enable me to query that port) -> pass it back via a file -> read that file, get port
