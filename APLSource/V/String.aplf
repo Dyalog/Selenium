@@ -1,0 +1,2 @@
+ String←String
+ String←Char∧1≥∘≢⍴

@@ -1,0 +1,18 @@
+ Y←X MergeNS Y;nl;n1;n2;n
+ :If 0=≢nl←(Y.⎕NL ¯9)∪X.⎕NL ¯9
+     Y←⎕NS X Y
+     →0
+ :EndIf
+ :For n :In nl
+     n1←X{6::⎕NS'' ⋄ ⍺⍎⍵}n
+     n2←Y{6::⎕NS'' ⋄ ⍺⍎⍵}n
+     n2←n1 MergeNS n2
+     ⍎'Y.',n,'←n2'
+ :EndFor
+ :If 0=≢nl←(Y.⎕NL ¯2)∪X.⎕NL ¯2
+     :For n :In nl
+         :If 0=Y.⎕NC n
+             ⍎'Y.',n,'←X.',n
+         :EndIf
+     :EndFor
+ :EndIf

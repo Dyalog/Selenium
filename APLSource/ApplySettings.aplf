@@ -1,22 +1,35 @@
- ApplySettings name;settings;ref;go
- settings←GetSettings
- ref←settings{
-     6::''
-     d←2 ⎕NQ'.' 'GetEnvironment' 'SELENIUM_DRIVER'
-     ⍺.Browsers⍎{(⊃⍸≢¨⍵)⊃⍵}⍵ d ⍺.Browser
- }name
- :If ref≡''
-     ('Settings "',name,'" not found!')⎕SIGNAL 11
-     ref←settings.{6::'' ⋄ ⍺⍎⍺⍎⍵}'default'
- :EndIf
- SETTINGS←⎕JSON ⎕JSON settings  ⍝ clone it (don't create a ref)
- SETTINGS.Browser←⎕JSON ⎕JSON ref
+ ApplySettings name;settings;ref;go;rarg;nv;s2;n;ns∆;nv_;ns1;ns2;i
+ ⍝ ⍵ is (name of browser)[port]
+ ⍝   or a namespace with the same content
 
- DEFAULTBROWSER←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Browser'DEFAULTBROWSER
- PORT←ref{6::2⊃⍵ ⋄ ⍺⍎1⊃⍵}'Port'PORT
+ settings←GetSettings
+ :If (0 2∊⍨10|⎕DR)⊃name  ⍝ browser[port]
+     rarg←name
+     name←⎕NS''
+     name.browser←⊃⊆rarg
+     :If 2=≢name
+     :AndIf (2|⎕DR)2⊃rarg
+         name.port←2⊃rarg
+     :EndIf
+ :EndIf
+
+ SETTINGS←⎕JSON('"(?:[^"\\]|\\.)+"(?=\s*:)|[a-zA-Z_$][a-zA-Z0-9_$]*(?=\s*:)'⎕R{⎕C ⍵.Match})⎕JSON settings   ⍝ convert all names to lowercase
+ :If 0<≢name
+     name←⎕JSON('"(?:[^"\\]|\\.)+"(?=\s*:)|[a-zA-Z_$][a-zA-Z0-9_$]*(?=\s*:)'⎕R{⎕C ⍵.Match})⎕JSON name    ⍝ all names to lowercase
+     SETTINGS←SETTINGS MergeNS name
+ :EndIf
+
+ ref←{
+     6::''
+     ⍵.browsers⍎⎕C ⍵.browser
+ }SETTINGS
+ :If ref≡''
+     ('Settings "',SETTINGS.browser,'" not found!')⎕SIGNAL 11
+ :EndIf
+ SETTINGS.Browser←⎕JSON ⎕JSON ref
  BROWSEROPTIONS←⍬  ⍝ no options found...
- :Select ⍬⍴ref.⎕NC'Options'
- :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
+ :Select ⍬⍴ref.⎕NC'options'
+ :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.options
  :EndSelect
 
  ⎕USING←'System'

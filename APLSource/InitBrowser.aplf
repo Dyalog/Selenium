@@ -1,12 +1,23 @@
  {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
- :If 0=⎕NC'DEFAULTBROWSER'
-     Init
- :EndIf
-   ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+ ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+ ⍝
+ ⍝ ⍵ is (name of browser)[port]
+ ⍝   or alternatively the name of json[5] file with browser settings (will be merged with our own browsers.json5 toget complete settings)
+ ⍝   or a namespace with the same content
+
+ Init
  Re←{6::0 ⋄ ⍎⍵}'Re'
  options←''
  :If ×⎕NC'BROWSER' ⍝ close any open browser
      BROWSER.Quit
+ :EndIf
+ :If 0 2∊⍨10|⎕DR settings   ⍝ if settings is a string
+ :AndIf ⎕NEXISTS settings
+     settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET settings
+ :EndIf
+ :If 0=≢settings            ⍝ it it is empty
+ :AndIf 0<≢f1←2 ⎕NQ'.' 'GetEnvironment' ' SELENIUM_CONFIGFILE'    ⍝ and a configfile is given in the environment
+     settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET f1
  :EndIf
  :If ~Re
      ApplySettings settings
@@ -19,18 +30,18 @@
  :Else
      noBrowserVersion←0=SETTINGS.Browser.⎕NC'version'
      :If ~Re
-         pckgs⍪←SETTINGS.Components.WebDriver.(nuget version using)
-         :For nm :In SETTINGS.Components.optional.⎕NL ¯9
-             p←SETTINGS.Components.optional⍎nm
+         pckgs⍪←SETTINGS.components.webdriver.(nuget version using)
+         :For nm :In SETTINGS.components.optional.⎕NL ¯9
+             p←SETTINGS.components.optional⍎nm
              :If 0=p.⎕NC'enabled'
              :OrIf p.enabled∊1(⊂'true')
-                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvu'
+                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nuget' 'version' 'using'
              :EndIf
          :EndFor
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
 
          pckgs⍪←SETTINGS.Browser.(nuget({0::'' ⋄ ⍎⍵}'version')using)
-         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
+         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
              :If 20≤1⊃⎕SE.SALTUtils.VERSION
                  myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
              :Else

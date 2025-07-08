@@ -1,0 +1,2 @@
+ Char←Char
+ Char←80 82 160 320∊⍨⎕DR
