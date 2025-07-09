@@ -1,9 +1,7 @@
-    {ok}←id SetInputValue text;s;i;r
+ {ok}←id SetInputValue text;s;i;r;obj;js
 ⍝ Set the value of an input control to text.
-      :If ∨/i←text='"'
-          text←(1+i)/text
-          text[(⍸i)+(0,¯1↓+\i)[⍸i]]←'\'
-      :EndIf
-      (Find id).Click
-      id SendKeys Keys.Delete,text
-    
+ (id obj)←id{2::(⍺)(Find ⍺) ⋄ (⍺.GetAttribute⊂⍵)⍺}'id'  ⍝ if "id" is an element, get its "id" Attibute
+ 
+ obj.Click
+ 
+ (obj text)ExecuteScript'arguments[0].value = arguments[1];'
