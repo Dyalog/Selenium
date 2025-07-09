@@ -1,5 +1,10 @@
- InitRIDE nul;z;path;f;file;rpfile
-⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##)
+ InitRIDE browser;z;path;f;file;rpfile
+⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##.##)
+⍝ creates globals:
+⍝ S - reference to Selenium ns
+⍝ proc - the process that runs the APL Interpreter that we are controlling through RIDE
+⍝ RIDEPORT - the port that RIDE is connected to
+
  :If 0=##.##.⎕NC'APLProcess'
      path←(2 ⎕NQ #'GetEnvironment' 'DYALOG'),'/Library/Core/'
      ⎕SE.Link.Import ##.##'APLProcess'
@@ -26,7 +31,7 @@
      RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
      3 ⎕NDELETE rpfile
  :EndIf
- S.InitBrowser''
+ S.InitBrowser browser
  S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
 
  ⎕PATH←'S S.ride'
