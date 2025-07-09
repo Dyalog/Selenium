@@ -6,11 +6,5 @@
       q←Find obj
       :If q≢0  ⍝ make sure that we found it!
           text←eis text
-          i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
-          ACTIONS.Reset
-          :For k :In i
-              (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
-          :EndFor
-          q.SendKeys,¨text~Keys.(Shift Control Alt)
+          q.SendKeys text
       :EndIf
-    
