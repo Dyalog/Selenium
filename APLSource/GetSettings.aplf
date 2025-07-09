@@ -1,5 +1,5 @@
  R←GetSettings;v;varnam
- Init
+ {}Init
  R←1⊃⎕NGET _HOME,'settings.json5'
  R←(⎕JSON⍠'Dialect' 'JSON5')R
  R.Browsers←Flatten R.Browsers
