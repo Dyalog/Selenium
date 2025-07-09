@@ -71,11 +71,19 @@ nav: # This 'nav:' MUST be at the very first column (no spaces before it)
   - Overview: 'index.md' # Indented by two spaces relative to 'nav:'
   - Usage:              # Indented by two spaces
     - 'Installation': 'install-selenium.md' # Indented by four spaces
+    - 'Setting browser options': 'settings.md'
   - Examples:           # Indented by two spaces
     - 'Simple Example': 'simple-example.md' # Indented by four spaces
     - 'Testing RIDE': 'ride.md'
   - Command Reference:  # Indented by two spaces
+    - 'Commands by category': 'commands-by-category.md' 
+    - 'Find': 'Find.md'   #ToDo!
+    - 'GoTo': 'GoTo.md'
     - 'InitBrowser': 'InitBrowser.md' # Indented by four spaces
-  - About:              # Indented by two spaces
+    - 'SendKeys': 'SendKeys.md'
+  - Need a good tile here!: 
+    - 'Terminology': 'terminology.md' 
+    - 'FAQ': 'faq.md'
+  - About:
     - License: 'LICENSE.md'         # Indented by four spaces
     - 'Release Notes': 'release-notes.md' # Indented by four spaces
