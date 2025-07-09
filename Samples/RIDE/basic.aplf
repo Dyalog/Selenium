@@ -6,7 +6,9 @@
      Se'var'Enter
  :AndIf LastIs'Hej Morten'
      Se'var'
-     Se Shift Enter
+     Se Shift,Enter
+∘∘∘  ⍝ the following will fail because the way we locate the editor input area is no longer valid. It's far more complicated now (thanks to Monaco!).
+∘∘∘  ⍝ (Pending q asking if there is a RIDE API from June 27th, 2025)
      Ed Home,3/Delete
      Ed'Hello'
      Ed Escape
