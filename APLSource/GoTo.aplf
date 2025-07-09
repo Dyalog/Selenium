@@ -6,8 +6,9 @@
          :If z=1
              base←((2≥+\base='/')/base),'/'
          :ElseIf '../'≡z↑url
-             base←()↑base
-         :ElseIf './'≡z↑url  ⍝ do nothing
+             base←(2⊃⌽⍸base='/')↑base
+         :ElseIf './'≡z↑url
+             base←(⊢/⍸base='/')↑base
          :Else
              base←base,z↑url
          :EndIf
