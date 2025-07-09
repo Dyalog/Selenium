@@ -2,27 +2,20 @@
 ⍝ R=0: no error initialising Selenium
 ⍝ otherwise error code & message
 ⍝ (not yet used, but might be one day...)
+ R←0
+ msg←''
+
  :If 2=⎕NC'__initialised'
  :AndIf __initialised
+     msg←'Selenium already initialised!'
      →0
  :EndIf
  ⎕WX←3
-
- :If 0=⎕NC'DEFAULTBROWSER'
-     DEFAULTBROWSER←'Chrome'
- :EndIf
- :If 0=⎕NC'PORT'
-     PORT←8080
- :EndIf
 
  RETRYLIMIT←DEFAULTRETRYLIMIT←5 ⍝ seconds
  HOME←''    ⍝ the home folder of this ns in the filesystem
 
  EXT←'.dyalog'
  RIDEEXT←'.ridetest'
-
-
- R←0
- msg←''
 
  __initialised←1
