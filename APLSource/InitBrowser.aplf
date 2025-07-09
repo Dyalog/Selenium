@@ -1,11 +1,14 @@
- {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
+ ok←{Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
  ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
  ⍝
  ⍝ ⍵ is (name of browser)[port]
  ⍝   or alternatively the name of json[5] file with browser settings (will be merged with our own browsers.json5 toget complete settings)
  ⍝   or a namespace with the same content
-
- Init
+ ⍝ ok=0 '' if it worked,
+ ⍝    1 errmsg otherwise
+ :If ⊃ok←Init
+     →0
+ :EndIf
  Re←{6::0 ⋄ ⍎⍵}'Re'
  options←''
  :If ×⎕NC'BROWSER' ⍝ close any open browser
@@ -51,7 +54,7 @@
                  ⎕MKDIR myNuGetFolder
              :EndIf
          :EndIf
-         NuGet.Setup myNuGetFolder
+         {}NuGet.Setup myNuGetFolder
          nul←{NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
          ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
          ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
@@ -68,7 +71,8 @@
          :Trap 90
              z←1⊣BSVC.IsRunning
          :Else
-             z←0
+             ok←1('BrowserService "',(⍎SETTINGS.Browser.driver,'Service'),'" has been started, but it not running!"')
+             →0
          :EndTrap
      :EndIf
 
@@ -115,9 +119,10 @@
              :EndIf
          :EndIf
      :Else
-         ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
-         ⎕←⍕⎕EXCEPTION
-         ∘∘∘
+         ok←1 ''
+         ok[2]←⊂(⎕JSON⍠'Compact' 0)⎕DMX
+         ok[2]←⊂(2⊃ok),⍕⎕EXCEPTION
+         →0
      :EndTrap
 
      CURRENTBROWSER←browser
