@@ -1,0 +1,7 @@
+r←test_keyboard_monitor nul;z;ctl;
+⍝
+allKeys← {nl←⍵.⎕nl¯2 ⋄ nl,[1.5]⍵⍎¨⍵.⎕nl¯2}#.S.Keys
+ #.S.GoTo'file:///',path,'Tests/keyboard-monitor.html'
+
+ kbdm_test ⎕A,⎕D,⎕C ⎕A
+ kbdm_test ⊂#.S.Keys.(Shift,Enter)

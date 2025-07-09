@@ -1,0 +1,4 @@
+teardown nul;z
+⍝
+#.S.End
+⎕se.Cider.CloseProject⍬

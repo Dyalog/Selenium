@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyboard Event Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+        #inputField {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .controls {
+            margin-bottom: 20px;
+            text-align: right; /* Button rechts ausrichten */
+        }
+        #clearLogButton {
+            background-color: #dc3545; /* Rot für Löschen */
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        #clearLogButton:hover {
+            background-color: #c82333;
+        }
+        #outputLog {
+            width: calc(100% - 20px);
+            min-height: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #333;
+            resize: vertical;
+            overflow-y: scroll;
+            box-sizing: border-box;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            padding-bottom: 3px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Keyboard Event Monitor</h1>
+        <label for="inputField">Type something here:</label>
+        <input type="text" id="inputField" placeholder="Start typing...">
+        
+        <div class="controls">
+            <button id="clearLogButton">Clear Log</button>
+        </div>
+
+        <label for="outputLog" style="margin-top: 20px;">Event Log:</label>
+        <textarea id="outputLog" readonly></textarea>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const outputLog = document.getElementById('outputLog');
+        const clearLogButton = document.getElementById('clearLogButton');
+
+        // Event Listener für Tastatureingaben
+        inputField.addEventListener('keydown', (event) => {
+            logEvent('keydown', event);
+        });
+
+        inputField.addEventListener('keyup', (event) => {
+            logEvent('keyup', event);
+        });
+
+        inputField.addEventListener('keypress', (event) => {
+            logEvent('keypress', event);
+        });
+
+        inputField.addEventListener('input', (event) => {
+            logEvent('input', event);
+        });
+
+        // Event Listener für den Clear Log Button
+        clearLogButton.addEventListener('click', () => {
+            outputLog.value = ''; // Leert das Textfeld
+            inputField.value = ''; // Leert auch das Eingabefeld
+            inputField.focus(); // Setzt den Fokus zurück ins Eingabefeld
+            console.log('Log cleared.');
+        });
+
+        function logEvent(eventType, event) {
+            let logMessage = `[${new Date().toLocaleTimeString()}] ${eventType.toUpperCase()}: `;
+            
+            const modifiers = [];
+            if (event.ctrlKey) modifiers.push('Ctrl');
+            if (event.shiftKey) modifiers.push('Shift');
+            if (event.altKey) modifiers.push('Alt');
+            if (event.metaKey) modifiers.push('Meta/Cmd');
+
+            if (modifiers.length > 0) {
+                logMessage += `[${modifiers.join('+')}] `;
+            }
+
+            if (event.key) {
+                logMessage += `Key='${event.key}' `;
+            }
+            
+            if (event.code) {
+                logMessage += `Code='${event.code}' `;
+            }
+
+            if (event.which) {
+                logMessage += `Which=${event.which} `;
+            }
+
+            if (eventType === 'input') {
+                logMessage += `Input Value='${inputField.value}'`;
+            } else if (eventType === 'keydown' || eventType === 'keypress' || eventType === 'keyup') {
+                if (event.key && event.key.length === 1 && event.key !== ' ' && event.key !== 'Enter') {
+                    logMessage += `Char='${event.key}'`;
+                }
+            }
+
+            // Füge den neuen Eintrag oben hinzu
+            outputLog.value = logMessage + '\n' + outputLog.value; 
+            
+            // Begrenze die Anzahl der Zeilen (optional)
+            const maxLines = 100; // Mehr Zeilen als vorher für längere Tests
+            const lines = outputLog.value.split('\n');
+            if (lines.length > maxLines) {
+                outputLog.value = lines.slice(0, maxLines).join('\n');
+            }
+        }
+    </script>
+</body>
+</html>

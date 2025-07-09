@@ -1,0 +1,17 @@
+ r←init_selenium_chrome nul;z
+ {}⎕SE.UCMD'output.find on -i'
+⍝ Initialize Selenium with Chrome driver
+ path←∊1 ⎕NPARTS ##.TESTSOURCE,'../'    ⍝ set up global variable with path to the Selenium folder (will also define #.S as ref to Selenium later)
+ :If ~⊃r←⎕SE.Cider.OpenProject ⎕SE.Cider.CreateOpenParms(folder:path ⋄ batch:1)    ⍝ open project using Cider
+     ∘∘∘
+     r←2⊃r
+     →0
+ :EndIf
+
+ #.S←#.Selenium
+ :If ⊃r←#.S.InitBrowser'chrome' 80   ⍝ if there was an error initialising the browser
+ ∘∘∘
+     r←2⊃r                           ⍝ report it...
+ :Else
+     r←''
+ :EndIf
