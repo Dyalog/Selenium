@@ -35,5 +35,8 @@ version←Version
 ⍝                   - "WaitFor" was not working as expected with textarea-elements
 ⍝                   - remove ⍺ from InitBrowser
 ⍝                   - added "End" method to dispose .NET artifacts from memory and disc
+⍝                   - ExecuteScript now supports passing arguments to the js code (in ⍺) - see SetInputValue for an example
+⍝                   - SetInputValue passes values with JS which means that even APL characters can be set
+⍝                   - SendKeys simplified internally thanks to recent changes in Selenium and WebDriver4
 
 version←'2.0.0'
