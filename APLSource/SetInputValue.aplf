@@ -4,4 +4,4 @@
  
  obj.Click
  
- (obj text)ExecuteScript'arguments[0].value = arguments[1];'
+ (obj text)ExecuteScript'arguments[0].value = arguments[1];arguments[0].dispatchEvent(new Event("input", { bubbles: true }));arguments[0].dispatchEvent(new Event("change", { bubbles: true }));'
