@@ -1,0 +1,26 @@
+ r←test_input_monitor nul;inp;ti;ni;sl;log;ctl;list;exp;evt;ds
+⍝
+ r←''
+ #.S.GoTo'file:///',path,'Tests/input_monitor.html'
+ ti←#.S.Find'textField'
+ ni←#.S.Find'numberField'
+ sl←#.S.Find'languageSelect'
+ log←#.S.Find'logField'
+⍝ ds←#.S.ExecuteScript'return (1.1).toLocaleString().replace(/\d/g, '''')[0];'  ⍝ decimal separator
+
+ :For ctl list :InEach (ti ni sl)(('Hello world!' 'Here is some APL: (≠⊆⊢)')(123.456 ¯42 0,(○0.5 1 2))('APL' 'C#'))
+     :For inp :In list
+         :If ctl∊ti ni
+             inp←('¯'⎕R'-'⍠'Regex' 0)⍕inp
+             ctl #.S.SetInputValue inp
+         :Else
+             ctl #.S.SelectItemText inp
+         :EndIf
+       ⍝  inp←('.'⎕R ds⍠'Regex' 0)inp    ⍝ fix decimal separator
+         evt←log.GetAttribute⊂'value'   ⍝ get the recorded event
+         exp←'Element ''',(ctl.GetAttribute⊂'id'),''' changed to: ''',inp,''''
+         :If 1 Check∨/exp⍷evt
+             r,←'Log did not contain expected value "',exp,'" but text "',evt,'"'
+         :EndIf
+     :EndFor
+ :EndFor

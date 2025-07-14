@@ -5,6 +5,6 @@ Description: run tests of Selenium against the installed version of chrome
 Setup   : init_selenium_chrome
 
 Test    : test_keyboard_monitor
-Test    : 
+Test    : test_input_monitor
 
 Teardown: teardown

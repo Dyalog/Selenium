@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Field Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        select {
+            height: 40px; /* Standard height for select boxes */
+            appearance: none; /* Removes default arrow in some browsers */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C197.3L159.9%2C69.9c-4.4-4.4-11.4-4.4-15.8%2C0L5.3%2C197.3c-4.4%2C4.4-4.4%2C11.4%2C0%2C15.8c4.4%2C4.4%2C11.4%2C4.4%2C15.8%2C0l130-130l130%2C130c4.4%2C4.4%2C11.4%2C4.4%2C15.8%2C0C291.3%2C208.7%2C291.3%2C201.7%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+            padding-right: 30px; /* Space for custom arrow */
+        }
+        #logField {
+            width: calc(100% - 22px);
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #333;
+            resize: vertical;
+            overflow-y: scroll;
+            box-sizing: border-box;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Input Field Monitor</h1>
+
+        <div class="form-group">
+            <label for="textField">Text Input:</label>
+            <input type="text" id="textField" placeholder="Enter text">
+        </div>
+
+        <div class="form-group">
+            <label for="numberField">Numeric Input:</label>
+            <input type="number" id="numberField" placeholder="Enter number">
+        </div>
+
+        <div class="form-group">
+            <label for="languageSelect">Select Language:</label>
+            <select id="languageSelect">
+                <option value="">-- Choose --</option>
+                <option value="APL">APL</option>
+                <option value="C#">C#</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Python">Python</option>
+                <option value="SQL">SQL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="logField">Activity Log:</label>
+            <textarea id="logField" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const textField = document.getElementById('textField');
+        const numberField = document.getElementById('numberField');
+        const languageSelect = document.getElementById('languageSelect');
+        const logField = document.getElementById('logField');
+
+        // Function to log changes to input fields
+        function logChange(elementId, value) {
+            const timestamp = new Date().toLocaleTimeString();
+            const message = `[${timestamp}] Element '${elementId}' changed to: '${value}'`;
+            
+            // Add the new message to the top of the log
+            logField.value = message;
+
+            // Optional: Limit the number of lines in the log
+            const maxLogLines = 50;
+            const lines = logField.value.split('\n');
+            if (lines.length > maxLogLines) {
+                logField.value = lines.slice(0, maxLogLines).join('\n');
+            }
+        }
+
+        // Event listener for Text Input
+        textField.addEventListener('input', (event) => {
+            logChange(event.target.id, event.target.value);
+        });
+
+        // Event listener for Numeric Input
+        numberField.addEventListener('input', (event) => {
+            logChange(event.target.id, event.target.value);
+        });
+
+        // Event listener for Select Control
+        languageSelect.addEventListener('change', (event) => {
+            // For select boxes, log the text of the selected option, not just its value
+            const selectedOptionText = event.target.options[event.target.selectedIndex].text;
+            logChange(event.target.id, selectedOptionText);
+        });
+
+    </script>
+</body>
+</html>
