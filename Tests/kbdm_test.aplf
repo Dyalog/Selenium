@@ -1,29 +1,31 @@
- R←kbdm_test keys;z
+ kbdm_test keys;z;c;sink;exp;txt;symbols;j;k
 ⍝ Send keystrokes to the browser and monitor keyboard events (related to test_keyboard_monitor.aplf and keyboard-monitor.html )
-
- :If 0=≢keys
-     R←''
-     →0
- :EndIf
-
- ctl←#.S.Find'inputField'
- log←#.S.Find'outputLog'
+⍝ writes errors into global "r" (result of test function test_keyboard_monitor that calls this fn)
+ →(0=≢keys)/0
+ symbols←'; :.,-_#+*''^°!"$%&/()=?\[]{}'
  c←⊃keys
  sink←ctl #.S.SendKeys c
- exp←'KEYPRESS: '   ⍝ the text we expect to see in the log
- :If c∊⎕A     ⍝ uppercase characters need shift (automagically added by Selenium)
+ exp←'KEYPRESS:'   ⍝ the text we expect to see in the log
+ :If ∧/c∊⎕A     ⍝ uppercase characters need shift (automagically added by Selenium)
      exp,←' [Shift] Key=''',c,''''
- :ElseIf c∊⎕C ⎕A   ⍝ lowercase characters do not need Shift
-     exp,←' Key=''',c,''''
- :ElseIf c∊{⍵⍎¨⍵.⎕NL ¯2}#.S.Keys
-     ∘∘∘
+ :ElseIf ∨/z←c∊∊allKeys[;2]
+     j←(∊allKeys[;2])⍳z/c
+     :If ∨/k←∨/¨(⊂'Shift')⍷¨allKeys[j;1]
+         exp,←' [Shift]'
+         j←(~k)/j
+         :If 0∊z
+             exp,←' Key=''',(1 ⎕C(~z)/c),''''
+         :EndIf
+     :Else
+         exp,←∊allKeys[j;1]
+     :EndIf
  :Else
-     ∘∘∘
+     exp,←' Key=''',c,''''
  :EndIf
  txt←log.GetAttribute⊂'value'
-
+ clb.Click  ⍝ clear log
  :If ~∨/exp⍷txt
-     R←'Could not find expected text "',exp,'" in log: ',txt
+     r,←'Could not find expected text "',exp,'" in log: ',txt,lf
      →0
  :EndIf
- R←kbdm_test 1↓keys
+ kbdm_test 1↓keys
