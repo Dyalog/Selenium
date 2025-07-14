@@ -4,7 +4,7 @@
 
  settings←GetSettings
  :If (0 2∊⍨10|⎕DR)⊃name  ⍝ browser[port]
- :andif 0<≢name  
+ :AndIf 0<≢name
      rarg←name
      name←⎕NS''
      name.browser←⊃⊆rarg
