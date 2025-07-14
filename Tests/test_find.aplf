@@ -1,0 +1,48 @@
+ r←test_find sink;ctl
+ r←''
+ #.S.GoTo'file:///',path,'Tests/test_find.html'
+
+⍝ 1. id
+ ctl←'Name'#.S.Find'usernameInput'
+ 'John Doe'Assert ctl[0].GetAttribute⊂'value'
+
+ ctl←'Name'#.S.Find'submitButton'
+ 'Submit Form'Assert ctl.Text
+
+
+⍝ 2. Name[s]
+ ctl←'Name'#.S.Find'userEmail'
+ 'input'Assert ctl.TagName
+ 'john@doe.com'Assert ctl[0].GetAttribute⊂'value'
+
+ ctl←'Names'#.S.Find'gender'
+ 2 Assert ctl.Count
+ 'male'Assert ctl[0].GetAttribute⊂'value'
+ 'female'Assert ctl[1].GetAttribute⊂'value'
+
+
+⍝ 3. Class Name[s]
+ ctl←'ClassName'#.S.Find'intro-paragraph'
+ 'This is an introductory paragraph.'Assert ctl.Text
+
+ ctl←'ClassNames'#.S.Find'highlighted-text'
+ 2 Assert ctl.Count
+ 'This text is important.'Assert ctl[0].Text
+ 'Another important text.'Assert ctl[1].Text
+
+
+⍝ 4. Tag Name
+ ctl←'TagName'#.S.Find'a'
+ 'Clickable Link'Assert ctl.Text
+
+
+⍝ 5. [Partial] Link Text
+ ctl←'LinkText'#.S.Find'Visit Google'
+ 'https://www.google.com/'Assert ctl.GetAttribute⊂'href'
+
+ ctl←'PartialLinkText'#.S.Find'Bing'
+ 'https://www.bing.com/'Assert ctl.GetAttribute⊂'href'
+
+
+⍝ 6..8 still TODO!
+ ∘∘∘

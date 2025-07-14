@@ -6,5 +6,6 @@ Setup   : init_selenium_chrome
 
 Test    : test_keyboard_monitor
 Test    : test_input_monitor
+Test    : test_find
 
 Teardown: teardown
