@@ -68,18 +68,18 @@
 </head>
 <body>
     <h1>Selenium Element Locators Test Page</h1>
-    <p>This page demonstrates various HTML elements for Selenium <code>FindElement[s]By</code> methods.</p>
+    <p>This page demonstrates various HTML elements to test with Selenium's <code>Find</code> function.</p>
 
     <section>
         <h2>1. By ID</h2>
         <div class="element-box">
             <label for="usernameInput">Username:</label>
             <input type="text" id="usernameInput" name="username" placeholder="Enter your username" value="John Doe">
-            <div class="code-example"><code>driver.FindElement(By.Id("usernameInput"))</code></div>
+            <div class="code-example"><code>Find'usernameInput'</code></div>
         </div>
         <div class="element-box">
             <button id="submitButton">Submit Form</button>
-            <div class="code-example"><code>driver.FindElement(By.Id("submitButton"))</code></div>
+            <div class="code-example"><code>Find'submitButton'</code></div>
         </div>
     </section>
 
@@ -88,12 +88,12 @@
         <div class="element-box">
             <label for="email">Email:</label>
             <input type="email" name="userEmail" id="emailField" placeholder="Enter your email" value="john@doe.com">
-            <div class="code-example"><code>driver.FindElement(By.Name("userEmail"))</code></div>
+            <div class="code-example"><code>'Name'Find'userEmail'</code></div>
         </div>
         <div class="element-box">
             <input type="radio" name="gender" value="male" id="maleRadio"> <label for="maleRadio">Male</label><br>
             <input type="radio" name="gender" value="female" id="femaleRadio"> <label for="femaleRadio">Female</label>
-            <div class="code-example"><code>driver.FindElements(By.Name("gender"))</code></div>
+            <div class="code-example"><code>'Name'Find'gender'</code></div>
         </div>
     </section>
 
@@ -101,12 +101,12 @@
         <h2>3. By Class Name</h2>
         <div class="element-box">
             <p class="intro-paragraph">This is an introductory paragraph.</p>
-            <div class="code-example"><code>driver.FindElement(By.ClassName("intro-paragraph"))</code></div>
+            <div class="code-example"><code>'ClassName'Find'intro-paragraph'</code></div>
         </div>
         <div class="element-box">
             <p class="highlighted-text">This text is important.</p>
             <p class="highlighted-text">Another important text.</p>
-            <div class="code-example"><code>driver.FindElements(By.ClassName("highlighted-text"))</code></div>
+            <div class="code-example"><code>'ClassName'Find'highlighted-text'</code></div>
         </div>
     </section>
 
@@ -114,7 +114,7 @@
         <h2>4. By Tag Name</h2>
         <div class="element-box">
             <a href="#">Clickable Link</a>
-            <div class="code-example"><code>driver.FindElement(By.TagName("a"))</code> (finds the first link)</div>
+            <div class="code-example"><code>'TagName'FindElement'a'</code> (finds the first link)</div>
         </div>
         <div class="element-box">
             <ul>
@@ -122,7 +122,7 @@
                 <li>List Item 2</li>
                 <li>List Item 3</li>
             </ul>
-            <div class="code-example"><code>driver.FindElements(By.TagName("li"))</code> (finds all list items)</div>
+            <div class="code-example"><code>'TagNames'Find'li'</code> (finds all list items)</div>
         </div>
     </section>
 
@@ -130,11 +130,11 @@
         <h2>5. By Link Text & Partial Link Text</h2>
         <div class="element-box">
             <a href="https://www.google.com" id="googleLink">Visit Google</a>
-            <div class="code-example"><code>driver.FindElement(By.LinkText("Visit Google"))</code></div>
+            <div class="code-example"><code>'LinkText'Find'Visit Google'</code></div>
         </div>
         <div class="element-box">
             <a href="https://www.bing.com" id="bingLink">Go to Bing Search</a>
-            <div class="code-example"><code>driver.FindElement(By.PartialLinkText("Bing"))</code></div>
+            <div class="code-example"><code>'PartialLinkText'Find'Bing'</code></div>
         </div>
     </section>
 
@@ -147,11 +147,11 @@
                 <span data-qa="footer-info">Contact us here.</span>
             </div>
             <div class="code-example">
-                <code>driver.FindElement(By.CssSelector("#mainContent"))</code><br>
-                <code>driver.FindElement(By.CssSelector(".content-area"))</code><br>
-                <code>driver.FindElement(By.CssSelector("div#mainContent.content-area"))</code><br>
-                <code>driver.FindElement(By.CssSelector("[data-qa='footer-info']"))</code><br>
-                <code>driver.FindElement(By.CssSelector("div.element-box > p"))</code> (direct child)
+                <code>'CssSelector'Find'#mainContent'</code><br>
+                <code>'CssSelector'Find'.content-area'</code><br>
+                <code>'CssSelector'Find'div#mainContent.content-area'</code><br>
+                <code>'CssSelector'Find'[data-qa="footer-info"]'</code><br>
+                <code>'CssSelector'Find'div.element-box > p'</code> (direct child)
             </div>
         </div>
         <div class="element-box">
@@ -160,7 +160,7 @@
                 <li class="menu-item active">Item Two</li>
                 <li class="menu-item">Item Three</li>
             </ul>
-            <div class="code-example"><code>driver.FindElement(By.CssSelector("li.menu-item.active"))</code></div>
+            <div class="code-example"><code>'CssSelector'Find'li.menu-item.active'</code></div>
         </div>
     </section>
 
@@ -174,17 +174,16 @@
                 <span>Some text</span>
             </div>
             <div class="code-example">
-                <code>driver.FindElement(By.XPath("//div[@id='xpathContainer']/p[1]"))</code> (first paragraph) <br>
-                <code>driver.FindElement(By.XPath("//p[@class='special-paragraph']"))</code> <br>
-                <code>driver.FindElement(By.XPath("//span[contains(text(), 'text')]"))</code> (partial text) <br>
-                <code>driver.FindElement(By.XPath("//*[@id='xpathContainer']//span"))</code> (any descendant)
+                <code>'XPath'Find'//div[@id="xpathContainer"]/p[1]'</code> (first paragraph) <br>
+                <code>'XPath'Find'//span[contains(text(), "text")]'</code> (partial text) <br>
+                <code>'XPath'Find'//*[@id="xpathContainer"]//span'</code> (any descendant)
             </div>
         </div>
         <div class="element-box">
             <button class="action-btn" type="button">Click Me</button>
             <button class="action-btn" type="submit">Submit</button>
             <div class="code-example">
-                <code>driver.FindElement(By.XPath("//button[@type='submit']"))</code> (finds the submit button)
+                <code>'XPath'Find'//button[@type="submit"]'</code> (finds the submit button)
             </div>
         </div>
     </section>
@@ -193,11 +192,11 @@
         <h2>8. Handling Hidden/Non-Interactable Elements</h2>
         <div class="element-box">
             <p id="hiddenElement">This element is hidden initially.</p>
-            <button id="showHiddenButton" onclick="document.getElementById('hiddenElement').style.display='block';">Show Hidden Element</button>
+            <button id="toggleHiddenButton" onclick="ctl=document.getElementById('hiddenElement');ctl.style.display=(ctl.style.display=='block')?'none':'block';">Toggle Hidden Element</button>
             <div class="code-example">
-                <code>driver.FindElement(By.Id("hiddenElement"))</code> (will find, but might not be visible/interactable initially)<br>
-                <code>driver.FindElement(By.Id("showHiddenButton")).Click()</code> (to make it visible)<br>
-                <code>wait.Until(ExpectedConditions.ElementIsVisible(By.Id("hiddenElement")))</code> (for robust tests)
+                <code>Find'hiddenElement'</code> (will find, but might not be visible/interactable initially)<br>
+                <code>Click'toggleHiddenButton'</code> (to make it visible)<br>
+                <code>wait.Until(ExpectedConditions.ElementIsVisible(By.Id("hiddenElement)</code> (for robust tests)
             </div>
         </div>
     </section>

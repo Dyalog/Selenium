@@ -1,19 +1,20 @@
- r←test_find sink;ctl
+ r←test_find sink;ctl;NL
  r←''
+ NL←⎕UCS ⎕SE.SALTUtils.LINDEL
  #.S.GoTo'file:///',path,'Tests/test_find.html'
 
 ⍝ 1. id
- ctl←'Name'#.S.Find'usernameInput'
- 'John Doe'Assert ctl[0].GetAttribute⊂'value'
+ ctl←#.S.Find'usernameInput'
+ 'John Doe'Assert ctl.GetAttribute⊂'value'
 
- ctl←'Name'#.S.Find'submitButton'
+ ctl←#.S.Find'submitButton'
  'Submit Form'Assert ctl.Text
 
 
 ⍝ 2. Name[s]
  ctl←'Name'#.S.Find'userEmail'
  'input'Assert ctl.TagName
- 'john@doe.com'Assert ctl[0].GetAttribute⊂'value'
+ 'john@doe.com'Assert ctl.GetAttribute⊂'value'
 
  ctl←'Names'#.S.Find'gender'
  2 Assert ctl.Count
@@ -34,7 +35,8 @@
 ⍝ 4. Tag Name
  ctl←'TagName'#.S.Find'a'
  'Clickable Link'Assert ctl.Text
-
+ ctl←'TagNames'#.S.Find'li'
+ 6 Assert ctl.Count  ⍝
 
 ⍝ 5. [Partial] Link Text
  ctl←'LinkText'#.S.Find'Visit Google'
@@ -43,6 +45,33 @@
  ctl←'PartialLinkText'#.S.Find'Bing'
  'https://www.bing.com/'Assert ctl.GetAttribute⊂'href'
 
+⍝ 6. Css Selector
+ ctl←'CssSelector'#.S.Find'#mainContent'
+ ('Content inside main area.',NL,'Contact us here.')Assert ctl.Text
+ ctl←'CssSelector'#.S.Find'.content-area'
+ ('Content inside main area.',NL,'Contact us here.')Assert ctl.Text
+ ctl←'CssSelector'#.S.Find'[data-qa="footer-info"]'
+ 'Contact us here.'Assert ctl.Text
+ ctl←'CssSelector'#.S.Find'div.element-box > p'
+ 'This is an introductory paragraph.'Assert ctl.Text
+ ctl←'CssSelector'#.S.Find'li.menu-item.active'
+ 'Item Two'Assert ctl.Text
 
-⍝ 6..8 still TODO!
- ∘∘∘
+
+⍝ 7. XPath
+ ctl←'XPath'#.S.Find'//div[@id="xpathContainer"]/p[1]'
+ 'Paragraph 1'Assert ctl.Text
+ ctl←'XPath'#.S.Find'//span[contains(text(), "text")]'
+ 'Some text'Assert ctl.Text
+ ctl←'XPath'#.S.Find'//*[@id="xpathContainer"]//span'
+ 'Some text'Assert ctl.Text
+ ctl←'XPath'#.S.Find'//button[@type="submit"]'
+ 'Submit'Assert ctl.Text
+
+⍝ 8. Dealing with hidden elements
+ ctl←#.S.Find'hiddenElement'
+ 0 Assert ctl.Displayed    ⍝ initially it's hidden
+ 0 Assert #.S.Click ctl   ⍝ can't interact with it
+ #.S.Click'toggleHiddenButton'⍝ make element visible
+ 1 Assert ctl.Displayed    ⍝ is it?
+ 1 Assert #.S.Click ctl    ⍝ and clickable...?
