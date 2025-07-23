@@ -8,7 +8,7 @@
      rarg←name
      name←⎕NS''
      name.browser←⊃⊆rarg
-     :If 2=≢name
+     :If 2=≢rarg
      :AndIf (2|⎕DR)2⊃rarg
          name.port←2⊃rarg
      :EndIf
