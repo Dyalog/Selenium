@@ -27,7 +27,7 @@
           AddArguments: ['--no-sandbox','--remote-debugging-port=8080'],
           Flavours: {
             HtmlRenderer200: {
-              version:'127.0.6533.7200', 
+              version:'138.0.7204.16800', 
             },
             HtmlRenderer190: {
               //version: '121.0.6167.18400'
