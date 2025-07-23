@@ -1,6 +1,6 @@
  Y←X MergeNS Y;nl;n1;n2;n
  :If 0=≢nl←(Y.⎕NL ¯9)∪X.⎕NL ¯9
-     Y←⎕NS X Y
+     {}'Y'⎕NS X
      →0
  :EndIf
  :For n :In nl
