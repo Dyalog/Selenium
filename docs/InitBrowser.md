@@ -9,4 +9,4 @@ The name should either be one of the browsers currently supported by Selenium (`
 
 The optional left argument is a boolean indicating if we're re-initialising the browser - it saves the time required to setup of the NuGet components and simply re-initializes the browser driver. This can be useful when the browser was closed.
 
-`InitBrowser` creates an object `BROWSER` in the Selenium namespace which is used for further interaction with the browser. `BROWSER` is an instance of the [Selenium WebDriver](https://www.selenium.dev/documentation/webdriver/) linked to your specific browser's .NET driver.
+`InitBrowser` creates an object `BROWSER` in the Selenium namespace which is used for further interaction with the browser. `BROWSER` is an instance of the [Selenium WebDriver](https://www.selenium.dev/documentation/webdriver/) linked to your specific browser's .NET driver. It will also create a variable `CURRENTBROWSER` with the name of the driver instantiated in `BROWSER` and `ACTIONS` which is a reference to an instance of Selenium.Interactions.Actions, used to automate mouse movements.

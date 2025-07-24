@@ -10,5 +10,5 @@ The result `r` will either be an instance of `IWebElement` or the scalar 0 if th
 While it is possible to find hidden elements, it is not possible to interact with them (click or enter text into input controls). The `IWebElement`instances provide a boolean `Displayed` that can be used to check if an element is visible or not.
 
 !!!info
-   Our own test `Tests/test_find.aplf` illustrates practical uses of `Find` with diverse criteria.
-<!--- can we link directly to the file? -->
+   Our own test [`Tests/test_find.aplf`](https://github.com/Dyalog/Selenium/blob/selenium-manager/Tests/test_find.aplf) illustrates practical uses of `Find` with diverse criteria.
+<!-- URL needs to be adjusted after merging this into main -->
