@@ -1,4 +1,4 @@
- r←test_find sink;ctl;NL
+ r←test_find sink;ctl;NL;hdn
  r←''
  NL←⎕UCS ⎕SE.SALTUtils.LINDEL
  #.S.GoTo'file:///',path,'Tests/test_find.html'
@@ -72,6 +72,19 @@
  ctl←#.S.Find'hiddenElement'
  0 Assert ctl.Displayed    ⍝ initially it's hidden
  0 Assert #.S.Click ctl   ⍝ can't interact with it
+ hdn←'hiddenElement'#.S.WaitFor&'This element is hidden initially.'   ⍝ use opportunity to also test "WaitFor"
  #.S.Click'toggleHiddenButton'⍝ make element visible
+ 0 Assert≢⎕TSYNC hdn       ⍝ has WaitFor found the element after it was clicked?
  1 Assert ctl.Displayed    ⍝ is it?
  1 Assert #.S.Click ctl    ⍝ and clickable...?
+
+ ⍝ 9. Find ListItems
+ ctl←'menuList'#.S.FindListItems'Item Two'
+ 326 Assert ⎕DR ctl               ⍝ have we found an object?
+ 1 Assert≢ctl                    ⍝ exactly one item?
+ (,⊂'Item Two')Assert ctl.Text   ⍝ does the text match?
+ 'i2'Assert(⊃ctl).GetAttribute⊂'id'
+
+ ⍝ 10. Test PageSource
+ ctl←#.S.BROWSER.PageSource
+ 1 Assert∨/'<meta charset="UTF-8">'⍷ctl   ⍝ not exactly a "Find" test, but still useful
