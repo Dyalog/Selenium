@@ -10,6 +10,6 @@
      :ElseIf '~'=1↑item
          se.DeselectByText⊂1↓item
      :Else
-         se.SelectByText item 1   ⍝ signature changed in WebDriver4 - do we need to distinguish?
+         se.SelectByText item 1  
      :EndIf
  :EndFor
