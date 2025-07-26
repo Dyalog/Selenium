@@ -61,13 +61,16 @@
       nuget: 'Selenium.WebDriver.EdgeDriver',
       using:[ 'OpenQA.Selenium.Edge'],
       wdns: 'Edge',
-    }
+    },
+    LoggingPreferences: [// edit as needed!
+      {type: "Browser",level: 'All'}, // │All│Debug│Info│Off│Severe│Warning│
+      {type: "Driver", level: 'All'}, 
+      {type: "Performance",level: 'Off'} 
+    ],
   },
-
   Port: 8080,
   Browser: 'Chrome', 
-  WindowSize: [ 1870, 900 ],
-  // WindowSize: [ 1920, 1080 ],
+  WindowSize: [ 1920, 1080 ],
   Components: {
     WebDriver: {
       nuget: 'Selenium.WebDriver', // name of NuGet package
