@@ -1,4 +1,4 @@
- ok←{Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
+ {ok}←{Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion
  ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
  ⍝
  ⍝ ⍵ is (name of browser)[port]
@@ -84,23 +84,21 @@
          :EndFor
      :EndIf
 
-     :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
+     :If 2=SETTINGS.Browser.⎕NC'additionalcapabilities'
      :AndIf 0 ⍝ not yet ripe for production!
-         :For cap :In SETTINGS.Browser.AdditionalCapabilities
+         :For cap :In SETTINGS.Browser.additionalcapabilities
              options.AddAdditionalCapability(cap.name)(cap.value)
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'AddArguments'
-         ⎕←SETTINGS.Browser.AddArguments
-         :For opt :In SETTINGS.Browser.AddArguments
+     :If 2=SETTINGS.Browser.⎕NC'addarguments'
+         :For opt :In SETTINGS.Browser.addarguments
              options.AddArgument⊂opt
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'LoggingPreferences'
-         cap←options.ToCapabilities
-
-         :For p :In SETTINGS.Browser.LoggingPreferences
-             options.SetLoggingPreference p.type(⍎p.level)
+     ∘∘∘
+     :If 2=SETTINGS.Browser.⎕NC'loggingpreferences'
+         :For p :In SETTINGS.Browser.loggingpreferences
+             options.SetLoggingPreference p.type(OpenQA.Selenium.LogLevel⍎p.level)
          :EndFor
      :EndIf
 
