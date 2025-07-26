@@ -2,6 +2,14 @@
 
 The Selenium namespace contains a number of functions which manipulate the browser in various ways (see the next section for details).
 
+## R←IsVisible id
+<a name="isvisible"></a>
+
+The boolean result R indicated whether or not the control with the given id is visible or not.
+
+!!!note
+   It might be interesting to combine `IsVisible` and [`Retry`](#retry) to wait until a dynamic element becomes visible.
+
 ## html←PageSource
 <a name="pagesource"></a>
 
@@ -18,9 +26,19 @@ Following any action, an unknown amount of time may pass before the server respo
 For example:
 ````
       {(Find 'result').Text=⍵} Retry 'You pressed the button!'
-````      
+````
 
 `Retry` returns the result of the final application of the function.
+
+## SaveScreenshot filename
+<a name="savescreenshot"></a>
+
+see [separate page](screenshots.md)
+
+## R←Text id
+<a name="text"></a>
+
+Returns the text displayed in control `id`. In contrast to Selenium's internal functions this works for all types of controls.
 
 ## {msg}←element WaitFor text [message]
 <a name=waitfor"></a>
