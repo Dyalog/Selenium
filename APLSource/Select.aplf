@@ -1,41 +1,41 @@
-     {ok}←selectId Select itemText;sp;se;type;reTry;op;value
+ {ok}←selectId Select itemText;sp;se;type;reTry;op;value
       ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch) OR (criteria)(Index|PartialText|Text|Value|CssSelector)
       ⍝ partialMatch is a boolean indicating whether partial matches are accepted (1) or whether we're looking for full match (0, DEFAULT)
-      ok←0
+ ok←0
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
-      :If 2=≡selectId ⋄ (type selectId)←selectId
-      :Else ⋄ type←'Id'
-      :EndIf
-      'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
-      se←⎕NEW Selenium.Support.UI.SelectElement sp
-      :If isChar itemText
-          itemText←(,itemText)(0)
-      :EndIf
-      reTry←0
-      :Repeat
-          :Trap 90
-              :If isChar 2⊃itemText
-                  :Select 2⊃itemText
-                  :Case 'Index'
-                      se.SelectByIndex 1⊃itemText
-                  :Case 'PartialText'
-                      se.SelectByIndex(1⊃itemText)(1)
-                  :Case 'Text'
-                      se.SelectByIndex 1⊃itemText
-                  :Case 'Value'
-                      se.SelectByValue itemText[1]
-                  :Case 'CssSelector'
-                      value←sp.{(FindElement(By.CssSelector ⍵)).GetAttribute⊂'value'}itemText[1]
-                      se.SelectByValue⊃value
-                  :Else
-                      ('Invalid element in ⍵[2]: "',(2⊃itemText),'"')⎕SIGNAL 11
-                  :EndSelect
-              :Else
-                  se.SelectByText itemText
-              :EndIf
-              ok←1
-          :Else
-              reTry+←1
-              ⎕DL 1
-          :EndTrap
-      :Until ok∨reTry>3
+ :If 2=≡selectId ⋄ (type selectId)←selectId
+ :Else ⋄ type←'Id'
+ :EndIf
+ 'Select not found'⎕SIGNAL(0≡sp←type Find selectId)/11
+ se←⎕NEW Selenium.Support.UI.SelectElement sp
+ :If isChar itemText
+     itemText←(,itemText)(0)
+ :EndIf
+ reTry←0
+ :Repeat
+     :Trap 90
+         :If isChar 2⊃itemText
+             :Select 2⊃itemText  ⍝ should this be relaxed by using ⎕C?
+             :Case 'Index'
+                 se.SelectByIndex 1⊃itemText
+             :Case 'PartialText'
+                 se.SelectByText(1⊃itemText)(1)
+             :Case 'Text'
+                 se.SelectByText itemText[1]
+             :Case 'Value'
+                 se.SelectByValue itemText[1]
+             :Case 'CssSelector'
+                 value←{(BROWSER.FindElement(By.CssSelector(⊂⍵))).GetAttribute⊂'value'}'#',selectId,' ',1⊃itemText
+                 se.SelectByValue⊂value
+             :Else
+                 ('Invalid element in ⍵[2]: "',(2⊃itemText),'"')⎕SIGNAL 11
+             :EndSelect
+         :Else
+             se.SelectByText itemText
+         :EndIf
+         ok←1
+     :Else
+         reTry+←1
+         ⎕DL 1
+     :EndTrap
+ :Until ok∨reTry>3
