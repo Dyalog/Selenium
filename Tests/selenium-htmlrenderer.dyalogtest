@@ -4,9 +4,12 @@ Description: run tests of Selenium against Dyalog's HtmlRenderer
 
 Setup   : init_selenium_htmlrenderer
 
-Test    : test_keyboard_monitor
-Test    : test_input_monitor
 Test    : test_find
+Test    : test_input_monitor
 Test    : test_interaction
+Test    : test_keyboard_monitor
+Test    : test_logs
+Test    : test_screenshots
+
 
 Teardown: teardown

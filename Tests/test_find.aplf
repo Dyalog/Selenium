@@ -1,4 +1,4 @@
- r←test_find sink;ctl;NL;hdn
+ r←test_find sink;ctl;NL;hdn;res
  r←''
  NL←⎕UCS ⎕SE.SALTUtils.LINDEL
  #.S.GoTo'file:///',path,'Tests/test_find.html'
@@ -77,6 +77,12 @@
  0 Assert≢⎕TSYNC hdn       ⍝ has WaitFor found the element after it was clicked?
  1 Assert ctl.Displayed    ⍝ is it?
  1 Assert #.S.Click ctl    ⍝ and clickable...?
+
+ #.S.Click'toggleHiddenButton'⍝ hide it again
+ hdn←{r←#.S.(IsVisible Retry ⍵) ⋄ sink←⎕DL 2 ⋄ r}&'hiddenElement'   ⍝ ⎕DL so that ⎕TSYNC will find the thread...
+ #.S.Click'toggleHiddenButton'⍝ hide it again
+ res←⎕TSYNC hdn
+ 1 Assert≢res                 ⍝ is it visible?
 
  ⍝ 9. Find ListItems
  ctl←'menuList'#.S.FindListItems'Item Two'

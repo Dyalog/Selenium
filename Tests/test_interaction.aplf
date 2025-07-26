@@ -37,7 +37,20 @@
  'Status: Not hovered.'Assert(#.S.Find'hoverStatus').Text       ⍝ that status shows it
 
  ⍝ 5. Select
+ ⍝ test all options of Select and also selecting via kbd
  'selectLanguage'#.S.Select'APL'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'C' 'PartialText'
+ 'Selected: C#'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select 1 'Index'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select '#pickSQL' 'CssSelector'
+ 'Selected: SQL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select 1 'Index'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select 'none' 'Value'
+ 'Selected: -- Select --'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'AP' 1
  'Selected: APL'Assert(#.S.Find'selectStatus').Text
  'selectLanguage'#.S.SendKeys #.S.Keys.Down
  'Selected: C#'Assert(#.S.Find'selectStatus').Text
