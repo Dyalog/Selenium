@@ -1,0 +1,23 @@
+{
+  api: "",
+  assets: "",
+  description: "Testing Web Applications with Dyalog APL using Selenium ",  // better ideas anyone?
+  documentation: "",
+  files: "LICENSE.md,SETTINGS.json5",// should Cider files be included?
+  group: "Dyalog",
+  io: 1,
+  license: "MIT",
+  lx: "",
+  maintainer: "support@dyalog.com",  // or mbaas?
+  minimumAplVersion: "19.0",         // test use Cider to load the package so we need at least 19.0
+  ml: 1,
+  name: "Selenium",
+  os_lin: 1,
+  os_mac: 1,
+  os_win: 1,
+  project_url: "https://github.com/Dyalog/Selenium",
+  source: "APLSource/",
+  tags: "test-framework,testing,web,http,run-applications,test,tools,website",// used the list of existing tags
+  userCommandScript: "",
+  version: "2.0.0+0",
+}
