@@ -1,6 +1,6 @@
 # Testing RIDE with Selenium (work in progress)
 
-The namespace `Selenium.ride` contains functions that support testing RIDE (standalone or zero footprint). The folder [`Samples/RIDE`](../Samples/RIDE) contains several tests that illustrate its usage.
+The namespace `Selenium.ride` contains functions that support testing RIDE (standalone or zero footprint). The folder `Samples/RIDE` contains several tests that illustrate its usage.
 
 ## Status
 
