@@ -66,7 +66,7 @@
 * SendKeys simplified internally thanks to recent changes in Selenium and WebDriver4
 * MoveToElement did no work as expected when only ⍵[1] was given - fixed
 * new functions Savescreenshot and CompareScreenshots to deal with screenshots
-* function GetLogs can be used to access the browser logs
+* function GetLogs can be used to access the browser logs (though it wasn't working reliably in our tests - it sometimes does notz get logs though are some to be gotten.)
 * Select has been significantly improved and offers more options to identify the target element
 
 **BREAKING CHANGES:**

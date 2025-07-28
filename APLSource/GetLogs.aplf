@@ -3,6 +3,7 @@
  ⍝ level ∊ 'Info' 'Severe'
  ⍝ types ∊ 'browser' 'driver'
  ⍝ These values depend on the browser that's used!
+ ⍝ Be careful: it seems new Chrome versions will not return info-logs but only errors and warnings!
  r←''
 
  types←types{0=≢⍺:⍵ ⋄ (⊆⍺)∩⍵}⊃⌷¨BROWSER.Manage.Logs.AvailableLogTypes
