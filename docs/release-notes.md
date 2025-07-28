@@ -66,8 +66,8 @@
 * SendKeys simplified internally thanks to recent changes in Selenium and WebDriver4
 * MoveToElement did no work as expected when only ⍵[1] was given - fixed
 * new functions Savescreenshot and CompareScreenshots to deal with screenshots
-* function GetLogs can be used to access the browser logs (though it wasn't working reliably in our tests - it sometimes does notz get logs though are some to be gotten.)
+* function GetLogs can be used to access the browser logs (though it wasn't working reliably in our tests - it sometimes does not get logs though are some to be gotten.)
 * Select has been significantly improved and offers more options to identify the target element
 
 **BREAKING CHANGES:**
-* Dyalog no longer distributes the Syncfusion controls, so the utilities dealing with them (`ejAccordinTab` and `ListMgrSelect`) were removed.
+* Dyalog no longer distributes the Syncfusion controls, so the utilities dealing with them (`ejAccordionTab` and `ListMgrSelect`) were removed.
