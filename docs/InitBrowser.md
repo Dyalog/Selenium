@@ -4,7 +4,7 @@ The function InitBrowser takes a right argument which is a character vector indi
 
 The name should either be one of the browsers currently supported by Selenium (`Chrome`, `Firefox`, `Edge`) or one of the browsers defined in settings.json5.
 
-!!!Note
+!!!note
    The browser names are case-senstive!
 
 The optional left argument is a boolean indicating if we're re-initialising the browser - it saves the time required to setup of the NuGet components and simply re-initializes the browser driver. This can be useful when the browser was closed.
