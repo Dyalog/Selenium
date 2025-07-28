@@ -21,8 +21,8 @@ To send special keys like `Escape`, `Shift` or others, use the BROWSER.Keys enum
 `SendKeys (BROWSER.Keys.Ctrl,'h'),'ello'`
 
 !!!note
-   * If you want to test input controls, it is recommended to use [SetInputValue](/browser-automation#setinputvalue) to set their values instead, as that function will also pass unicode values reliably without requiring keystroke translation.
-   * It is also worth noting that the underlying Selenium function `SendKeys` supports extended features such as "unicode keystrokes" in varying degress on different browsers: while sending the keystroke `'≢'` to Chrome will cause the symbol `≢` to appear in the control, [CEF](./terminology.md#cef---chromium-embedded-framework) (as used in Dyalog's HtmlRenderer object) does not support that. For this reason [SetInputValue](/browser-automation#setinputvalue) is recommended when you want to simulate complex input.
+   * If you want to test input controls, it is recommended to use [SetInputValue](/browser-automation.md#setinputvalue) to set their values instead, as that function will also pass unicode values reliably without requiring keystroke translation.
+   * It is also worth noting that the underlying Selenium function `SendKeys` supports extended features such as "unicode keystrokes" in varying degress on different browsers: while sending the keystroke `'≢'` to Chrome will cause the symbol `≢` to appear in the control, [CEF](./terminology.md#cef---chromium-embedded-framework) (as used in Dyalog's HtmlRenderer object) does not support that. For this reason [SetInputValue](/browser-automation.md#setinputvalue) is recommended when you want to simulate complex input.
 
 ## Complete list of key names
 
