@@ -80,7 +80,7 @@
     optional: {
       Support: {
         nuget: 'Selenium.Support',
-        version: '4.33.0',
+        version: '4.34.0',
         using: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
       },
       Newtonsoft: {
