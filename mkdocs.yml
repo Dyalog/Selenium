@@ -104,9 +104,8 @@ nav: # This 'nav:' MUST be at the very first column (no spaces before it)
     - 'Retry': 'inspecting-the-contents.md#retry'
     - 'Wait': 'Wait.md'
     - 'WaitFor': 'inspecting-the-contents.md#waitfor'
-  - Need a good title here!: 
+  - Additional Information: 
     - 'Terminology': 'terminology.md' 
     - 'FAQ': 'faq.md'
-  - About:
-    - 'License': 'LICENSE.md'
     - 'Release Notes': 'release-notes.md'
+    - 'License': 'LICENSE.md'
