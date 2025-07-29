@@ -1,0 +1,2721 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../img/favicon-32.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Print - Selenium</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/print-site.css">
+    
+      <link rel="stylesheet" href="../css/print-site-material.css">
+    
+      <link rel="stylesheet" href="../style/documentation-styles/css/main.css">
+    
+      <link rel="stylesheet" href="../style/documentation-styles/css/extra.css">
+    
+      <link rel="stylesheet" href="../style/documentation-styles/css/admonition-ucmdhelp.css">
+    
+    <script>__md_scope=new URL("/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  
+        <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            remove_material_navigation();remove_mkdocs_theme_navigation();
+        })
+        </script>
+        </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#index" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Selenium" class="md-header__button md-logo" aria-label="Selenium" data-md-component="logo">
+      
+  <img src="../img/dyalog-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Selenium
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Print
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dyalog/Selenium" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Dyalog/Selenium
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Selenium" class="md-nav__button md-logo" aria-label="Selenium" data-md-component="logo">
+      
+  <img src="../img/dyalog-white.svg" alt="logo">
+
+    </a>
+    Selenium
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dyalog/Selenium" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Dyalog/Selenium
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install-selenium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Setting browser options
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Inspecting the Contents of the Page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Browser Automation Functions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other-webdriver-functionality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Other WebDriver Functionality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../End/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Ending a test
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simple-example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ride/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing RIDE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Command Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Command Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands-by-category/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Commands by category
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#clearinput" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ClearInput
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#click" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Click
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../screenshots.md#comparescreenshots" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CompareScreenshots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#draganddrop" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DragAndDrop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#draganddroptooffset" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DragAndDropToOffset
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../End.md#end" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    End
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#executescript" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ExecuteScript
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Find/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Find
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#getlogs" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GetLogs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GoTo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GoTo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InitBrowser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    InitBrowser
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents.md#isvisible" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    IsVisible
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#movetoelement" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MoveToElement
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../screenshots.md#savescreenshot" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SaveScreenshot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#select" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Select
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#selectitemtext" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SelectItemText
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SendKeys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SendKeys
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../browser-automation.md#setinputvalue" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SetInputValue
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents.md#text" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Text
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents.md#pagesource" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PageSource
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents.md#retry" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Retry
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Wait/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wait
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspecting-the-contents.md#waitfor" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WaitFor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Information
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../terminology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terminology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Release Notes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Print
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Print
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-selenium" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting browser options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspecting-the-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspecting the Contents of the Page
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#browser-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Browser Automation Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-webdriver-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other WebDriver Functionality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ending a test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing RIDE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands by category
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#goto" class="md-nav__link">
+    <span class="md-ellipsis">
+      GoTo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initbrowser" class="md-nav__link">
+    <span class="md-ellipsis">
+      InitBrowser
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sendkeys" class="md-nav__link">
+    <span class="md-ellipsis">
+      SendKeys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wait
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Terminology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-selenium" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting browser options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspecting-the-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspecting the Contents of the Page
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#browser-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Browser Automation Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-webdriver-functionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other WebDriver Functionality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ending a test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing RIDE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands by category
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#goto" class="md-nav__link">
+    <span class="md-ellipsis">
+      GoTo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initbrowser" class="md-nav__link">
+    <span class="md-ellipsis">
+      InitBrowser
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sendkeys" class="md-nav__link">
+    <span class="md-ellipsis">
+      SendKeys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wait
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Terminology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<div id="print-site-page" class="">
+        <section id="print-site-cover-page">
+            
+<div>
+
+    
+        <h1>Selenium</h1>
+    
+
+</div>
+
+
+<table>
+
+    
+
+    
+
+    
+    <tr>
+        <td>Repository</td>
+        <td><a href="https://github.com/dyalog/Selenium">https://github.com/dyalog/Selenium</a></td>
+    </tr>
+    
+
+    
+    <tr>
+        <td>Copyright</td>
+        <td><div class="left">Made with <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener"><strong>Material for MkDocs</strong></a>.&nbsp;</div><div class="right">Contents copyright &copy;2015-2024 <strong><a href="https://dyalog.com" target="_blank" rel="noopener">Dyalog, LTD</a></strong></div></td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+        </section>
+        <section class="print-page" id="index" heading-number="1"><h1 id="index-driving-selenium-from-dyalog-apl">Driving Selenium from Dyalog APL</h1>
+<p><a href="http://seleniumhq.org">Selenium</a> is a widely used open-source tool for automating browsers, with growing support from browser vendors. The GitHub repository <a href="https://github.com/Dyalog/Selenium">Dyalog/Selenium</a> contains code which allows Dyalog applications to drive browsers via Selenium.</p>
+<p>The namespace Selenium contained in this repository contains cover-functions for some of the most frequently used features of Selenium. 
+In contrast to earlier versions it is not necessary to search for keep up with browsers versions etc. - using the latest Selenium features it is now possible to detect the locally installed browser (Chrome, Edge and Firefox are now supported!) and its version and get the appropriate driver automatically!</p></section>
+                    <section class='print-page md-section' id='section-2' heading-number='2'>
+                        <h1>Usage<a class='headerlink' href='#section-2' title='Permanent link'></a>
+                        </h1>
+                    <section class="print-page" id="install-selenium" heading-number="2.1"><h1 id="install-selenium-installing-selenium">Installing Selenium</h1>
+<p>Selenium is available as a <a href="http://tatin.dev">Tatin</a> package.</p>
+<h3 id="install-selenium-when-using-tatin">when using Tatin</h3>
+<p>First, use <code>]TATIN.ListPackages [tatin] -tags=selenium</code> to find out which versions are available.
+<strong><em>to be continued</em></strong></p>
+<h3 id="install-selenium-when-not-using-tatin-and-still-using-it">when not using Tatin (and still using it)</h3>
+<p>Even when not using Tatin (in the code you write and want to deploy) you probably have Tatin installed
+and can use it. If you feel comfortable doing so, <code>]Tatin.LoadPackages dyalog-selenium,dyalog-nuget</code> can be used to bring in the Selenium namespace (and the NuGet package that it depends on) into #.</p>
+<h3 id="install-selenium-without-tatin">without Tatin</h3>
+<p>You'll need the Selenium namespace as well as NuGet. There are infinite ways to get them, such as</p>
+<ul>
+<li>cloning the repositories</li>
+<li>downloading the required files from the home repositories</li>
+<li>and more.</li>
+</ul>
+<p>We'll trust you'll have your own methods to get the files.</p></section><section class="print-page" id="settings" heading-number="2.2"><h1 id="settings-settings-browser-options">Settings browser options</h1>
+<p>Selenium provide several layers to control its behavior (and that of the browser it controls):</p>
+<h2 id="settings-environment-variables-configuration-settings">Environment variables / Configuration settings</h2>
+<p>This refers to variables that are set up in the environment that the interpreter's executable runs in or in a CONFIGFILE or USERCONFIGFILE that it uses.</p>
+<h3 id="settings-selenium_home">SELENIUM_HOME</h3>
+<p>The config variable <code>SELENIUM_HOME</code> is the first candidate that Selenium looks at when it searches its <a href="#faq-where-do-we-live">home directory</a>.</p>
+<h3 id="settings-selenium_configfile">SELENIUM_CONFIGFILE</h3>
+<p>This optional variable can be defined to point to a .json5 file with the configuration to use. This file will then complement the settings found in Selenium's <code>settings.json5</code>.</p>
+<h2 id="settings-setting-options-in-the-selenium-namespace">Setting options in the Selenium namespace</h2>
+<h3 id="settings-defaultretrylimit">DEFAULTRETRYLIMIT</h3>
+<p>The number of seconds that the Retry operator and its derivatives should retry an operation.</p>
+<h3 id="settings-selenium_home_1">SELENIUM_HOME</h3>
+<p>The variable <code>SELENIUM_HOME</code> is supposed to contain the path to Selenium's settings file. If is not defined, we <a href="#faq-where-do-we-live">determine</a> the path and store it in this variable for further references.</p>
+<h3 id="settings-port">PORT</h3>
+<p>The address of the port that the browser uses to retrieve content.</p></section><section class="print-page" id="inspecting-the-contents" heading-number="2.3"><h1 id="inspecting-the-contents-inspecting-the-contents-of-the-page">Inspecting the Contents of the Page</h1>
+<p>The Selenium namespace contains a number of functions which manipulate the browser in various ways (see the next section for details).</p>
+<p><a name="isvisible"></a></p>
+<h2 id="inspecting-the-contents-risvisible-id">R←IsVisible id</h2>
+<p>The boolean result R indicated whether or not the control with the given id is visible or not.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>It might be interesting to combine <code>IsVisible</code> and <a href="#inspecting-the-contents-retry"><code>Retry</code></a> to wait until a dynamic element becomes visible.</p>
+<p><a name="pagesource"></a></p>
+<h2 id="inspecting-the-contents-htmlpagesource">html←PageSource</h2>
+<p>You can verify whether the page has been correctly loaded by inspecting the PageSource, for example:
+<div class="highlight"><pre><span></span><code>      ∨/&#39;&lt;link href=&quot;/Styles/tryapl.css&quot;&#39;⍷Selenium.BROWSER.PageSource
+</code></pre></div></p>
+<p><a name="retry"></a></p>
+<h2 id="inspecting-the-contents-okfn-retry-arg">{ok}←(fn Retry) arg</h2>
+<p>Following any action, an unknown amount of time may pass before the server responds and a response is detectable in the browser. The <code>Retry</code> operator is provided to allow waiting for an expected effect. The time to wait is controlled by the variable <code>Selenium.DEFAULTRETRYLIMIT</code> . <code>Retry</code> invokes <code>fn</code> on <code>arg</code>, and retries until the result is true, or <code>DEFAULTRETRYLIMI</code>T seconds have passed.</p>
+<p>For example:
+<div class="highlight"><pre><span></span><code>      {(Find &#39;result&#39;).Text=⍵} Retry &#39;You pressed the button!&#39;
+</code></pre></div></p>
+<p><code>Retry</code> returns the result of the final application of the function.</p>
+<p><a name="savescreenshot"></a></p>
+<h2 id="inspecting-the-contents-savescreenshot-filename">SaveScreenshot filename</h2>
+<p>see <a href="#screenshots">separate page</a></p>
+<p><a name="text"></a></p>
+<h2 id="inspecting-the-contents-rtext-id">R←Text id</h2>
+<p>Returns the text displayed in control <code>id</code>. In contrast to Selenium's internal functions this works for all types of controls.</p>
+<p><a name="waitfor"></a></p>
+<h2 id="inspecting-the-contents-msgelement-waitfor-text-message">{msg}←element WaitFor text [message]</h2>
+<p>The left argument can be the id or a reference to an element to be tested or a two element vector containing the left and right arguments of the <a href="#find"><code>Find</code></a> function. <code>WaitFor</code> will use <code>Retry</code> to wait until the element in question contains the specified text anywhere within its Text property. If the element is of type input, (element.GetAttribute⊂'value') is tested instead.</p>
+<p>For example:
+<div class="highlight"><pre><span></span><code>      &#39;result&#39; WaitFor &#39;Welcome!&#39;
+</code></pre></div>
+An optional second character vector can be used in message to replace the default, which is "Expected output did not appear".</p></section><section class="print-page" id="browser-automation" heading-number="2.4"><h1 id="browser-automation-browser-automation-functions">Browser Automation Functions</h1>
+<p>The following functions manipulate the browser in various ways. Note that, wherever a <code>{selector}</code> is used, a reference to an IWebElement (returned by <a href="#find"><code>Find</code></a> or the argument(s) of <a href="#find"><code>Find</code></a> can be used instead.</p>
+<p><a name="clearinput"></a></p>
+<h2 id="browser-automation-clearinput" selector="selector">ClearInput</h2>
+<p>Clears the content of input-fields or textarea.</p>
+<p><a name="click"></a></p>
+<h2 id="browser-automation-selector-click-id">{selector} Click id</h2>
+<p>Clicks on the selected element. Both arguments are passed directly to the Find function, and the Click method is invoked on the result. For example:
+<div class="highlight"><pre><span></span><code>       Click &#39;btn1&#39;
+</code></pre></div></p>
+<p><a name="executescript"></a></p>
+<h2 id="browser-automation-rargsexecutescript-sc">{R}←{args}ExecuteScript sc</h2>
+<p>Executes the Javascript code passed in sc. The optional left argument can be used to pass arguments to it.</p>
+<p>A good use case for this is this line of the <a href="#browser-automation-setinputvalue">SetInputValue</a> function:
+<div class="highlight"><pre><span></span><code>      (obj text)ExecuteScript&#39;arguments[0].value = arguments[1];&#39;
+</code></pre></div></p>
+<p><a name="draganddrop"></a></p>
+<h2 id="browser-automation-fromid-draganddrop-toid">fromid DragAndDrop toid</h2>
+<p>Drag the element <fromid> and drop it on <toid>. For example:
+<div class="highlight"><pre><span></span><code>      &#39;draggable&#39;#.S.DragAndDrop&#39;droppable&#39; 
+</code></pre></div></p>
+<p><a name="draganddroptooffset"></a></p>
+<h2 id="browser-automation-fromid-draganddroptooffset-xy">fromid DragAndDropToOffset xy</h2>
+<p>Drag the element <fromid> and drop it at the given offset. For example:
+<div class="highlight"><pre><span></span><code>      &#39;draggable&#39;#.S.DragAndDropToOffset 10 10
+</code></pre></div></p>
+<p><a name="getlogs"></a></p>
+<h2 id="browser-automation-rlevelgetlogs-type">R←{level}GetLogs type</h2>
+<p>This function retrieves the logs. Valid values for <code>type</code> are <code>browser</code>, <code>webdriver</code> and <code>performance</code>, the optional <code>level</code> must be one of <code>All</code>, <code>Debug</code>, <code>Info</code>, <code>Off</code>, <code>Severe</code> or <code>Warning</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>By default, only browser and webdriver logs are enabled.
+   If you want to access performance logs, they needs to be enabled in <code>settings.json5</code> first.</p>
+<p><a name="movetoelement"></a></p>
+<h2 id="browser-automation-action-movetoelement-toid-x-y">{action} MoveToElement toid [x y]</h2>
+<p>Move the mouse to the middle of an element, or optionally to the (x y) coordinates.
+If the optional left argument is provided and is a character vector containing one of the strings <code>Click</code> | <code>ClickAndHold</code> | <code>ContextClick</code> | <code>DoubleClick</code>, that mouse action will be performed after the move.</p>
+<p>For example:
+<div class="highlight"><pre><span></span><code>       &#39;DoubleClick&#39; MoveToElement &#39;btn1&#39; 10 10
+</code></pre></div></p>
+<p><a name="select"></a></p>
+<h2 id="browser-automation-okid-select-text">{ok}←id Select text</h2>
+<p>Select the item with a given text in a dropdown. For example:
+<div class="highlight"><pre><span></span><code>       &#39;fruits&#39; Select &#39;apples&#39;
+</code></pre></div></p>
+<p>The right argument <code>text</code> can also be a two-element vector containing <code>(srch crit)</code>where</p>
+<ul>
+<li><code>srch</code> specifies what you're searching for</li>
+<li>
+<p>and <code>crit</code> describes the criteria:</p>
+<ul>
+<li><code>CssSelector</code>: find the element using a CSS Selector</li>
+<li><code>Index</code>: <code>srch</code> gives the index of the element you want to select</li>
+<li><code>PartialText</code>: <code>srch</code> is a partial text</li>
+<li><code>Text</code>: <code>srch</code>is the full text that needs to match</li>
+<li><code>Value</code>: <code>srch</code> must match the <code>value</code> attribute of the element you're looking for</li>
+<li>a boolean value in <code>crit</code> indicates whether partial matches are accepted (=1) or not (=0, default)</li>
+</ul>
+</li>
+</ul>
+<p>The boolean result <code>ok</code> indicates if the selection was successful (=1) or not (=0).</p>
+<p><a name="selectitemtext"></a></p>
+<h2 id="browser-automation-okid-selectitemtext-text">{ok}←id SelectItemText text</h2>
+<p>Much like the previous function, this function can be used to select elements in a <code>select</code> control based on the item text. While it does not provide the flexibility regarding selections, it also enables you to de-select elements by providing a prefix <code>-</code> and to de-select all element by passing the value <code>~</code>.</p>
+<p><a name="sendkeys"></a></p>
+<h2 id="browser-automation-id-sendkeys-text">id SendKeys text</h2>
+<p>see separate <a href="#sendkeys">doc</a></p>
+<p><a name="setinputvalue"></a></p>
+<h2 id="browser-automation-id-setinputvalue-text">id SetInputValue text</h2>
+<p>This method  is an alternative to SendKeys. While SendKeys focusses on sending actual keystrokes, this function provides an easy way to send text to an input control. It is recommended when sending "complex" text that may require key-combinations to enter it, for example APL-Symbols or special characters like "@".</p></section><section class="print-page" id="other-webdriver-functionality" heading-number="2.5"><h1 id="other-webdriver-functionality-other-webdriver-functionality">Other WebDriver Functionality</h1>
+<p>Instances of the Selenium WebDriver classes support significant functionality which is not covered by the existing Selenium namespace. The full set of methods and properties exposed by WebDriver.dll and WebDriver.Support.dll, which are documented here on the Selenium web site:
+<a href="https://www.selenium.dev/documentation/webdriver/">https://www.selenium.dev/documentation/webdriver/</a></p>
+<p>After <a href="#initbrowser"><code>InitBrowser</code></a> has been called, the variable <code>BROWSER</code> is a reference to the current instance. It exposes several methods which are not covered by the Selenium namespace, but can be called from APL after consulting the Selenium documentation. It also exposes a number of interesting properties.</p>
+<p>The ACTIONS variable is a reference to an instance of an Actions object, which also exposes functions not currently supported by any of the functions in the Selenium namespace:</p>
+<pre><code>- DragAndDropToOffset  
+- KeyDown  
+- KeyUp  
+- Release
+</code></pre>
+<p>It is also worth mentioning <code>Selenium.BROWSER.Navigate.Refresh</code> which can be useful when experimenting in the session to refresh the current page.
+There is scope for future extensions to the tool, suggestions and pull requests are most welcome!</p></section><section class="print-page" id="end" heading-number="2.6"><h1 id="end-end">End</h1>
+<p><a name="end"></a></p>
+<p>As you have noticed, running a test opens a console-window showing the output of the webdriver that was launched – which will in turn launch the browser. In order to close the windows at the end of a test, it is recommended to call the <code>End</code> function which will close those windows and dispose all objects it created.</p>
+<p>As the code uses NuGet, <a href="#initbrowser"><code>InitBrowser</code></a> will create a temporary project folder for NuGet to work with which <code>End</code> will also delete. (If you do not call <code>End</code> in your tests, you may want to check the variable <code>Selenium.myNuGetFolder</code> and make sure the folder is deleted.)</p></section></section>
+                    <section class='print-page md-section' id='section-3' heading-number='3'>
+                        <h1>Examples<a class='headerlink' href='#section-3' title='Permanent link'></a>
+                        </h1>
+                    <section class="print-page" id="simple-example" heading-number="3.1"><h1 id="simple-example-simple-example">Simple example</h1>
+<p>A basic example is provided in the <code>Samples\</code> folder of the <a href="https://github.com/Dyalog/Selenium">GitHub repository</a> where the code in <code>TestUppercase.aplf</code> controls the website coded in text-uppercase.html that accepts text input and shows its representation in uppercase upon clicking the "Transform" button.</p>
+<p>Use LINK to bring it into the workspace:
+<code>]LINK.Create Sample /git/Selenium/Samples</code></p>
+<p><code>r←TestUppercase nul;S;path;demoText;expect;errMsg;file
+ path←1⊃1 ⎕NPARTS{6::50 ⎕ATX ⍵ ⋄ SALT_Data.SourceFile}1⊃⎕SI   ⍝ where does this file come from?
+ 11 ⎕SIGNAL(0=≢path)/'Unable to determine source path'
+ file←path,'text-uppercase.html'
+ 11 ⎕SIGNAL(≡⎕NEXISTS file)/'File "',file,'" does not exist!'
+ demoText←'Hello World!'
+ expect←1 ⎕C demoText
+ errMsg←'Did not find expected output!'
+ S←##.Selenium
+ S.InitBrowser''
+ S.GoTo'file:///',file
+ 'inputText'S.SendKeys demoText
+ (S.Find'transformButton').Click
+ r←'outputText'S.WaitFor expect errMsg
+ S.End</code></p>
+<p>There is some initialisation work to do by assigning path as the directory where the code was loaded from. (This approach is compatible with SALT's <code>]Load</code> as well as with Link´s <code>]Import</code> or <code>⎕FIX</code>.) It then assigns <code>demoText</code> as the text that we want to operate on and uses <code>⎕C</code> to determine the expected value, which we will compare against the result that the web page delivers.
+ The above code assumes that the <code>Selenium</code> namespace has been loaded into the same namespace as the <code>TestUppercase</code> function itself and creates a reference to it using the variable <code>S</code>.</p>
+<p>After this setup work, the test is executed:</p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Discussion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S.InitBrowser''</code></td>
+<td>Launch the browser (looks for one of Chrome, Firefox, Edge)</td>
+</tr>
+<tr>
+<td><code>S.GoTo'file:///',file</code></td>
+<td>Open the local version of the uppercase application</td>
+</tr>
+<tr>
+<td><code>'inputText'S.SendKeys demoText</code></td>
+<td>Enter the sample text into the input field</td>
+</tr>
+<tr>
+<td><code>(S.Find'transformButton').Click</code></td>
+<td>Click the "Transform" button</td>
+</tr>
+<tr>
+<td><code>r←'outputText'S.WaitFor expect errMsg</code></td>
+<td>Wait until the expected text appears in the output field, otherwise print an error message</td>
+</tr>
+<tr>
+<td><code>S.End</code></td>
+<td>Close Browser and clean up</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>This test is written to be executed as a standalone test. If multiple tests are executed, it makes sense to separate out the instructions for initialisation of Selenium and the browser as well as the "Teardown" instructions like <code>S.End</code>.</p></section><section class="print-page" id="ride" heading-number="3.2"><h1 id="ride-testing-ride-with-selenium-work-in-progress">Testing RIDE with Selenium (work in progress)</h1>
+<p>The namespace <code>Selenium.ride</code> contains functions that support testing RIDE (standalone or zero footprint). The folder <code>Samples/RIDE</code> contains several tests that illustrate its usage.</p>
+<h2 id="ride-status">Status</h2>
+<p>This is work in progress currently. Some of the fns do not work as advertised.</p>
+<h2 id="ride-expectations">Expectations</h2>
+<p>This section lists the underlying assumptions made in the RIDE tests when accessing the session etc.</p>
+<ul>
+<li>Lines of the session should have the class "view-lines"</li>
+</ul>
+<h2 id="ride-usage">Usage</h2>
+<h3 id="ride-initride">InitRIDE</h3>
+<p>The function <code>InitRIDE</code> launches a new interpreter instance. It is always an "interesting question" which port to use. Fortunately v20 significantly improves this
+process by allowing to assign port 0 and have the interpreter use a free one. For versions &lt; 20, this is a manual process: the system will attempt to use the default
+port and the user has to observe the launch and see if Dyalog started w/o an error message about the port being used or not. Two different statements to continue 
+processing depending on the result will be printed into the session and then InitRIDE will temporary interrupt with an intended error.</p></section></section>
+                    <section class='print-page md-section' id='section-4' heading-number='4'>
+                        <h1>Command Reference<a class='headerlink' href='#section-4' title='Permanent link'></a>
+                        </h1>
+                    <section class="print-page" id="commands-by-category" heading-number="4.1"><h1 id="commands-by-category-commands-by-category">Commands by category</h1>
+<h2 id="commands-by-category-initialisation-and-teardown">Initialisation and teardown</h2>
+<ul>
+<li>Initialise the browser: <a href="#initbrowser">InitBrowser</a></li>
+<li>End a session: <a href="#end">End</a></li>
+</ul>
+<h2 id="commands-by-category-navigation">Navigation</h2>
+<ul>
+<li>Open URL: <a href="#goto">GoTo</a></li>
+</ul>
+<h2 id="commands-by-category-dealing-with-websites">Dealing with websites</h2>
+<ul>
+<li>Clear content of an input control: <a href="#browser-automation-clearinput">ClearInput</a></li>
+<li>Click a control: <a href="#browser-automation-click">Click</a></li>
+<li>Compare Screenshots: <a href="#screenshots-comparescreenshots">CompareScreenshots</a></li>
+<li>Drag and Drop elements: <a href="#browser-automation-draganddrop">DragAndDrop</a> and <a href="#browser-automation-draganddroptooffset">DragAndDropToOffset</a></li>
+<li>Execute Javascript code: <a href="#browser-automation-executescript">ExecuteScript</a></li>
+<li>Find elements on page: <a href="#find">Find</a></li>
+<li>Input value: <a href="#browser-automation-setinputvalue">SetInputValue</a></li>
+<li>Mouse movements: <a href="#browser-automation-movetoelement">MoveToElement</a></li>
+<li>Page source: <a href="#inspecting-the-contents-pagesource">PageSource</a></li>
+<li>Query item text: <a href="#inspecting-the-contents-text">Text</a></li>
+<li>Save a Screenshot: <a href="#screenshots-savescreenshot">SaveScreenshot</a></li>
+<li>Selections: <a href="#browser-automation-select">Select</a>, <a href="#browser-automation-selectitemtext">SelectItemText</a></li>
+<li>Send keystrokes: <a href="#sendkeys">SendKeys</a></li>
+<li>Wait: <a href="#inspecting-the-contents-retry">Retry</a>, <a href="#wait">Wait</a>, <a href="#inspecting-the-contents-waitfor">WaitFor</a></li>
+</ul></section><section class="print-page" id="find" heading-number="4.9"><h1 id="find-rselectorfind-id">r←{selector}Find id</h1>
+<p>Allows searching for DOM elements by Id (the default if no left argument is provided) or one of the other selectors: ClassName,  CssSelector, Id, LinkText, Name, PartialLinkText, TagName or XPath.</p>
+<p>In order to find multiple elements (when using options such as <code>ClassName</code>, <code>CssSelector</code> etc.) simply append a plural-s to the criteria (i.e. <code>'ClassNames'Find'...'</code>)</p>
+<p>The result <code>r</code> will either be an instance of <code>IWebElement</code> or the scalar 0 if the element was not found.</p>
+<p><code>Find</code> will retry the search for an element until <code>RETRYLIMIT</code> has elapsed, so if it takes time for a page to render completely, or an element is created by an earlier action, it will wait for a while.
+While it is possible to find hidden elements, it is not possible to interact with them (click or enter text into input controls). The <code>IWebElement</code>instances provide a boolean <code>Displayed</code> that can be used to check if an element is visible or not.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>Our own test <a href="https://github.com/Dyalog/Selenium/blob/selenium-manager/Tests/test_find.aplf"><code>Tests/test_find.aplf</code></a> illustrates practical uses of <code>Find</code> with diverse criteria.</p>
+<!-- URL needs to be adjusted after merging this into main --></section><section class="print-page" id="goto" heading-number="4.11"><h1 id="goto-goto-url">Goto url</h1>
+<p>Calls the <code>Navigate.GoToUrl</code> method and verifies that the Url property subsequently has the desired value. Signals an error if navigation fails. While <code>Navigate.GoToUrl</code> requires a complete URL, you may also specify relative URLs here (omitting protocol, domain &amp; port).
+If the first 4 characters of the URL match either <code>'http'</code> or <code>'file'</code>, we assume it is a complete URL, otherwise it wil be treated as being relative to the current URL.</p></section><section class="print-page" id="initbrowser" heading-number="4.12"><p>{⍺}InitBrowser ⍵</p>
+<p>The function InitBrowser takes a right argument which is a character vector indicating the name of the browser. If the element is empty, the system will look for an environment variable <code>SELENIUM_DRIVER</code> or used the <code>Browser</code> element from <code>settings.json5</code> will be used and if both are also not available, check the <code>DEFAULTBROWSER</code> variable in the Selenium namespace.</p>
+<p>The name should either be one of the browsers currently supported by Selenium (<code>Chrome</code>, <code>Firefox</code>, <code>Edge</code>) or one of the browsers defined in settings.json5.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>The browser names are case-senstive!</p>
+<p>The optional left argument is a boolean indicating if we're re-initialising the browser - it saves the time required to setup of the NuGet components and simply re-initializes the browser driver. This can be useful when the browser was closed.</p>
+<p><code>InitBrowser</code> creates an object <code>BROWSER</code> in the Selenium namespace which is used for further interaction with the browser. <code>BROWSER</code> is an instance of the <a href="https://www.selenium.dev/documentation/webdriver/">Selenium WebDriver</a> linked to your specific browser's .NET driver. It will also create a variable <code>CURRENTBROWSER</code> with the name of the driver instantiated in <code>BROWSER</code> and <code>ACTIONS</code> which is a reference to an instance of Selenium.Interactions.Actions, used to automate mouse movements.</p></section><section class="print-page" id="sendkeys" heading-number="4.18"><h1 id="sendkeys-robj-sendkeys-keys">{r}←obj SendKeys keys</h1>
+<p>The SendKeys function sends they keystrokes given in the right argument <code>keys</code> to the object <code>obj</code>.</p>
+<h2 id="sendkeys-argument-obj">Argument <code>obj</code></h2>
+<p>The target object can either be passed as a previously found object or it can be the right argument of the <a href="#find">Find</a> function.</p>
+<h2 id="sendkeys-argument-keys">Argument <code>keys</code></h2>
+<p>The right argument specifies the keystrokes that are to be sent as a vector.</p>
+<p>To send special keys like <code>Escape</code>, <code>Shift</code> or others, use the BROWSER.Keys enumeration and pass it as a nested element optionally joined by the basic key.</p>
+<h3 class="example1">Example: Send the keystrokes Ctrl+A</h3>
+
+<p><code>SendKeys ⊂BROWSER.Keys.Ctrl,'A'</code></p>
+<h3 class="example2">Example: Send the keystrokes Shift+h followed by "ello" to enter "Hello"</h3>
+
+<p><code>SendKeys (BROWSER.Keys.Ctrl,'h'),'ello'</code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<ul>
+<li>If you want to test input controls, it is recommended to use <a href="#browser-automation-setinputvalue">SetInputValue</a> to set their values instead, as that function will also pass unicode values reliably without requiring keystroke translation.</li>
+<li>It is also worth noting that the underlying Selenium function <code>SendKeys</code> supports extended features such as "unicode keystrokes" in varying degress on different browsers: while sending the keystroke <code>'≢'</code> to Chrome will cause the symbol <code>≢</code> to appear in the control, <a href="#terminology-cef---chromium-embedded-framework">CEF</a> (as used in Dyalog's HtmlRenderer object) does not support that. For this reason <a href="#browser-automation-setinputvalue">SetInputValue</a> is recommended when you want to simulate complex input.</li>
+</ul>
+<h2 id="sendkeys-complete-list-of-key-names">Complete list of key names</h2>
+<div class="highlight"><pre><span></span><code>Add
+Alt
+ArrowDown
+ArrowLeft
+ArrowRight
+ArrowUp
+Backspace
+Cancel
+Clear
+Command
+Control
+Decimal
+Delete
+Divide
+Down
+End
+Enter
+Equal
+Escape
+F1
+F10
+F11
+F12
+F2
+F3
+F4
+F5
+F6
+F7
+F8
+F9
+Help
+Home
+Insert
+Left
+LeftAlt
+LeftControl
+LeftShift
+Meta
+Multiply
+Null
+NumberPad0
+NumberPad1
+NumberPad2
+NumberPad3
+NumberPad4
+NumberPad5
+NumberPad6
+NumberPad7
+NumberPad8
+NumberPad9
+PageDown
+PageUp
+Pause
+Return
+Right
+Semicolon
+Separator
+Shift
+Space
+Subtract
+Tab
+Up
+ZenkakuHankaku
+</code></pre></div></section><section class="print-page" id="wait" heading-number="4.23"><h1 id="wait-wait-msec">Wait msec</h1>
+<p>This function waits for <code>msec</code> miliseconds.</p></section></section>
+                    <section class='print-page md-section' id='section-5' heading-number='5'>
+                        <h1>Additional Information<a class='headerlink' href='#section-5' title='Permanent link'></a>
+                        </h1>
+                    <section class="print-page" id="terminology" heading-number="5.1"><h1 id="terminology-terminology">Terminology</h1>
+<h2 id="terminology-cef-chromium-embedded-framework">CEF - Chromium Embedded Framework</h2>
+<p>CEF (Chromium Embedded Framework) is an open-source framework that allows developers to embed a Chromium-based web browser within desktop applications. It provides a simple API for integrating modern web technologies and rendering web content inside native applications.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>It is very likely that we've used words that would benefit from a deeper discussion. If you find any, please feel free to submit a pull request or let us know about it by creating an <a href="https://github.com/Dyalog/Selenium/issues">issue</a> on our GitHub site.</p></section><section class="print-page" id="faq" heading-number="5.2"><h1 id="faq-faq">FAQ</h1>
+<h2 id="faq-where-do-we-live">Where do we live?</h2>
+<p>Determining a function's home folder (that it was loaded from) is a popular question in times of text-based code. Selenium needs to answer it so that it knows where to look for its settings file (settings.json5).</p>
+<p>Because Selenium can be brought into the WS in a variety of ways (recommended: using Tatin) it tries to handle this using several alternative techniques:</p>
+<ul>
+<li>look for an environment variable <code>SELENIUM_HOME</code></li>
+<li>use <code>50[⎕ATX](https://dyalog.github.io/documentation/20.0/language-reference-guide/system-functions/atx/)</code></li>
+<li>look for a <code>SALT_Data</code> namespace in the Selenium ns (as <code>]Load</code> would create)</li>
+</ul>
+<p>If one of these approaches gives us a valid path, it is assigned to the variable <code>SELENIUM_HOME</code> which is used to answer the question the next time it is asked.
+Therefore, depending on the setup in which you use Selenium, you can also initialise <code>Selenium.SELENIUM_HOME</code> with the path to <code>settings.json5</code> or rely on Tatin or Link and not worry about it all.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+</div>
+<p>Please note that <code>SELENIUM_HOME</code> points to Selenium's base folder (the folder that contains the <code>APLSource</code> directory with the individual functions.)</p></section><section class="print-page" id="release-notes" heading-number="5.3"><h1 id="release-notes-release-notes">Release notes</h1>
+<h2 id="release-notes-2017-05-09-adam">2017 05 09 Adam</h2>
+<ul>
+<li>Version info added</li>
+</ul>
+<h2 id="release-notes-2017-05-23-adam">2017 05 23 Adam</h2>
+<ul>
+<li>now gives helpful messages for DLL problems, harmonised ADOC utils</li>
+</ul>
+<h2 id="release-notes-2020-02-12-mbaas-210">2020 02 12 MBaas 2.10</h2>
+<ul>
+<li>updated to use a config (.json)-file to facilitate testing with various browsers (incl. HTMLRenderer)</li>
+</ul>
+<h2 id="release-notes-2020-05-08-mbaas">2020 05 08 MBaas</h2>
+<ul>
+<li>preparing for cross-platformness;</li>
+<li>new folder-structure for drivers</li>
+</ul>
+<h2 id="release-notes-2020-07-11-mbaas">2020 07 11 MBaas</h2>
+<ul>
+<li>lots of changes to make it working on ALL platforms</li>
+<li>revised structure of settings (AND names of parameter DRIVERS → DRIVER)</li>
+</ul>
+<h2 id="release-notes-2021-11-15-mbaas-2110">2021 11 15 MBaas: 2.11.0</h2>
+<ul>
+<li>settings.json may now use "SELENIUM_DRIVERPATH" to point to the folder with the downloaded drivers -this way it becomes more generally usable and less platform-dependent. </li>
+<li>Changed to semantic versioning. </li>
+<li>Settings file now uses JSON5.</li>
+</ul>
+<h2 id="release-notes-2021-02-22-mbaas-major-update-branch-webdriver4">2021 02 22 MBaas: MAJOR UPDATE (branch WebDriver4)</h2>
+<ul>
+<li>now using WebDriver4 and NuGet. This removes the need to distribute DLLs. (started development on branch "WebDriver4")</li>
+<li>removed all paths from settings.json</li>
+<li>
+<ul>
+<li>we're aiming to keep all changes "under the cover". Selenium should behave as before.</li>
+</ul>
+</li>
+</ul>
+<h2 id="release-notes-2024-04-15-mbaas">2024 04 15 MBaas</h2>
+<ul>
+<li>replaced BHC's NugetConsum with the Dyalog's "officiat" NuGet package (this should really be a Tatin dependency and will soon be changed)</li>
+<li>enhanced WaitFor to not only WaitFor a text to appear but also to wait for the element itself to appear</li>
+<li>No other outstanding items atm...(more testing needed)</li>
+<li>Not yet cross-platform (BHC is on it...)</li>
+</ul>
+<p><strong>NB</strong>: if you previously did <code>ApplySettings 'foo'</code> followed by <code>InitBrowser''</code>, you should now combine these calls with <code>InitBrowser 'foo'</code></p>
+<h2 id="release-notes-2024-05-08-mbaas">2024 05 08 MBaas</h2>
+<ul>
+<li>optional ⍺ to ReInitBrowser to support re-initialization of the browser (useful to reconnect when HtmlRenderer was closed and re-opened)</li>
+<li>*SetInputValue did not work as expected - fixed. (NB: it now clears the control before setting text)</li>
+</ul>
+<h2 id="release-notes-2025-07-30-mbaas-v200-major-update">2025 07 30 MBaas, V2.0.0 - major update</h2>
+<ul>
+<li>in addition to Chrome, we now also support Firefox and Edge browsers</li>
+<li>Selenium should work with the browser version that's installed </li>
+<li>without any tweaking of settings...</li>
+<li>uses Cider &amp; Tatin</li>
+<li>converted doc to be MkDocs based, updated it.</li>
+<li>converted from scripted ns to individual files for the functions</li>
+<li>GoTo now also supports file:// URLs</li>
+<li>"WaitFor" was not working as expected with textarea-elements</li>
+<li>remove ⍺ from InitBrowser</li>
+<li>added "End" method to dispose .NET artifacts from memory and disc</li>
+<li>ExecuteScript now supports passing arguments to the js code (in ⍺) - see SetInputValue for an example</li>
+<li>SetInputValue passes values with JS which means that even APL characters can be set</li>
+<li>SendKeys simplified internally thanks to recent changes in Selenium and WebDriver4</li>
+<li>MoveToElement did no work as expected when only ⍵[1] was given - fixed</li>
+<li>new functions Savescreenshot and CompareScreenshots to deal with screenshots</li>
+<li>function GetLogs can be used to access the browser logs (though it wasn't working reliably in our tests - it sometimes does not get logs though are some to be gotten.)</li>
+<li>Select has been significantly improved and offers more options to identify the target element</li>
+</ul>
+<p><strong>BREAKING CHANGES:</strong>
+* Dyalog no longer distributes the Syncfusion controls, so the utilities dealing with them (<code>ejAccordionTab</code> and <code>ListMgrSelect</code>) were removed.</p></section></section></div><style>.print-site-enumerate-headings #index > h1:before { content: '1 ' }
+
+                .print-site-enumerate-headings #index h2:before { content: '1.' counter(counter-index-2) ' ' }
+                .print-site-enumerate-headings #index h2 {  counter-reset: counter-index-3  counter-index-4  counter-index-5  counter-index-6 ;  counter-increment: counter-index-2 }
+            
+                .print-site-enumerate-headings #index h3:before { content: '1.' counter(counter-index-2) '.' counter(counter-index-3) ' ' }
+                .print-site-enumerate-headings #index h3 {  counter-reset: counter-index-4  counter-index-5  counter-index-6 ;  counter-increment: counter-index-3 }
+            
+                .print-site-enumerate-headings #index h4:before { content: '1.' counter(counter-index-2) '.' counter(counter-index-3) '.' counter(counter-index-4) ' ' }
+                .print-site-enumerate-headings #index h4 {  counter-reset: counter-index-5  counter-index-6 ;  counter-increment: counter-index-4 }
+            
+                .print-site-enumerate-headings #index h5:before { content: '1.' counter(counter-index-2) '.' counter(counter-index-3) '.' counter(counter-index-4) '.' counter(counter-index-5) ' ' }
+                .print-site-enumerate-headings #index h5 {  counter-reset: counter-index-6 ;  counter-increment: counter-index-5 }
+            
+                .print-site-enumerate-headings #index h6:before { content: '1.' counter(counter-index-2) '.' counter(counter-index-3) '.' counter(counter-index-4) '.' counter(counter-index-5) '.' counter(counter-index-6) ' ' }
+                .print-site-enumerate-headings #index h6 {  counter-increment: counter-index-6 }
+            
+.print-site-enumerate-headings #section-2 > h1:before { content: '2 ' }
+.print-site-enumerate-headings #install-selenium > h1:before { content: '2.1 ' }
+
+                .print-site-enumerate-headings #install-selenium h2:before { content: '2.1.' counter(counter-install-selenium-2) ' ' }
+                .print-site-enumerate-headings #install-selenium h2 {  counter-reset: counter-install-selenium-3  counter-install-selenium-4  counter-install-selenium-5 ;  counter-increment: counter-install-selenium-2 }
+            
+                .print-site-enumerate-headings #install-selenium h3:before { content: '2.1.' counter(counter-install-selenium-2) '.' counter(counter-install-selenium-3) ' ' }
+                .print-site-enumerate-headings #install-selenium h3 {  counter-reset: counter-install-selenium-4  counter-install-selenium-5 ;  counter-increment: counter-install-selenium-3 }
+            
+                .print-site-enumerate-headings #install-selenium h4:before { content: '2.1.' counter(counter-install-selenium-2) '.' counter(counter-install-selenium-3) '.' counter(counter-install-selenium-4) ' ' }
+                .print-site-enumerate-headings #install-selenium h4 {  counter-reset: counter-install-selenium-5 ;  counter-increment: counter-install-selenium-4 }
+            
+                .print-site-enumerate-headings #install-selenium h5:before { content: '2.1.' counter(counter-install-selenium-2) '.' counter(counter-install-selenium-3) '.' counter(counter-install-selenium-4) '.' counter(counter-install-selenium-5) ' ' }
+                .print-site-enumerate-headings #install-selenium h5 {  counter-increment: counter-install-selenium-5 }
+            
+.print-site-enumerate-headings #settings > h1:before { content: '2.2 ' }
+
+                .print-site-enumerate-headings #settings h2:before { content: '2.2.' counter(counter-settings-2) ' ' }
+                .print-site-enumerate-headings #settings h2 {  counter-reset: counter-settings-3  counter-settings-4  counter-settings-5 ;  counter-increment: counter-settings-2 }
+            
+                .print-site-enumerate-headings #settings h3:before { content: '2.2.' counter(counter-settings-2) '.' counter(counter-settings-3) ' ' }
+                .print-site-enumerate-headings #settings h3 {  counter-reset: counter-settings-4  counter-settings-5 ;  counter-increment: counter-settings-3 }
+            
+                .print-site-enumerate-headings #settings h4:before { content: '2.2.' counter(counter-settings-2) '.' counter(counter-settings-3) '.' counter(counter-settings-4) ' ' }
+                .print-site-enumerate-headings #settings h4 {  counter-reset: counter-settings-5 ;  counter-increment: counter-settings-4 }
+            
+                .print-site-enumerate-headings #settings h5:before { content: '2.2.' counter(counter-settings-2) '.' counter(counter-settings-3) '.' counter(counter-settings-4) '.' counter(counter-settings-5) ' ' }
+                .print-site-enumerate-headings #settings h5 {  counter-increment: counter-settings-5 }
+            
+.print-site-enumerate-headings #inspecting-the-contents > h1:before { content: '2.3 ' }
+
+                .print-site-enumerate-headings #inspecting-the-contents h2:before { content: '2.3.' counter(counter-inspecting-the-contents-2) ' ' }
+                .print-site-enumerate-headings #inspecting-the-contents h2 {  counter-reset: counter-inspecting-the-contents-3  counter-inspecting-the-contents-4  counter-inspecting-the-contents-5 ;  counter-increment: counter-inspecting-the-contents-2 }
+            
+                .print-site-enumerate-headings #inspecting-the-contents h3:before { content: '2.3.' counter(counter-inspecting-the-contents-2) '.' counter(counter-inspecting-the-contents-3) ' ' }
+                .print-site-enumerate-headings #inspecting-the-contents h3 {  counter-reset: counter-inspecting-the-contents-4  counter-inspecting-the-contents-5 ;  counter-increment: counter-inspecting-the-contents-3 }
+            
+                .print-site-enumerate-headings #inspecting-the-contents h4:before { content: '2.3.' counter(counter-inspecting-the-contents-2) '.' counter(counter-inspecting-the-contents-3) '.' counter(counter-inspecting-the-contents-4) ' ' }
+                .print-site-enumerate-headings #inspecting-the-contents h4 {  counter-reset: counter-inspecting-the-contents-5 ;  counter-increment: counter-inspecting-the-contents-4 }
+            
+                .print-site-enumerate-headings #inspecting-the-contents h5:before { content: '2.3.' counter(counter-inspecting-the-contents-2) '.' counter(counter-inspecting-the-contents-3) '.' counter(counter-inspecting-the-contents-4) '.' counter(counter-inspecting-the-contents-5) ' ' }
+                .print-site-enumerate-headings #inspecting-the-contents h5 {  counter-increment: counter-inspecting-the-contents-5 }
+            
+.print-site-enumerate-headings #browser-automation > h1:before { content: '2.4 ' }
+
+                .print-site-enumerate-headings #browser-automation h2:before { content: '2.4.' counter(counter-browser-automation-2) ' ' }
+                .print-site-enumerate-headings #browser-automation h2 {  counter-reset: counter-browser-automation-3  counter-browser-automation-4  counter-browser-automation-5 ;  counter-increment: counter-browser-automation-2 }
+            
+                .print-site-enumerate-headings #browser-automation h3:before { content: '2.4.' counter(counter-browser-automation-2) '.' counter(counter-browser-automation-3) ' ' }
+                .print-site-enumerate-headings #browser-automation h3 {  counter-reset: counter-browser-automation-4  counter-browser-automation-5 ;  counter-increment: counter-browser-automation-3 }
+            
+                .print-site-enumerate-headings #browser-automation h4:before { content: '2.4.' counter(counter-browser-automation-2) '.' counter(counter-browser-automation-3) '.' counter(counter-browser-automation-4) ' ' }
+                .print-site-enumerate-headings #browser-automation h4 {  counter-reset: counter-browser-automation-5 ;  counter-increment: counter-browser-automation-4 }
+            
+                .print-site-enumerate-headings #browser-automation h5:before { content: '2.4.' counter(counter-browser-automation-2) '.' counter(counter-browser-automation-3) '.' counter(counter-browser-automation-4) '.' counter(counter-browser-automation-5) ' ' }
+                .print-site-enumerate-headings #browser-automation h5 {  counter-increment: counter-browser-automation-5 }
+            
+.print-site-enumerate-headings #other-webdriver-functionality > h1:before { content: '2.5 ' }
+
+                .print-site-enumerate-headings #other-webdriver-functionality h2:before { content: '2.5.' counter(counter-other-webdriver-functionality-2) ' ' }
+                .print-site-enumerate-headings #other-webdriver-functionality h2 {  counter-reset: counter-other-webdriver-functionality-3  counter-other-webdriver-functionality-4  counter-other-webdriver-functionality-5 ;  counter-increment: counter-other-webdriver-functionality-2 }
+            
+                .print-site-enumerate-headings #other-webdriver-functionality h3:before { content: '2.5.' counter(counter-other-webdriver-functionality-2) '.' counter(counter-other-webdriver-functionality-3) ' ' }
+                .print-site-enumerate-headings #other-webdriver-functionality h3 {  counter-reset: counter-other-webdriver-functionality-4  counter-other-webdriver-functionality-5 ;  counter-increment: counter-other-webdriver-functionality-3 }
+            
+                .print-site-enumerate-headings #other-webdriver-functionality h4:before { content: '2.5.' counter(counter-other-webdriver-functionality-2) '.' counter(counter-other-webdriver-functionality-3) '.' counter(counter-other-webdriver-functionality-4) ' ' }
+                .print-site-enumerate-headings #other-webdriver-functionality h4 {  counter-reset: counter-other-webdriver-functionality-5 ;  counter-increment: counter-other-webdriver-functionality-4 }
+            
+                .print-site-enumerate-headings #other-webdriver-functionality h5:before { content: '2.5.' counter(counter-other-webdriver-functionality-2) '.' counter(counter-other-webdriver-functionality-3) '.' counter(counter-other-webdriver-functionality-4) '.' counter(counter-other-webdriver-functionality-5) ' ' }
+                .print-site-enumerate-headings #other-webdriver-functionality h5 {  counter-increment: counter-other-webdriver-functionality-5 }
+            
+.print-site-enumerate-headings #end > h1:before { content: '2.6 ' }
+
+                .print-site-enumerate-headings #end h2:before { content: '2.6.' counter(counter-end-2) ' ' }
+                .print-site-enumerate-headings #end h2 {  counter-reset: counter-end-3  counter-end-4  counter-end-5 ;  counter-increment: counter-end-2 }
+            
+                .print-site-enumerate-headings #end h3:before { content: '2.6.' counter(counter-end-2) '.' counter(counter-end-3) ' ' }
+                .print-site-enumerate-headings #end h3 {  counter-reset: counter-end-4  counter-end-5 ;  counter-increment: counter-end-3 }
+            
+                .print-site-enumerate-headings #end h4:before { content: '2.6.' counter(counter-end-2) '.' counter(counter-end-3) '.' counter(counter-end-4) ' ' }
+                .print-site-enumerate-headings #end h4 {  counter-reset: counter-end-5 ;  counter-increment: counter-end-4 }
+            
+                .print-site-enumerate-headings #end h5:before { content: '2.6.' counter(counter-end-2) '.' counter(counter-end-3) '.' counter(counter-end-4) '.' counter(counter-end-5) ' ' }
+                .print-site-enumerate-headings #end h5 {  counter-increment: counter-end-5 }
+            
+.print-site-enumerate-headings #section-3 > h1:before { content: '3 ' }
+.print-site-enumerate-headings #simple-example > h1:before { content: '3.1 ' }
+
+                .print-site-enumerate-headings #simple-example h2:before { content: '3.1.' counter(counter-simple-example-2) ' ' }
+                .print-site-enumerate-headings #simple-example h2 {  counter-reset: counter-simple-example-3  counter-simple-example-4  counter-simple-example-5 ;  counter-increment: counter-simple-example-2 }
+            
+                .print-site-enumerate-headings #simple-example h3:before { content: '3.1.' counter(counter-simple-example-2) '.' counter(counter-simple-example-3) ' ' }
+                .print-site-enumerate-headings #simple-example h3 {  counter-reset: counter-simple-example-4  counter-simple-example-5 ;  counter-increment: counter-simple-example-3 }
+            
+                .print-site-enumerate-headings #simple-example h4:before { content: '3.1.' counter(counter-simple-example-2) '.' counter(counter-simple-example-3) '.' counter(counter-simple-example-4) ' ' }
+                .print-site-enumerate-headings #simple-example h4 {  counter-reset: counter-simple-example-5 ;  counter-increment: counter-simple-example-4 }
+            
+                .print-site-enumerate-headings #simple-example h5:before { content: '3.1.' counter(counter-simple-example-2) '.' counter(counter-simple-example-3) '.' counter(counter-simple-example-4) '.' counter(counter-simple-example-5) ' ' }
+                .print-site-enumerate-headings #simple-example h5 {  counter-increment: counter-simple-example-5 }
+            
+.print-site-enumerate-headings #ride > h1:before { content: '3.2 ' }
+
+                .print-site-enumerate-headings #ride h2:before { content: '3.2.' counter(counter-ride-2) ' ' }
+                .print-site-enumerate-headings #ride h2 {  counter-reset: counter-ride-3  counter-ride-4  counter-ride-5 ;  counter-increment: counter-ride-2 }
+            
+                .print-site-enumerate-headings #ride h3:before { content: '3.2.' counter(counter-ride-2) '.' counter(counter-ride-3) ' ' }
+                .print-site-enumerate-headings #ride h3 {  counter-reset: counter-ride-4  counter-ride-5 ;  counter-increment: counter-ride-3 }
+            
+                .print-site-enumerate-headings #ride h4:before { content: '3.2.' counter(counter-ride-2) '.' counter(counter-ride-3) '.' counter(counter-ride-4) ' ' }
+                .print-site-enumerate-headings #ride h4 {  counter-reset: counter-ride-5 ;  counter-increment: counter-ride-4 }
+            
+                .print-site-enumerate-headings #ride h5:before { content: '3.2.' counter(counter-ride-2) '.' counter(counter-ride-3) '.' counter(counter-ride-4) '.' counter(counter-ride-5) ' ' }
+                .print-site-enumerate-headings #ride h5 {  counter-increment: counter-ride-5 }
+            
+.print-site-enumerate-headings #section-4 > h1:before { content: '4 ' }
+.print-site-enumerate-headings #commands-by-category > h1:before { content: '4.1 ' }
+
+                .print-site-enumerate-headings #commands-by-category h2:before { content: '4.1.' counter(counter-commands-by-category-2) ' ' }
+                .print-site-enumerate-headings #commands-by-category h2 {  counter-reset: counter-commands-by-category-3  counter-commands-by-category-4  counter-commands-by-category-5 ;  counter-increment: counter-commands-by-category-2 }
+            
+                .print-site-enumerate-headings #commands-by-category h3:before { content: '4.1.' counter(counter-commands-by-category-2) '.' counter(counter-commands-by-category-3) ' ' }
+                .print-site-enumerate-headings #commands-by-category h3 {  counter-reset: counter-commands-by-category-4  counter-commands-by-category-5 ;  counter-increment: counter-commands-by-category-3 }
+            
+                .print-site-enumerate-headings #commands-by-category h4:before { content: '4.1.' counter(counter-commands-by-category-2) '.' counter(counter-commands-by-category-3) '.' counter(counter-commands-by-category-4) ' ' }
+                .print-site-enumerate-headings #commands-by-category h4 {  counter-reset: counter-commands-by-category-5 ;  counter-increment: counter-commands-by-category-4 }
+            
+                .print-site-enumerate-headings #commands-by-category h5:before { content: '4.1.' counter(counter-commands-by-category-2) '.' counter(counter-commands-by-category-3) '.' counter(counter-commands-by-category-4) '.' counter(counter-commands-by-category-5) ' ' }
+                .print-site-enumerate-headings #commands-by-category h5 {  counter-increment: counter-commands-by-category-5 }
+            
+.print-site-enumerate-headings #find > h1:before { content: '4.9 ' }
+
+                .print-site-enumerate-headings #find h2:before { content: '4.9.' counter(counter-find-2) ' ' }
+                .print-site-enumerate-headings #find h2 {  counter-reset: counter-find-3  counter-find-4  counter-find-5 ;  counter-increment: counter-find-2 }
+            
+                .print-site-enumerate-headings #find h3:before { content: '4.9.' counter(counter-find-2) '.' counter(counter-find-3) ' ' }
+                .print-site-enumerate-headings #find h3 {  counter-reset: counter-find-4  counter-find-5 ;  counter-increment: counter-find-3 }
+            
+                .print-site-enumerate-headings #find h4:before { content: '4.9.' counter(counter-find-2) '.' counter(counter-find-3) '.' counter(counter-find-4) ' ' }
+                .print-site-enumerate-headings #find h4 {  counter-reset: counter-find-5 ;  counter-increment: counter-find-4 }
+            
+                .print-site-enumerate-headings #find h5:before { content: '4.9.' counter(counter-find-2) '.' counter(counter-find-3) '.' counter(counter-find-4) '.' counter(counter-find-5) ' ' }
+                .print-site-enumerate-headings #find h5 {  counter-increment: counter-find-5 }
+            
+.print-site-enumerate-headings #goto > h1:before { content: '4.11 ' }
+
+                .print-site-enumerate-headings #goto h2:before { content: '4.11.' counter(counter-goto-2) ' ' }
+                .print-site-enumerate-headings #goto h2 {  counter-reset: counter-goto-3  counter-goto-4  counter-goto-5 ;  counter-increment: counter-goto-2 }
+            
+                .print-site-enumerate-headings #goto h3:before { content: '4.11.' counter(counter-goto-2) '.' counter(counter-goto-3) ' ' }
+                .print-site-enumerate-headings #goto h3 {  counter-reset: counter-goto-4  counter-goto-5 ;  counter-increment: counter-goto-3 }
+            
+                .print-site-enumerate-headings #goto h4:before { content: '4.11.' counter(counter-goto-2) '.' counter(counter-goto-3) '.' counter(counter-goto-4) ' ' }
+                .print-site-enumerate-headings #goto h4 {  counter-reset: counter-goto-5 ;  counter-increment: counter-goto-4 }
+            
+                .print-site-enumerate-headings #goto h5:before { content: '4.11.' counter(counter-goto-2) '.' counter(counter-goto-3) '.' counter(counter-goto-4) '.' counter(counter-goto-5) ' ' }
+                .print-site-enumerate-headings #goto h5 {  counter-increment: counter-goto-5 }
+            
+.print-site-enumerate-headings #initbrowser > h1:before { content: '4.12 ' }
+
+                .print-site-enumerate-headings #initbrowser h2:before { content: '4.12.' counter(counter-initbrowser-2) ' ' }
+                .print-site-enumerate-headings #initbrowser h2 {  counter-reset: counter-initbrowser-3  counter-initbrowser-4  counter-initbrowser-5 ;  counter-increment: counter-initbrowser-2 }
+            
+                .print-site-enumerate-headings #initbrowser h3:before { content: '4.12.' counter(counter-initbrowser-2) '.' counter(counter-initbrowser-3) ' ' }
+                .print-site-enumerate-headings #initbrowser h3 {  counter-reset: counter-initbrowser-4  counter-initbrowser-5 ;  counter-increment: counter-initbrowser-3 }
+            
+                .print-site-enumerate-headings #initbrowser h4:before { content: '4.12.' counter(counter-initbrowser-2) '.' counter(counter-initbrowser-3) '.' counter(counter-initbrowser-4) ' ' }
+                .print-site-enumerate-headings #initbrowser h4 {  counter-reset: counter-initbrowser-5 ;  counter-increment: counter-initbrowser-4 }
+            
+                .print-site-enumerate-headings #initbrowser h5:before { content: '4.12.' counter(counter-initbrowser-2) '.' counter(counter-initbrowser-3) '.' counter(counter-initbrowser-4) '.' counter(counter-initbrowser-5) ' ' }
+                .print-site-enumerate-headings #initbrowser h5 {  counter-increment: counter-initbrowser-5 }
+            
+.print-site-enumerate-headings #sendkeys > h1:before { content: '4.18 ' }
+
+                .print-site-enumerate-headings #sendkeys h2:before { content: '4.18.' counter(counter-sendkeys-2) ' ' }
+                .print-site-enumerate-headings #sendkeys h2 {  counter-reset: counter-sendkeys-3  counter-sendkeys-4  counter-sendkeys-5 ;  counter-increment: counter-sendkeys-2 }
+            
+                .print-site-enumerate-headings #sendkeys h3:before { content: '4.18.' counter(counter-sendkeys-2) '.' counter(counter-sendkeys-3) ' ' }
+                .print-site-enumerate-headings #sendkeys h3 {  counter-reset: counter-sendkeys-4  counter-sendkeys-5 ;  counter-increment: counter-sendkeys-3 }
+            
+                .print-site-enumerate-headings #sendkeys h4:before { content: '4.18.' counter(counter-sendkeys-2) '.' counter(counter-sendkeys-3) '.' counter(counter-sendkeys-4) ' ' }
+                .print-site-enumerate-headings #sendkeys h4 {  counter-reset: counter-sendkeys-5 ;  counter-increment: counter-sendkeys-4 }
+            
+                .print-site-enumerate-headings #sendkeys h5:before { content: '4.18.' counter(counter-sendkeys-2) '.' counter(counter-sendkeys-3) '.' counter(counter-sendkeys-4) '.' counter(counter-sendkeys-5) ' ' }
+                .print-site-enumerate-headings #sendkeys h5 {  counter-increment: counter-sendkeys-5 }
+            
+.print-site-enumerate-headings #wait > h1:before { content: '4.23 ' }
+
+                .print-site-enumerate-headings #wait h2:before { content: '4.23.' counter(counter-wait-2) ' ' }
+                .print-site-enumerate-headings #wait h2 {  counter-reset: counter-wait-3  counter-wait-4  counter-wait-5 ;  counter-increment: counter-wait-2 }
+            
+                .print-site-enumerate-headings #wait h3:before { content: '4.23.' counter(counter-wait-2) '.' counter(counter-wait-3) ' ' }
+                .print-site-enumerate-headings #wait h3 {  counter-reset: counter-wait-4  counter-wait-5 ;  counter-increment: counter-wait-3 }
+            
+                .print-site-enumerate-headings #wait h4:before { content: '4.23.' counter(counter-wait-2) '.' counter(counter-wait-3) '.' counter(counter-wait-4) ' ' }
+                .print-site-enumerate-headings #wait h4 {  counter-reset: counter-wait-5 ;  counter-increment: counter-wait-4 }
+            
+                .print-site-enumerate-headings #wait h5:before { content: '4.23.' counter(counter-wait-2) '.' counter(counter-wait-3) '.' counter(counter-wait-4) '.' counter(counter-wait-5) ' ' }
+                .print-site-enumerate-headings #wait h5 {  counter-increment: counter-wait-5 }
+            
+.print-site-enumerate-headings #section-5 > h1:before { content: '5 ' }
+.print-site-enumerate-headings #terminology > h1:before { content: '5.1 ' }
+
+                .print-site-enumerate-headings #terminology h2:before { content: '5.1.' counter(counter-terminology-2) ' ' }
+                .print-site-enumerate-headings #terminology h2 {  counter-reset: counter-terminology-3  counter-terminology-4  counter-terminology-5 ;  counter-increment: counter-terminology-2 }
+            
+                .print-site-enumerate-headings #terminology h3:before { content: '5.1.' counter(counter-terminology-2) '.' counter(counter-terminology-3) ' ' }
+                .print-site-enumerate-headings #terminology h3 {  counter-reset: counter-terminology-4  counter-terminology-5 ;  counter-increment: counter-terminology-3 }
+            
+                .print-site-enumerate-headings #terminology h4:before { content: '5.1.' counter(counter-terminology-2) '.' counter(counter-terminology-3) '.' counter(counter-terminology-4) ' ' }
+                .print-site-enumerate-headings #terminology h4 {  counter-reset: counter-terminology-5 ;  counter-increment: counter-terminology-4 }
+            
+                .print-site-enumerate-headings #terminology h5:before { content: '5.1.' counter(counter-terminology-2) '.' counter(counter-terminology-3) '.' counter(counter-terminology-4) '.' counter(counter-terminology-5) ' ' }
+                .print-site-enumerate-headings #terminology h5 {  counter-increment: counter-terminology-5 }
+            
+.print-site-enumerate-headings #faq > h1:before { content: '5.2 ' }
+
+                .print-site-enumerate-headings #faq h2:before { content: '5.2.' counter(counter-faq-2) ' ' }
+                .print-site-enumerate-headings #faq h2 {  counter-reset: counter-faq-3  counter-faq-4  counter-faq-5 ;  counter-increment: counter-faq-2 }
+            
+                .print-site-enumerate-headings #faq h3:before { content: '5.2.' counter(counter-faq-2) '.' counter(counter-faq-3) ' ' }
+                .print-site-enumerate-headings #faq h3 {  counter-reset: counter-faq-4  counter-faq-5 ;  counter-increment: counter-faq-3 }
+            
+                .print-site-enumerate-headings #faq h4:before { content: '5.2.' counter(counter-faq-2) '.' counter(counter-faq-3) '.' counter(counter-faq-4) ' ' }
+                .print-site-enumerate-headings #faq h4 {  counter-reset: counter-faq-5 ;  counter-increment: counter-faq-4 }
+            
+                .print-site-enumerate-headings #faq h5:before { content: '5.2.' counter(counter-faq-2) '.' counter(counter-faq-3) '.' counter(counter-faq-4) '.' counter(counter-faq-5) ' ' }
+                .print-site-enumerate-headings #faq h5 {  counter-increment: counter-faq-5 }
+            
+.print-site-enumerate-headings #release-notes > h1:before { content: '5.3 ' }
+
+                .print-site-enumerate-headings #release-notes h2:before { content: '5.3.' counter(counter-release-notes-2) ' ' }
+                .print-site-enumerate-headings #release-notes h2 {  counter-reset: counter-release-notes-3  counter-release-notes-4  counter-release-notes-5 ;  counter-increment: counter-release-notes-2 }
+            
+                .print-site-enumerate-headings #release-notes h3:before { content: '5.3.' counter(counter-release-notes-2) '.' counter(counter-release-notes-3) ' ' }
+                .print-site-enumerate-headings #release-notes h3 {  counter-reset: counter-release-notes-4  counter-release-notes-5 ;  counter-increment: counter-release-notes-3 }
+            
+                .print-site-enumerate-headings #release-notes h4:before { content: '5.3.' counter(counter-release-notes-2) '.' counter(counter-release-notes-3) '.' counter(counter-release-notes-4) ' ' }
+                .print-site-enumerate-headings #release-notes h4 {  counter-reset: counter-release-notes-5 ;  counter-increment: counter-release-notes-4 }
+            
+                .print-site-enumerate-headings #release-notes h5:before { content: '5.3.' counter(counter-release-notes-2) '.' counter(counter-release-notes-3) '.' counter(counter-release-notes-4) '.' counter(counter-release-notes-5) ' ' }
+                .print-site-enumerate-headings #release-notes h5 {  counter-increment: counter-release-notes-5 }
+            </style>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <div class="left">Made with <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener"><strong>Material for MkDocs</strong></a>.&nbsp;</div><div class="right">Contents copyright &copy;2015-2024 <strong><a href="https://dyalog.com" target="_blank" rel="noopener">Dyalog, LTD</a></strong></div>
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "/", "features": ["navigation.sections", "navigation.instant", "content.footnote.tooltips", "navigation.path", "navigation.indexes"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+        <script src="../js/print-site.js"></script>
+      
+    
+  </body>
+</html>
