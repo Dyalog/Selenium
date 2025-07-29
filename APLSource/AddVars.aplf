@@ -1,8 +1,8 @@
-vars←vars AddVars ns;n;i
+ vars←vars AddVars ns;n;i
 ⍝ settings manipulation
-      :For n :In ns.⎕NL-2
-          :If (≢vars)<i←vars[;1]⍳⊂n
-              vars←vars⍪2↑⊂n
-          :EndIf
-          vars[i;2]←⊂1 ⎕JSON ns⍎n
-      :EndFor
+ :For n :In ns.⎕NL-2
+     :If (≢vars)<i←vars[;1]⍳⊂n
+         vars←vars⍪2↑⊂n
+     :EndIf
+     vars[i;2]←⊂1 ⎕JSON ns⍎n
+ :EndFor

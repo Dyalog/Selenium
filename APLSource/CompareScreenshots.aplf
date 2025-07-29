@@ -11,7 +11,7 @@
      fileStreamDifferenceMask←System.IO.File.Create⊂∊(2↑⎕NPARTS file),'-diff.png'
      :Trap 90  ⍝ catch execptions
          maskImage←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiffMaskImage file ref #.S.Codeuctivity.ImageSharpCompare.ResizeOption.Resize 0
-     maskImage.Save fileStreamDifferenceMask(⎕NEW SixLabors.ImageSharp.Formats.Png.PngEncoder)
+         maskImage.Save fileStreamDifferenceMask(⎕NEW SixLabors.ImageSharp.Formats.Png.PngEncoder)
      :EndTrap
      fileStreamDifferenceMask.Close
  :EndIf

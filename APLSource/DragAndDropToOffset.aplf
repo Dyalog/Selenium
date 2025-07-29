@@ -1,7 +1,6 @@
-     {ok}←fromid DragAndDropToOffset xy;from
-     ⍝ Drag
-      ok←1
-      from←Find fromid
-      ACTIONS.Reset
-      (ACTIONS.DragAndDropToOffset from,xy).Build.Perform
-    
+ {ok}←fromid DragAndDropToOffset xy;from
+ ⍝ Drag
+ ok←1
+ from←Find fromid
+ ACTIONS.Reset
+ (ACTIONS.DragAndDropToOffset from,xy).Build.Perform

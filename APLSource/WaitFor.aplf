@@ -1,11 +1,11 @@
  r←larg WaitFor args;f;text;msg;element;oLarg
-    ⍝ Retry until text/value of element begins with text
-    ⍝ Return msg on failure, '' on success
-    ⍝ larg ist either an object or the [left and] right argument of Find.
-    ⍝ ie.         MyLabel WaitFor'MyText'
-    ⍝ or         'MyLabel'WaitFor'MyText'
-    ⍝ or  ('id' 'MyLabel')WaitFor'MyText'
-    ⍝ are all possible!
+ ⍝ Retry until text/value of element begins with text
+ ⍝ Return msg on failure, '' on success
+ ⍝ larg ist either an object or the [left and] right argument of Find.
+ ⍝ ie.         MyLabel WaitFor'MyText'
+ ⍝ or         'MyLabel'WaitFor'MyText'
+ ⍝ or  ('id' 'MyLabel')WaitFor'MyText'
+ ⍝ are all possible!
  :If 9≠⎕NC'larg'
      oLarg←larg
      :If 2=≡larg

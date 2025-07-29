@@ -1,6 +1,6 @@
  {ok}←selectId Select itemText;sp;se;type;reTry;op;value
-      ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch) OR (criteria)(Index|PartialText|Text|Value|CssSelector)
-      ⍝ partialMatch is a boolean indicating whether partial matches are accepted (1) or whether we're looking for full match (0, DEFAULT)
+ ⍝ Select an item in a select element  (⍵=itemText OR (itemText)(partialMatch) OR (criteria)(Index|PartialText|Text|Value|CssSelector)
+ ⍝ partialMatch is a boolean indicating whether partial matches are accepted (1) or whether we're looking for full match (0, DEFAULT)
  ok←0
      ⍝ ↓↓↓ Id can be tuple of (type identifier - see Find)
  :If 2=≡selectId ⋄ (type selectId)←selectId

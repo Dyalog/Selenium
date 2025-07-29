@@ -1,1 +1,1 @@
-DefaultTo←{0=⎕NC ⍺:⍎⍺,'←⍵' ⋄ _←⍵} ⍝ set ⍺ to ⍵ if undefined
+ DefaultTo←{0=⎕NC ⍺:⍎⍺,'←⍵' ⋄ _←⍵} ⍝ set ⍺ to ⍵ if undefined

@@ -1,38 +1,38 @@
-     r←{type}Find id;f;ok;time;value;attr;search;elms;mask
-      :If 9=⎕NC'id'
-          r←id ⍝ Already an object
-      :Else
-          'type'DefaultTo'Id'
+ r←{type}Find id;f;ok;time;value;attr;search;elms;mask
+ :If 9=⎕NC'id'
+     r←id ⍝ Already an object
+ :Else
+     'type'DefaultTo'Id'
           ⍝ See #.S.BROWSER.By.⎕nl-3 for a list of possible ways to find things
           ⍝ ClassName CssSelector Id Name TagName XPath
-          (id attr value)←{3↑⍵,(⍴⍵)↓'' '' ''}eis id
-          :If search←~0∊⍴attr
-              type,←('s'=¯1↑type)↓'s'
-          :EndIf
-          :If 's'=¯1↑type ⍝ The call FindElements*
-              f←BROWSER.FindElements(By.⍎¯1↓type)
-          :Else
-              f←BROWSER.FindElement(By.⍎type)
-          :EndIf
-          time←⎕AI[3]
-          :Repeat ⍝ Other functions use Retry operator, but we need to collect the result
-              :Trap 0
-                  r←f⊂id
-                  ok←1
-              :Else
-                  r←0
-                  :If RETRYLIMIT>0 ⋄ ⎕DL 0.1 ⋄ ok←0 ⋄ :EndIf
-              :EndTrap
-          :Until ok∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second
-          :If ok
-          :AndIf search
-              :If 0<r.Count
-                  elms←⌷r
-                  :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
-                      r←⊃mask/elms
-                  :EndIf
-              :Else
-                  r←0   ⍝ nothing found!
-              :EndIf
-          :EndIf
-      :EndIf
+     (id attr value)←{3↑⍵,(⍴⍵)↓'' '' ''}eis id
+     :If search←~0∊⍴attr
+         type,←('s'=¯1↑type)↓'s'
+     :EndIf
+     :If 's'=¯1↑type ⍝ The call FindElements*
+         f←BROWSER.FindElements(By.⍎¯1↓type)
+     :Else
+         f←BROWSER.FindElement(By.⍎type)
+     :EndIf
+     time←⎕AI[3]
+     :Repeat ⍝ Other functions use Retry operator, but we need to collect the result
+         :Trap 0
+             r←f⊂id
+             ok←1
+         :Else
+             r←0
+             :If RETRYLIMIT>0 ⋄ ⎕DL 0.1 ⋄ ok←0 ⋄ :EndIf
+         :EndTrap
+     :Until ok∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second
+     :If ok
+     :AndIf search
+         :If 0<r.Count
+             elms←⌷r
+             :If r←∨/mask←<\(⊂value)≡¨attr∘{⍵.GetAttribute⊂⍺}¨elms
+                 r←⊃mask/elms
+             :EndIf
+         :Else
+             r←0   ⍝ nothing found!
+         :EndIf
+     :EndIf
+ :EndIf
