@@ -70,7 +70,7 @@
 
 ⍝ 8. Dealing with hidden elements
 ⍝ this is from AB (more robust than my original attempt that used ⎕DL)
-_Spawn←{
+ _Spawn←{
      nil←()
      _←nil.⎕DF'⍰'
      ⍺←⊢
@@ -93,7 +93,7 @@ _Spawn←{
          ⍵⍵.Ready←1
      }result&⍵
      result
-}
+ }
  ctl←#.S.Find'hiddenElement'
  0 Assert ctl.Displayed    ⍝ initially it's hidden
  0 Assert #.S.Click ctl   ⍝ can't interact with it
@@ -102,17 +102,38 @@ _Spawn←{
  #.S.Click'toggleHiddenButton'⍝ make element visible
  ⍝ 0 Assert≢⎕TSYNC hdn       ⍝ has WaitFor found the element after it was clicked?
  :Repeat
- ⎕dl .01
+     ⎕DL 0.01
  :Until hdn.Ready
  0 Assert≢hdn.Value        ⍝ has WaitFor found the element after it was clicked?
  1 Assert ctl.Displayed    ⍝ is it?
  1 Assert #.S.Click ctl    ⍝ and clickable...?
 
  #.S.Click'toggleHiddenButton'⍝ hide it again
- hdn←{r←#.S.(IsVisible Retry ⍵) ⋄ sink←⎕DL 2 ⋄ r}&'hiddenElement'   ⍝ ⎕DL so that ⎕TSYNC will find the thread...
+⍝ hdn←{r←#.S.(IsVisible Retry ⍵) ⋄ sink←⎕DL 2 ⋄ r}&'hiddenElement'   ⍝ ⎕DL so that ⎕TSYNC will find the thread...
+ hdn←{r←#.S.(IsVisible Retry ⍵) ⋄ sink←⎕DL 2 ⋄ r}_Spawn'hiddenElement'   ⍝ ⎕DL so that ⎕TSYNC will find the thread...
  #.S.Click'toggleHiddenButton'⍝ hide it again
- res←⎕TSYNC hdn
+ ⍝res←⎕TSYNC hdn
+ :Repeat
+     ⎕DL 0.01
+ :Until hdn.Ready
+ res←hdn.Value
  1 Assert≢res                 ⍝ is it visible?
+
+ ∘∘∘
+⍝ need Bjorns help to figure out the details here:
+⍝ based on "Explicit Wait" sample @ 
+r mit dem "=>"  konstarukt tue ich mich 
+cxhwer!bet
+whttps://www.selenium.dev/documentation/webdriver/waits/:Access i
+  ←#.S.(⎕NEW OpenQA.Selenium.Support.UI.WebDriverWait(BROWSER (TimeSpan.FromSeconds 2)))
+       w
+OpenQA.Selenium.Support.UI.WebDriverWait
+      w.Until
+TResult Until[TResult](System.Func`2[OpenQA.Selenium.IWebDriver,TResult])
+TResult Until[TResult](System.Func`2[OpenQA.Selenium.IWebDriver,TResult], System.Threading.CancellationToken)
+      w.Until(#.S.BROWSER d.Displayed)
+EXCEPTION: Invalid number of generic type arguments applied (expected 1, got 0)
+      w.Until(#.S.BROWSER d.Displayed)
 
  ⍝ 9. Find ListItems
  ctl←'menuList'#.S.FindListItems'Item Two'

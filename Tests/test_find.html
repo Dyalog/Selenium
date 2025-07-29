@@ -193,6 +193,7 @@
         <div class="element-box">
             <p id="hiddenElement">This element is hidden initially.</p>
             <button id="toggleHiddenButton" onclick="ctl=document.getElementById('hiddenElement');ctl.style.display=(ctl.style.display=='block')?'none':'block';">Toggle Hidden Element</button>
+            <button id="delayedToggleHiddenButton" onclick="setTimeout(function(){ ctl=document.getElementById('hiddenElement'); ctl.style.display=(ctl.style.display=='block')?'none':'block'; }, 5000);">Delayed Toggle (5s)</button>
             <div class="code-example">
                 <code>Find'hiddenElement'</code> (will find, but might not be visible/interactable initially)<br>
                 <code>Click'toggleHiddenButton'</code> (to make it visible)<br>
