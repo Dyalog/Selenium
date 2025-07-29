@@ -56,7 +56,7 @@
          :EndIf
          {}NuGet.Setup myNuGetFolder
          nul←{NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
-         ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
+         ⎕USING←'System' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
          ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
      :EndIf
      path←(NuGet.BinFolder myNuGetFolder),'/'
