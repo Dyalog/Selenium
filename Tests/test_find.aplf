@@ -1,4 +1,4 @@
- r←test_find sink;ctl;NL;hdn;res
+ r←test_find sink;ctl;NL;hdn;res;_Spawn
  r←''
  NL←⎕UCS ⎕SE.SALTUtils.LINDEL
  #.S.GoTo'file:///',path,'Tests/test_find.html'
@@ -69,12 +69,42 @@
  'Submit'Assert ctl.Text
 
 ⍝ 8. Dealing with hidden elements
+⍝ this is from AB (more robust than my original attempt that used ⎕DL)
+_Spawn←{
+     nil←()
+     _←nil.⎕DF'⍰'
+     ⍺←⊢
+     result←⍺{
+         (
+             Ready:0
+             Value:nil
+         )
+     }⍵
+     _←result.⎕FX(
+         'r←Sync'
+         ':trap 6'
+         ':if Ready ⋄ r←Value ⋄ :else ⋄ r←⎕TSYNC Tid ⋄ :endif'
+         ':else ⋄ r←Value'
+         ':endtrap'
+     )
+     _←⍺ ⍺⍺{
+         ⍺←⊢
+         ⍵⍵.Value←⍺ ⍺⍺ ⍵
+         ⍵⍵.Ready←1
+     }result&⍵
+     result
+}
  ctl←#.S.Find'hiddenElement'
  0 Assert ctl.Displayed    ⍝ initially it's hidden
  0 Assert #.S.Click ctl   ⍝ can't interact with it
- hdn←'hiddenElement'#.S.WaitFor&'This element is hidden initially.'   ⍝ use opportunity to also test "WaitFor"
+ ⍝ hdn←'hiddenElement'#.S.WaitFor&'This element is hidden initially.'   ⍝ use opportunity to also test "WaitFor"
+ hdn←'hiddenElement'#.S.WaitFor _Spawn'This element is hidden initially.'   ⍝ use opportunity to also test "WaitFor"
  #.S.Click'toggleHiddenButton'⍝ make element visible
- 0 Assert≢⎕TSYNC hdn       ⍝ has WaitFor found the element after it was clicked?
+ ⍝ 0 Assert≢⎕TSYNC hdn       ⍝ has WaitFor found the element after it was clicked?
+ :Repeat
+ ⎕dl .01
+ :Until hdn.Ready
+ 0 Assert≢hdn.Value        ⍝ has WaitFor found the element after it was clicked?
  1 Assert ctl.Displayed    ⍝ is it?
  1 Assert #.S.Click ctl    ⍝ and clickable...?
 
