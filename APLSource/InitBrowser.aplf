@@ -95,7 +95,6 @@
              options.AddArgument⊂opt
          :EndFor
      :EndIf
-     ∘∘∘
      :If 2=SETTINGS.Browser.⎕NC'loggingpreferences'
          :For p :In SETTINGS.Browser.loggingpreferences
              options.SetLoggingPreference p.type(OpenQA.Selenium.LogLevel⍎p.level)
