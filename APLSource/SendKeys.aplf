@@ -1,16 +1,10 @@
-     {ok}←obj SendKeys text;q;i;k
-     ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
-     ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
-     ⍝ To get A,Ctrl+X use 'A'(Control 'X')
-      ok←1
-      q←Find obj
-      :If q≢0  ⍝ make sure that we found it!
-          text←eis text
-          i←4~⍨Keys.(Shift Control Alt)⍳¯1↓text
-          ACTIONS.Reset
-          :For k :In i
-              (ACTIONS.(KeyDown ##.k⌷Keys.(Shift Control Alt))).Build.Perform
-          :EndFor
-          q.SendKeys,¨text~Keys.(Shift Control Alt)
-      :EndIf
-    
+ {ok}←obj SendKeys text;q;i;k
+ ⍝ Send keystrokes - see Keys.⎕NL -2 for special keys like Keys.Enter
+ ⍝ Note that even 'A' Control 'X' will be interpreted as Ctrl+A,X
+ ⍝ To get A,Ctrl+X use 'A'(Control,'X')
+ ok←1
+ q←Find obj
+ :If q≢0  ⍝ make sure that we found it!
+     text←eis text
+     q.SendKeys¨⊂¨text
+ :EndIf

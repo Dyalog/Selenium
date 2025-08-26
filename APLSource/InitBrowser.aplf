@@ -1,56 +1,150 @@
- {Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;BSVC;z;pckgs;Selenium;slnm;av;f;nm;f1;nugetPackage;sldir;nul;sz
-       ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
- Re←{6::0 ⋄ ⍎⍵}'Re'
- :If 0=⎕NC'DEFAULTBROWSER'
-     Init
+ {ok}←{Re}InitBrowser settings;browser;files;msg;path;len;options;opt;pth;subF;suffix;drv;opts;p;cap;z;pckgs;Selenium;slnm;av;nm;f1;nugetPackage;nul;sz;noBrowserVersion;os;vers;zPckgs;versF;exe;folder
+ ⍝ if ⍺=1, re-initialize browser (might be neccessary to easily reconnect to HtmlRenderer, when the previous instance was closed by the application...)
+ ⍝
+ ⍝ ⍵ is (name of browser)[port]
+ ⍝   or alternatively the name of json[5] file with browser settings (will be merged with our own browsers.json5 toget complete settings)
+ ⍝   or a namespace with the same content
+ ⍝ ok=0 '' if it worked,
+ ⍝    1 errmsg otherwise
+ :If ⊃ok←Init
+     →0
  :EndIf
+ Re←{6::0 ⋄ ⍎⍵}'Re'
  options←''
  :If ×⎕NC'BROWSER' ⍝ close any open browser
      BROWSER.Quit
  :EndIf
+ :If 0 2∊⍨10|⎕DR settings   ⍝ if settings is a string
+ :AndIf ⎕NEXISTS settings   ⍝ and it points to an existing file
+ :AndIf 2=1 ⎕NINFO settings  ⍝ and it really IS a file (yes, that did happen!)
+     settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET settings
+ :EndIf
+ :If 0=≢settings            ⍝ it it is empty
+ :AndIf 0<≢f1←2 ⎕NQ'.' 'GetEnvironment' ' SELENIUM_CONFIGFILE'    ⍝ and a configfile is given in the environment
+     settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET f1
+ :EndIf
  :If ~Re
      ApplySettings settings
  :EndIf
- browser←SETTINGS.Browser.ns  ⍝ ns is also the "name" of the browser...
- pckgs←0 4⍴⍬
+ browser←SETTINGS.Browser.wdns
+ pckgs←0 3⍴⍬
 
  :Trap 0 ⍝ Try to find out if Browser is alive - not always reliable
      {}BROWSER.Url
  :Else
+     noBrowserVersion←0=SETTINGS.Browser.⎕NC'version'
      :If ~Re
-         pckgs⍪←SETTINGS.Components.WebDriver.(n v u f)
-         pckgs[1;3],←⊂⊂'OpenQA.Selenium.',SETTINGS.Browser.ns  ⍝ also ⎕USE namespace of selected browser
-      ⍝↑↑↑↑ this makes some assumptions about the namespaces - so we need to use WebDriver!
+         pckgs⍪←SETTINGS.Components.WebDriver.(nuget version using)
          :For nm :In SETTINGS.Components.optional.⎕NL ¯9
              p←SETTINGS.Components.optional⍎nm
              :If 0=p.⎕NC'enabled'
              :OrIf p.enabled∊1(⊂'true')
-                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nvuf'
+                 pckgs⍪←p.{6::'' ⋄ ⍎⍵}¨'nuget' 'version' 'using'
              :EndIf
          :EndFor
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
-⍝          :Select SETTINGS.Browser.o
-⍝          :Case 'ChromeDriver'
-⍝              f←'driver/',(('dows' '64'⎕R'' '32')av),'/chromedriver',('w'=1⊃av)/'.exe'
-⍝          :EndSelect
 
-         pckgs⍪←SETTINGS.Browser.(n v ⎕NULL),⊂''  ⍝ VALUE ERROR indicates we don't know your browser!
-
-         NuGet.Setup sldir←(739⌶0),'/Selenium'
-         nul←{NuGet.Add sldir((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
-         ⎕USING←'System,mscorlib.dll' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
-         ⎕USING,←('(includePrimary: 0)'NuGet.Using sldir),(⊃,/pckgs[;3])~⎕NULL
-     :Else
-         sldir←(739⌶0),'/Selenium'
+         pckgs⍪←SETTINGS.Browser.(nuget({0::'' ⋄ ⍎⍵}'version')using)
+         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
+             :If 20≤1⊃⎕SE.SALTUtils.VERSION
+                 myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
+             :Else
+                 :While ⎕NEXISTS myNuGetFolder
+                     myNuGetFolder,←⎕A[?26]
+                 :EndWhile
+                 ⎕MKDIR myNuGetFolder
+             :EndIf
+         :EndIf
+         {}NuGet.Setup myNuGetFolder
      :EndIf
-     path←(NuGet.BinFolder sldir),'/'
-     BSVC←(⍎SETTINGS.Browser.o,'Service').CreateDefaultService⊂(path)
-     BSVC.Start
-     :Trap 90
-         z←1⊣BSVC.IsRunning
+     ⎕USING←'System' 'System.Drawing,System.Drawing.Primitives' 'System.IO,System.IO.dll'
+
+     path←(NuGet.BinFolder myNuGetFolder),'/'
+     BSVC←⍬
+    ⍝  :If noBrowserVersion
+     :If ~Re
+         :Select ⎕C 3↑1⊃'.'⎕WG'APLVersion'
+         :Case 'win'
+             os←'windows'
+         :Case 'mac'
+             os←'macos'
+         :Case 'lin'
+             os←'linux'
+         :Else
+             ('Unknow OS: ',⎕C 3↑1⊃'.'⎕WG'APLVersion')⎕SIGNAL 11
+         :EndSelect
+         Environment.SetEnvironmentVariable('SE_MANAGER_PATH'(myNuGetFolder,'/published/selenium-manager/',os,'/selenium-manager',(os≡'windows')/'.exe'))
+     :EndIf
+
+     :If 2=SETTINGS.Browser.⎕NC'version'
+         Environment.SetEnvironmentVariable('SE_BROWSER_VERSION'SETTINGS.Browser.version)
+         Environment.SetEnvironmentVariable('SE_LOG_LEVEL' 'DEBUG')
+     :ElseIf 2=⎕NC'vers'
+     :AndIf 0<≢vers
+         Environment.SetEnvironmentVariable('SE_BROWSER_VERSION'vers)
+         Environment.SetEnvironmentVariable('SE_LOG_LEVEL' 'DEBUG')
+     :EndIf
+
+     :If 2=SETTINGS.Browser.⎕NC'isCEF'
+     :AndIf SETTINGS.Browser.isCEF
+         :If 0=⎕NC'HttpCommand'
+             ⎕SE.Link.Import ⎕THIS'HttpCommand'
+         :EndIf
+         vers←HttpCommand.GetJSON'GET'('http://127.0.0.1:',(⍕SETTINGS.Browser.Port),'/json/version')
+         :If vers.rc≠0
+             (⍕vers)⎕SIGNAL 11
+         :EndIf
+         versF←'/'(≠⊆⊢)vers.Data.Browser
+     ⍝ path←'C:\Users\mbaas\.nuget\packages\selenium.webdriver.chromedriver\127.0.6533.11900\driver\win32\chromedriver.exe'
+         vers←{(2>+\⍵='.')/⍵}2⊃versF
+       ⍝ now add the driver version needed for the CEF Version we got from /json/version
+         pckgs[≢pckgs;2]←⊂{(3>+\⍵='.')/⍵}2⊃versF
+         zPckgs←(⍳≢pckgs)≠pckgs[;1]⍳⊂'WebDriverManager'  ⍝ we don't need WebDriverManager with CEF, as we got the exact version from CEF
+         nul←{0 NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨zPckgs/↓pckgs
+         ⎕←zPckgs⌿pckgs
+         :If ∨/'Error'⍷∊nul
+             ⎕←nul
+             ⎕SIGNAL 11
+         :EndIf
+         NuGet.Publish myNuGetFolder  ⍝ publish after we added everything...
+         ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/zPckgs/pckgs[;3])~⎕NULL
+
+
+         ⍝path←FindChromeDriver vers os
+
+     ⍝    BSVC←(⍎SETTINGS.Browser.driver,'Service').CreateDefaultService⊂(path)
+     ⍝    BSVC.Start
+     ⍝ C#: new DriverManager().SetUpDriver(new ChromeConfig(), majorMinor);
+        ⍝drvm←⎕NEW DriverManager
+         ⍝DRVMSG←drvm.SetUpDriver((⎕NEW ChromeConfig) vers Architecture.Auto)
+
+         Environment.SetEnvironmentVariable'SE_DISABLE_DRIVER_MANAGEMENT' '1'
+         exe←⊃⊃0(⎕NINFO⍠('Recurse' 1))myNuGetFolder,'/chromedriver.exe'
+         (folder exe)←¯1↓⎕NPARTS exe
+         svc←ChromeDriverService.CreateDefaultService(folder exe)
+         svc.EnableVerboseLogging←1
+         svc.LogPath←myNuGetFolder,'chromedriver.log'
+
+
+         options←⎕NEW ChromeOptions
+         options.DebuggerAddress←'127.0.0.1:',⍕SETTINGS.Browser.Port
+         BROWSER←⎕NEW ChromeDriver(svc options)
+        ⍝  :Trap 90
+        ⍝      z←1⊣BSVC.IsRunning
+        ⍝  :Else
+        ⍝      ok←1('BrowserService "',(⍎SETTINGS.Browser.driver,'Service'),'" has been started, but it not running!"')
+        ⍝      →0
+        ⍝  :EndTrap
      :Else
-         z←0
-     :EndTrap
+         nul←{0 NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
+         :If ∨/'Error'⍷∊nul
+             ⎕←nul
+             ⎕SIGNAL 11
+         :EndIf
+         NuGet.Publish myNuGetFolder  ⍝ publish after we added everything...
+         ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
+
+     :EndIf
 
      options←InitOptions browser
      :If 9=⎕NC'BROWSEROPTIONS'  ⍝ if var exists
@@ -60,51 +154,42 @@
          :EndFor
      :EndIf
 
-     :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
+     :If 2=SETTINGS.Browser.⎕NC'additionalcapabilities'
      :AndIf 0 ⍝ not yet ripe for production!
-         :For cap :In SETTINGS.Browser.AdditionalCapabilities
+         :For cap :In SETTINGS.Browser.additionalcapabilities
              options.AddAdditionalCapability(cap.name)(cap.value)
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'AddArguments'
-         :For opt :In SETTINGS.Browser.AddArguments
+     :If 2=SETTINGS.Browser.⎕NC'addarguments'
+         :For opt :In SETTINGS.Browser.addarguments
              options.AddArgument⊂opt
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'LoggingPreferences'
-         cap←options.ToCapabilities
-
-         :For p :In SETTINGS.Browser.LoggingPreferences
-             options.SetLoggingPreference p.type(⍎p.level)
+     :If 2=SETTINGS.Browser.⎕NC'loggingpreferences'
+         :For p :In SETTINGS.Browser.loggingpreferences
+             options.SetLoggingPreference p.type(OpenQA.Selenium.LogLevel⍎p.level)
          :EndFor
      :EndIf
-⍝          :If 0<SETTINGS.Browser{0::0⍴' ' ⋄ ≢⍺(⍎⍵).⎕NL ¯2}'Options'
-⍝              :For opt :In SETTINGS.Browser.Options.⎕NL ¯2
-⍝                  options⍎opt,'←',{' '⎕DR⍥=⍵:'''',⍵,'''' ⋄ ⍕⍵}SETTINGS.Browser.Options⍎opt
-⍝              :EndFor
-⍝          :EndIf
 
-
-     :If ~z
-         ⎕←'Could not create instance of ',browser,'DriverService.'
-         ⎕←'You may have to adjust file-permissions to make this file executable:'
-         :If 'w'=1⊃av
-             ⎕←⎕SH'icacls ',f
-         :Else
-             ⎕←⎕SH'ls -l ',f
-         :EndIf
-         'Could not create DriverService - check msg in session'⎕SIGNAL 11
-     :EndIf
      :Trap 90
-         :If options≡''
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)BSVC
+         :If BSVC≡⍬
+             :If options≡''
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)
+             :Else
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)(options)
+             :EndIf
          :Else
-             BROWSER←⎕NEW(⍎SETTINGS.Browser.o)(BSVC options)
+             :If options≡''
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)BSVC
+             :Else
+                 BROWSER←⎕NEW(⍎SETTINGS.Browser.driver)(BSVC options)
+             :EndIf
          :EndIf
      :Else
-         ⎕←(⎕JSON⍠'Compact' 0)⎕DMX
-         ⎕←⍕⎕EXCEPTION
-         ∘∘∘
+         ok←1 ''
+         ok[2]←⊂(⎕JSON⍠'Compact' 0)⎕DMX
+         ok[2]←⊂(2⊃ok),⍕⎕EXCEPTION
+         →0
      :EndTrap
 
      CURRENTBROWSER←browser
@@ -122,5 +207,7 @@
          BROWSER.Manage.Window.Maximize
      :EndTrap
  :ElseIf sz≢⍬
-     BROWSER.Manage.Window.Size←⎕NEW Size sz
+     :Trap 90   ⍝ does not work with CEF
+         BROWSER.Manage.Window.Size←⎕NEW Size sz
+     :EndTrap
  :EndIf

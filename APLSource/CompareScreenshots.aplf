@@ -1,0 +1,17 @@
+ z←ref CompareScreenshots file;bool;fileStreamDifferenceMask;maskImage;encodedData
+⍝ z=0 Identical
+⍝ z=1 different
+
+ bool←Codeuctivity.ImageSharpCompare.ImageSharpCompare.ImagesAreEqual ref file #.S.Codeuctivity.ImageSharpCompare.ResizeOption.DontResize 0
+
+ :If bool
+     z←0
+ :Else
+     z←1
+     fileStreamDifferenceMask←System.IO.File.Create⊂∊(2↑⎕NPARTS file),'-diff.png'
+     :Trap 90  ⍝ catch execptions
+         maskImage←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiffMaskImage file ref #.S.Codeuctivity.ImageSharpCompare.ResizeOption.Resize 0
+         maskImage.Save fileStreamDifferenceMask(⎕NEW SixLabors.ImageSharp.Formats.Png.PngEncoder)
+     :EndTrap
+     fileStreamDifferenceMask.Close
+ :EndIf

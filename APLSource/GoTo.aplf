@@ -6,14 +6,18 @@
          :If z=1
              base←((2≥+\base='/')/base),'/'
          :ElseIf '../'≡z↑url
-             base←()↑base
-         :ElseIf './'≡z↑url  ⍝ do nothing
+             base←(2⊃⌽⍸base='/')↑base
+         :ElseIf './'≡z↑url
+             base←(⊢/⍸base='/')↑base
          :Else
              base←base,z↑url
          :EndIf
          url←z↓url
      :EndWhile
      url←base,url
+ :ElseIf 'file'≡lc 4↑url
+ :AndIf 'win'≡⎕C 3↑1⊃'.'⎕WG'APLVersion'
+     url←(7↑url),((url[8]≠'/')/'/'),7↓url
  :EndIf
  :Trap 90
      BROWSER.Navigate.GoToUrl⊂url

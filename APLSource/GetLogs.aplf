@@ -1,27 +1,30 @@
-     r←{level}GetLogs types;lb;e;entry;tit;r∆;type
-    ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
-    ⍝ level ∊ 'Info' 'Severe'
-    ⍝ types ∊ 'Browser'
-    ⍝ These values depend on the browser that's used!
-    ⍝ TODO: Document this!
-      r←''
-     
-      types←types{0=≢⍺:⍵ ⋄ (⊆⍺)∩⍵}⊃⌷¨BROWSER.Manage.Logs.AvailableLogTypes
-      :For type :In types
-          lb←BROWSER.Manage.Logs.GetLog⊂type
-          tit←'Log: ',type,' ('
-          r∆←⍬
-          :If 0<lb.Count
-              :For e :In ⍳lb.Count
-                  entry←e⌷lb
-                  :If 2=⎕NC'level' ⋄ :AndIf 0<≢level ⋄ :AndIf ~(⊂⍕entry.Level)∊⊆level ⋄ :Continue
-                  :EndIf
-                  r∆,←⊂' ',' ',⍕entry
-              :EndFor
-          :EndIf
-          :If 0<≢r∆
-              r←r,(⊂tit,(⍕≢r∆),' entries)'),r∆
-          :Else
-              r←r,⊂tit,,'(no entries)'
-          :EndIf
-      :EndFor
+ r←{level}GetLogs types;lb;e;entry;tit;r∆;type
+ ⍝ chould/should take ⍵ to select desired log(s) - once we have some data in them...;)
+ ⍝ level ∊ 'Info' 'Severe'
+ ⍝ types ∊ 'browser' 'driver'
+ ⍝ These values depend on the browser that's used!
+ ⍝ Be careful: it seems new Chrome versions will not return info-logs but only errors and warnings!
+ r←''
+
+ types←types{0=≢⍺:⍵ ⋄ (⊆⍺)∩⍵}⊃⌷¨BROWSER.Manage.Logs.AvailableLogTypes
+ :For type :In types
+     lb←BROWSER.Manage.Logs.GetLog⊂type
+     tit←'Log: ',type,' ('
+     r∆←⍬
+     :If 0<lb.Count
+         :For e :In ⍳lb.Count
+             entry←e⌷lb
+             :If 2=⎕NC'level'
+             :AndIf 0<≢level
+             :AndIf ~(⊂⍕entry.Level)∊⊆level
+                 :Continue
+             :EndIf
+             r∆,←⊂' ',' ',⍕entry
+         :EndFor
+     :EndIf
+     :If 0<≢r∆
+         r←r,(⊂tit,(⍕≢r∆),' entries)'),r∆
+     :Else
+         r←r,⊂tit,,'no entries)'
+     :EndIf
+ :EndFor

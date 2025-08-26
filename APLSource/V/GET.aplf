@@ -1,0 +1,22 @@
+ R←{a}GET w
+ :If 0=⎕NC'a'
+     a←⊃⎕RSI
+ :EndIf
+ :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
+     :If Numeric w
+         R←a ∆NV w
+     :Else
+         R←a ∆NG w
+     :EndIf
+ :Else
+     R←a ⎕VGET w
+     :If Numeric w
+         :If R≢a ∆NV w  ⍝ temporary qa
+             ∘∘∘
+         :EndIf
+     :Else
+         :If R≢a ∆NG w
+             ∘∘∘
+         :EndIf
+     :EndIf
+ :EndIf

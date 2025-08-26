@@ -1,0 +1,7 @@
+ {ok}←id Add2InputValue(pre post);s;i;r;obj;js
+⍝ Modify the value of an input control to text by prefixing and/or appending some text (pass '' to not use relevant option)
+ (id obj)←id{2::(⍺)(Find ⍺) ⋄ (⍺.GetAttribute⊂⍵)⍺}'id'  ⍝ if "id" is an element, get its "id" Attibute
+
+ obj.Click
+ (pre post)←{0<≢⍵:⍵⋄''}¨pre post  ⍝ transform ⍬ to ''
+ (obj pre post)ExecuteScript'arguments[0].value = arguments[1] + arguments[0].value + arguments[2];arguments[0].dispatchEvent(new Event("input", { bubbles: true }));arguments[0].dispatchEvent(new Event("change", { bubbles: true }));'

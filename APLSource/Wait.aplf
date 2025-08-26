@@ -1,2 +1,2 @@
-{ok}←Wait msec
-      ok←×⎕DL msec÷1000
+ {ok}←Wait msec
+ ok←×⎕DL msec÷1000

@@ -1,0 +1,1 @@
+Numeric←{(0<≢⍵)∧2|⎕DR⍵}   ⍝ test if ⍵ is a numeric value (⍬ isn't!)

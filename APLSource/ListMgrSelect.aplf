@@ -1,6 +1,0 @@
-     {ok}←id ListMgrSelect items;elements
-     ⍝ Move items from left to right in a MiServer ejListManager control
-      ok←1
-      elements←(id,'_left')FindListItems items
-      elements DragAndDrop¨⊂id,'_right_container'
-    

@@ -1,11 +1,19 @@
  home←_HOME;src
- :If 0<≢HOME
-     home←HOME
+ :If 2=⎕NC'SELENIUM_HOME'
+ :AndIf 0<≢SELENIUM_HOME
+     home←SELENIUM_HOME
  :Else
-     :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
-     :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
-     :AndIf 0=≢src←{0::'' ⋄ ⍵.SALT_Data.SourceFile}⎕THIS
-         'Unable to determine home-directory and HOME is emppty!'⎕SIGNAL 11
+     :If 0=≢src←2 ⎕NQ'.' 'GetEnvironment' 'SELENIUM_HOME'
+         :If 0=≢src←50 ⎕ATX 1⊃⎕SI                                                    ⍝ loaded with 2⎕FIX or ]Get etc.
+         :AndIf 0=≢src←{l←⍵[≢⍵;] ⋄ '⍝∇⍣§'≢4↑l:'' ⋄ 1↓(1=+\l='§')/l}⎕CR 1⊃⎕SI         ⍝ if ]LOADed
+         :AndIf 0=≢src←{0::'' ⋄ ⍵.SALT_Data.SourceFile}⎕THIS
+             'Unable to determine home directory and HOME is emppty!'⎕SIGNAL 11
+         :EndIf
+         :If ⎕NEXISTS src
+             src←1⊃⎕NPARTS ¯1↓1⊃⎕NPARTS src
+         :Else
+             ('Unable to determine home directory as "',src,'" does not exist!')⎕SIGNAL 11
+         :EndIf
      :EndIf
-     home←HOME←1⊃⎕NPARTS src
+     home←SELENIUM_HOME←src
  :EndIf

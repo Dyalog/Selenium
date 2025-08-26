@@ -1,16 +1,15 @@
-     {ok}←selectId SelectItemText itemsText;item;se
-     ⍝ Select items in a select control
-     ⍝ Each item can be deselected by preceding it with '-'.
-     ⍝ A single '-' deselects all
-      ok←1
-      se←⎕NEW SelectElement,⊂Find selectId
-      :For item :In eis itemsText
-          :If item≡'~'
-              se.DeselectAll
-          :ElseIf '~'=1↑item
-              se.DeselectByText⊂1↓item
-          :Else
-              se.SelectByText item 1   ⍝ signature changed in WebDriver4 - do we need to distinguish?
-          :EndIf
-      :EndFor
-    ∇
+ {ok}←selectId SelectItemText itemsText;item;se
+ ⍝ Select items in a select control
+ ⍝ Each item can be deselected by preceding it with '-'.
+ ⍝ A single '-' deselects all
+ ok←1
+ se←⎕NEW SelectElement,⊂Find selectId
+ :For item :In eis itemsText
+     :If item≡'~'
+         se.DeselectAll
+     :ElseIf '~'=1↑item
+         se.DeselectByText⊂1↓item
+     :Else
+         se.SelectByText item 1  
+     :EndIf
+ :EndFor

@@ -1,9 +1,9 @@
-r←FindAllFiles root ⍝ Recursive
-      :If ∨/' '≠root
-          root,←'/'/⍨~'/\'∊⍨¯1↑root ⍝ append trailing / if missing
-          r←Files List root,'*',EXT
-          r,←Files List root,'*',RIDEEXT
-          r,←⊃,/FindAllFiles¨Folders List root,'*'
-      :Else
-          r←0⍴⊂''
-      :EndIf
+ r←FindAllFiles root ⍝ Recursive
+ :If ∨/' '≠root
+     root,←'/'/⍨~'/\'∊⍨¯1↑root ⍝ append trailing / if missing
+     r←Files List root,'*',EXT
+     r,←Files List root,'*',RIDEEXT
+     r,←⊃,/FindAllFiles¨Folders List root,'*'
+ :Else
+     r←0⍴⊂''
+ :EndIf

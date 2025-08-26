@@ -1,0 +1,91 @@
+ path←FindChromeDriver(vers os);exe;i;path∆;f
+⍝ Find the ChromeDriver executable
+⍝ Three possible sources:
+⍝ 1. myNuGetFolder
+⍝ 2. NuGet cache
+⍝ 3. Selenium Manager cache
+
+ path←''  ⍝ If not found, return an empty string
+ exe←'chromedriver',(os≡'windows')/'.exe'
+
+ :If ⎕NEXISTS path∆←⊃⊃0(⎕NINFO⍠1)myNuGetFolder,'/published/',exe    ⍝ 1.
+     path←path∆
+     →0
+ :EndIf
+
+⍝ 2.. search NuGet cache
+ :For i :In ⍳2
+     path∆←Environment.GetFolderPath Environment.SpecialFolder.UserProfile
+     :If i=1
+         path∆,←'/.nuget/packages/selenium.webdriver.chromedriver/',vers,'*'
+         f←0 1(⎕NINFO⍠'Wildcard' 1)path∆
+         :If 0<≢⊃f
+             f←((1⍳⍨2⊃f)⊃1⊃f),,'/driver/',exe
+             f←0(⎕NINFO⍠('Recurse' 1))path∆
+             :If 0<≢⊃f
+                 path←f
+             :EndIf
+         :EndIf
+     :ElseIf i=2
+         path∆,←'/.cache/selenium/',exe
+         f←{22::'' ⋄ ⊃0(⎕NINFO⍠('Recurse' 1)('Wildcard' 1))⍵}path∆
+         :If 0<≢⊃f
+             path←f
+         :EndIf
+         ∘∘∘
+     :EndIf
+     :If 0=≢f
+         ∘∘∘
+     :EndIf
+     :If 0<≢path   ⍝ have we found it?
+         :Leave        ⍝ leave the loop
+     :EndIf
+ :EndFor
+
+
+⍝──────────────────────────────────────────────────────────────────────────────────
+ public static class ChromeDriverHelper
+ {
+     public static ChromeDriver CreateCefCompatibleDriver(string debuggerAddress="127.0. 0.1:8080 ")
+     {
+         var chromeDriverPath=FindChromeDriver ();
+
+         var service=string.IsNullOrEmpty(chromeDriverPath)
+         ?ChromeDriverService.CreateDefaultService ()
+         :ChromeDriverService.CreateDefaultService(Path.GetDirectoryName(chromeDriverPath));
+
+         var options=new ChromeOptions ();
+         options.DebuggerAddress=debuggerAddress;
+
+         return new ChromeDriver(service,options);
+     }
+
+     private static string FindChromeDriver ()
+     {
+         //1 Im Output-Verzeichnis suchen
+         var outputDir=Path.GetDirectoryName(Assembly.GetExecutingAssembly ().Location);
+         var localDriver=Path.Combine(outputDir,"chromedriver.exe ");
+         if(File.Exists(localDriver))return localDriver;
+
+         //2 In NuGet-Cache suchen
+         var userProfile=Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+         var nugetCache=Path.Combine(userProfile,".nuget ","packages ","selenium.webdriver.chromedriver ");
+         if(Directory.Exists(nugetCache))
+         {
+             var chromeDriver=Directory.GetFiles(nugetCache,"chromedriver.exe ",SearchOption.AllDirectories)
+             .FirstOrDefault(f=>f.Contains("127 "));
+             if(!string.IsNullOrEmpty(chromeDriver))return chromeDriver;
+         }
+
+         //3 Selenium Manager Cache
+         var seleniumCache=Path.Combine(userProfile,".cache ","selenium ");
+         if(Directory.Exists(seleniumCache))
+         {
+             var cachedDriver=Directory.GetFiles(seleniumCache,"chromedriver.exe ",SearchOption.AllDirectories)
+             .FirstOrDefault ();
+             if(!string.IsNullOrEmpty(cachedDriver))return cachedDriver;
+         }
+
+         return null;//Fallback auf Selenium Manager
+     }
+ }

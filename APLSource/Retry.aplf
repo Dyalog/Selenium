@@ -1,10 +1,10 @@
-     {ok}←(fn Retry)arg;time;z;⎕TRAP
-     ⍝ Retry fn for a while
-      ok←0 ⋄ time←⎕AI[3]
-      :Repeat
-          :Trap 0
-              ok←fn arg
-          :Else
-              ⎕DL 0.1
-          :EndTrap
-      :Until (⊃ok)∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second
+ {ok}←(fn Retry)arg;time;z;⎕TRAP
+ ⍝ Retry fn for a while
+ ok←0 ⋄ time←⎕AI[3]
+ :Repeat
+     :Trap 0
+         ok←fn arg
+     :Else
+         ⎕DL 0.1
+     :EndTrap
+ :Until (⊃ok)∨(⎕AI[3]-time)>1000×RETRYLIMIT ⍝ Try for a second

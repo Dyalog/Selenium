@@ -1,3 +1,6 @@
-     {r}←ExecuteScript script ⍝ cover for awkward syntax and meaningless result
-      r←BROWSER.ExecuteScript script ⍬
-    
+ {r}←{args}ExecuteScript script;js
+ js←(IJavaScriptExecutor)⎕CLASS BROWSER
+ :If 0=⎕NC'args'
+     args←⍬
+ :EndIf
+ r←js.ExecuteScript script args
