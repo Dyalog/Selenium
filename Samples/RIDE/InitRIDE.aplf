@@ -1,0 +1,44 @@
+ InitRIDE browser;z;path;f;file;rpfile
+⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##.##)
+⍝ browser must refer to an entry in config.json (i.e. Chrome | HtmlRenderer) where the last has specific hardcoded instructions to create an
+⍝ additional process running the renderer
+⍝ creates globals:
+⍝ S - reference to Selenium ns
+⍝ proc - the process that runs the APL Interpreter that we are controlling through RIDE
+⍝ [procHR - the process that contains the HtmlRenderer]
+⍝ RIDEPORT - the port that RIDE is connected to
+
+ :If 0=##.##.⎕NC'APLProcess'
+     path←(2 ⎕NQ #'GetEnvironment' 'DYALOG'),'/Library/Core/'
+     ⎕SE.Link.Import ##.##'APLProcess'
+ :EndIf
+ S←##.##.Selenium
+ :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
+     RIDEPORT←4502
+     proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
+     ⎕←''
+     ⎕←'RIDEPORT+←1 ⋄ →¯4+⊃⎕LC   ⍝ try with a alternate port if there is an error message during startup'
+     ⎕←'→1+⊃⎕LC                  ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
+     ∘∘∘
+ :Else
+⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> (dev todo: enable me to query that port) -> pass it back via a file -> read that file, get port
+     file←S._HOME,'/Samples/RIDE/tools/ReportRidePort.aplf'
+     rpfile←∊(2↑⎕NPARTS file),'.rideport'
+     3 ⎕NDELETE rpfile
+     proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:0'))
+⍝ todo: wait until file is available, then read it to get its value into RIDEPORT
+     :While ~⎕NEXISTS rpfile
+         ⎕DL 0.5
+     :EndWhile
+     ⎕DL 0.5
+     RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
+     3 ⎕NDELETE rpfile
+ :EndIf
+ :if browser≡'HtmlRenderer'
+     procHR←⎕NEW ##.##.APLProcess('' ('LX="''h''⎕WC''HtmlRenderer''" -cef --remote-debugging-port=8080'))
+ :endif
+
+ S.InitBrowser browser
+ S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
+
+ ⎕PATH←'S S.ride'

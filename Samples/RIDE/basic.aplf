@@ -1,0 +1,43 @@
+ msg←basic dummy⍝;Into;Se;Ed;Ans;Tb;LastIs
+ :If 1
+     Se')clear'S.Keys.Enter
+ :AndIf LastIs'clear ws'
+     SeRef S.SetInputValue   'var←''Hej Morten'''
+     Se S.Keys.Enter
+     SeRef S.SetInputValue 'var'
+     Se S.Keys.Enter
+ :AndIf LastIs'Hej Morten'
+     SeRef S.SetInputValue'var'
+     Se S.Keys.(Shift,Enter)
+     Ed S.Keys.(Home,3/Delete)
+     Ed'Hello'
+     Ed S.Keys.Escape
+     Se S.Keys.Enter
+ :AndIf LastIs'Hello Morten'
+     SeRef S.SetInputValue'fn'
+     Se S.Keys.(Shift,Enter)
+     EdRef S.Add2InputValue'res←'  ';name'
+     Ed S.Keys.Down
+     EdRef S.SetInputValue'name←⍞'
+     Ed S.Keys.Enter
+     EdRef S.SetInputValue'res←''Hello '',name'
+     Ed S.Keys.Escape
+     Se S.Keys.Enter
+     Se'Morten'
+     Se S.Keys.Enter
+ :AndIf LastIs'Hello Morten'
+     Se'fn'
+     Se S.Keys.(Control,Enter)
+     Ed S.Keys.(End(Shift, Enter))
+     Ed S.Keys.(Down,Left)
+     Ed S.Keys.(5/⊂Shift,Right)
+     Ed'Hej'
+     Ed S.Keys.Escape
+     Tb'RM'
+     Se'Morten'
+     Se S.Keys.Enter
+ :AndIf LastIs'Hej Morten'
+     Lb '+∘÷/⍳'
+     Se '10'S.Keys.Enter
+ :AndIf LastIs'1.433127427'
+ :EndIf

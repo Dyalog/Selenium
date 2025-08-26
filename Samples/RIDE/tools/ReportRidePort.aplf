@@ -1,0 +1,5 @@
+ ReportRidePort nul;file;port
+ file←50 ⎕ATX 1⊃⎕SI
+ file←∊(2↑⎕NPARTS file),'.rideport'
+ port←(497⌶⍬)[1;4]
+ (⊂⍕port)⎕NPUT file 1

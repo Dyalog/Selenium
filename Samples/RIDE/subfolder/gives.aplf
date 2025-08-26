@@ -1,0 +1,19 @@
+﻿ msg←gives dummy
+ ')clear'Gives'clear ws'
+ Se'var←''Hej Morten'''Keys.Enter
+ 'var'Gives'Hej Morten'
+ Se'var←''Hello'',3↓var'Keys.Enter
+ 'var'Gives'Hello John'
+ Se'∇res←fn;name'Keys.Enter
+ Se'name←⍞'Keys.Enter
+ Se'res←''Hello '',name'Keys.Enter
+ Se'∇'Keys.Enter
+ Se'fn'Keys.Enter
+ 'Morten'Gives'Hello Morten'
+ Se'∇fn[2]''Hej '',name∇'Keys.Enter
+ Se'fn'Keys.Enter
+ 'Morten'Gives'Hej Morten'
+⍝ RegEx:
+ '?9'Gives'$\d$'
+⍝ wait up to 10 seconds:
+ '⊢⎕DL 6'Gives'6.0'⊣RETRYTIMEOUT←10
