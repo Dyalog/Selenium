@@ -2,5 +2,9 @@
  js←(IJavaScriptExecutor)⎕CLASS BROWSER
  :If 0=⎕NC'args'
      args←⍬
+ :Else
+     :If isChar args
+         args←,⎕NEW System.String(⊂args)
+     :EndIf
  :EndIf
  r←js.ExecuteScript script args
