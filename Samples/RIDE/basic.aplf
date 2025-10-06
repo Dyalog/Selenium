@@ -2,25 +2,26 @@
  :If 1
      Se')clear'S.Keys.Enter
  :AndIf LastIs'clear ws'
-     SeRef S.SetInputValue   'var←''Hej Morten'''
+     1 MonacoInput'var←''Hej Morten'''
      Se S.Keys.Enter
-     SeRef S.SetInputValue 'var'
+     1 MonacoInput'var'
      Se S.Keys.Enter
  :AndIf LastIs'Hej Morten'
-     SeRef S.SetInputValue'var'
+     1 MonacoInput'var'
      Se S.Keys.(Shift,Enter)
      Ed S.Keys.(Home,3/Delete)
-     Ed'Hello'
+     2 MonacoInput'Hello'
      Ed S.Keys.Escape
      Se S.Keys.Enter
  :AndIf LastIs'Hello Morten'
-     SeRef S.SetInputValue'fn'
+     1 MonacoInput'fn'
      Se S.Keys.(Shift,Enter)
-     EdRef S.Add2InputValue'res←'  ';name'
+     Ed S.Keys.Home   ⍝ shouldn't be neccessary, but is a problem with ZFP ( https://github.com/Dyalog/ride/issues/1354 )
+     2 MonacoInput'res←' ';name'
      Ed S.Keys.Down
-     EdRef S.SetInputValue'name←⍞'
+     2 MonacoInput'name←⍞'
      Ed S.Keys.Enter
-     EdRef S.SetInputValue'res←''Hello '',name'
+     2 MonacoInput'res←''Hello '',name'
      Ed S.Keys.Escape
      Se S.Keys.Enter
      Se'Morten'
@@ -28,16 +29,17 @@
  :AndIf LastIs'Hello Morten'
      Se'fn'
      Se S.Keys.(Control,Enter)
-     Ed S.Keys.(End(Shift, Enter))
+     Ed S.Keys.(End(Shift,Enter))
      Ed S.Keys.(Down,Left)
      Ed S.Keys.(5/⊂Shift,Right)
      Ed'Hej'
      Ed S.Keys.Escape
-     Tb'RM'
+     ⍝ Tb'RM'   ⍝ what was the idea of this one?  (Selects "Continue all threads" from the Threads menu)
+     Se S.Keys.Enter  ⍝ this one helps to run the test successfully...
      Se'Morten'
      Se S.Keys.Enter
  :AndIf LastIs'Hej Morten'
-     Lb '+∘÷/⍳'
-     Se '10'S.Keys.Enter
+     Lb'+∘÷/⍳'
+     Se'10'S.Keys.Enter
  :AndIf LastIs'1.433127427'
  :EndIf
