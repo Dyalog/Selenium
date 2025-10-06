@@ -1,13 +1,15 @@
- InitRIDE browser;z;path;f;file;rpfile
+ {debug}InitRIDE browser;z;path;f;file;rpfile
 ⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##.##)
-⍝ browser must refer to an entry in config.json (i.e. Chrome | HtmlRenderer) where the last has specific hardcoded instructions to create an
-⍝ additional process running the renderer
+⍝ browser must refer to an entry in config.json (i.e. Chrome | HtmlRenderer) where the last has the flag "isCEF"
+⍝ which is used by InitBrowser to create an additional process running the renderer
 ⍝ creates globals:
 ⍝ S - reference to Selenium ns
 ⍝ proc - the process that runs the APL Interpreter that we are controlling through RIDE
 ⍝ [procHR - the process that contains the HtmlRenderer]
 ⍝ RIDEPORT - the port that RIDE is connected to
-
+ :If 0=⎕NC'debug' ⍝ optional flag "debug" controls if DevTools should be shown (currently only supported with HtmlRenderer)
+     debug←0
+ :EndIf
  :If 0=##.##.⎕NC'APLProcess'
      path←(2 ⎕NQ #'GetEnvironment' 'DYALOG'),'/Library/Core/'
      ⎕SE.Link.Import ##.##'APLProcess'
@@ -34,11 +36,15 @@
      RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
      3 ⎕NDELETE rpfile
  :EndIf
- :if browser≡'HtmlRenderer'
-     procHR←⎕NEW ##.##.APLProcess('' ('LX="''h''⎕WC''HtmlRenderer''" -cef --remote-debugging-port=8080'))
- :endif
+ :If browser≡'HtmlRenderer'
+     procHR←⎕NEW ##.##.APLProcess(''('LX="''h''⎕WC''HtmlRenderer''',debug/'⋄h.ShowDevTools 1" -cef --remote-debugging-port=8080'))
+ :EndIf
 
  S.InitBrowser browser
  S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
-
+ S.InjectScript S._HOME,'/Samples/RIDE/tools/MonacoTools.js'  ⍝ to handle Monaco editors
+ :If ~S.ExecuteScript'return typeof window.MonacoInput === "function";'
+     ⎕←'could not inject script MonacoInput!'
+     ∘∘∘
+ :EndIf
  ⎕PATH←'S S.ride'
