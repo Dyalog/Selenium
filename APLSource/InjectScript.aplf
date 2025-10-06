@@ -1,0 +1,6 @@
+ rc←InjectScript code
+⍝ adds code to a script section in the current page's header
+ :If ⎕NEXISTS code
+     code←1⊃⎕NGET code
+ :EndIf
+ code ExecuteScript'(function(code){var s = document.createElement("script");s.type = "text/javascript";s.text = code;document.head.appendChild(s);})(arguments[0]);'

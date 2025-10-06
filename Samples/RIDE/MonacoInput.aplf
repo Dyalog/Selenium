@@ -1,0 +1,13 @@
+ idx MonacoInput txt;id;sc;class
+ ⍝ idx=1: Session
+ ⍝     2: Editor
+ ⍝ (It's not easy to find the right textarea. While we have the object in EdRef/SeRef, these do not have an id
+ class←idx⊃'.ride_win' '.ride_win_me'
+⍝ id txt ExecuteScript'mEmulateInput(arguments[0],arguments[1]);'
+ :If 1=≡txt
+     sc←'MonacoInput(arguments[0],arguments[1]);'
+ :Else
+     sc←'MonacoInput(arguments[0],arguments[1],arguments[2]);'
+ :EndIf
+ txt←(⊂class),⊆txt
+ txt ExecuteScript sc
