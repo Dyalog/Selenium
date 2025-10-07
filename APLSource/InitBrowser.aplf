@@ -90,7 +90,7 @@
          :If 0=⎕NC'HttpCommand'
              ⎕SE.Link.Import ⎕THIS'HttpCommand'
          :EndIf
-         vers←HttpCommand.GetJSON'GET'('http://127.0.0.1:',(⍕SETTINGS.Browser.Port),'/json/version')
+         vers←HttpCommand.GetJSON'GET'('http://localhost:',(⍕SETTINGS.Browser.Port),'/json/version')
          :If vers.rc≠0
              (⍕vers)⎕SIGNAL 11
          :EndIf
