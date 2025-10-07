@@ -1,4 +1,4 @@
- {debug}InitRIDE browser;z;path;f;file;rpfile
+ {debug}InitRIDE browser;z;path;f;file;rpfile;rc
 ⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##.##)
 ⍝ browser must refer to an entry in config.json (i.e. Chrome | HtmlRenderer) where the last has the flag "isCEF"
 ⍝ which is used by InitBrowser to create an additional process running the renderer
@@ -40,7 +40,11 @@
      procHR←⎕NEW ##.##.APLProcess(''('LX="''h''⎕WC''HtmlRenderer''',debug/'⋄h.ShowDevTools 1" -cef --remote-debugging-port=8080'))
  :EndIf
 
- S.InitBrowser browser
+ :If 1⊃rc←S.InitBrowser browser
+     ⎕←'Problem initialising browser "',browser,'"'
+     ⎕←2⊃rc
+     ∘∘∘   ⍝ stop so that user can check vars etc,
+ :EndIf
  S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
  S.InjectScript S._HOME,'/Samples/RIDE/tools/MonacoTools.js'  ⍝ to handle Monaco editors
  :If ~S.ExecuteScript'return typeof window.MonacoInput === "function";'
