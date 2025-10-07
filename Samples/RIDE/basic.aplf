@@ -34,8 +34,7 @@
      Ed S.Keys.(5/⊂Shift,Right)
      Ed'Hej'
      Ed S.Keys.Escape
-     ⍝ Tb'RM'   ⍝ what was the idea of this one?  (Selects "Continue all threads" from the Threads menu)
-     Se S.Keys.Enter  ⍝ this one helps to run the test successfully...
+     Tb'MA'
      Se'Morten'
      Se S.Keys.Enter
  :AndIf LastIs'Hej Morten'
