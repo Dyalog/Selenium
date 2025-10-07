@@ -1,7 +1,8 @@
-﻿ msg←fixfns dummy
+ msg←fixfns dummy
  :If 1
-     Fix Local'factorial.dfn'
+     Fix Local'factorial.aplf'
  :AndIf LastIs'factorial'
-     Se'factorial¨⍳9'Keys.Enter
+     Se'factorial¨⍳9'
+     Se S.Keys.Enter
  :AndIf LastIs'1 2 6 24 120 720 5040 40320 362880'
  :EndIf

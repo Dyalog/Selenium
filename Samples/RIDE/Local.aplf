@@ -1,0 +1,3 @@
+path←Local file
+⍝ no idea what the original fn "Local" did - just trying to emulate it in a sensible way
+path←S._HOME,'/Samples/RIDE/tools/',file
