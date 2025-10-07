@@ -1,4 +1,4 @@
- idx MonacoInput txt;id;sc;class
+{nul}← idx MonacoInput txt;id;sc;class
  ⍝ idx=1: Session
  ⍝     2: Editor
  ⍝ (It's not easy to find the right textarea. While we have the object in EdRef/SeRef, these do not have an id
@@ -10,4 +10,5 @@
      sc←'MonacoInput(arguments[0],arguments[1],arguments[2]);'
  :EndIf
  txt←(⊂class),⊆txt
- txt ExecuteScript sc
+ txt ##.ExecuteScript sc
+ nul←⍬
