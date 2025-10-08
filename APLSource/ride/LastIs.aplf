@@ -1,5 +1,5 @@
  R←LastIs arg
  R←{
      Do:''≡msg,←EndsWith ##.Nested ⍵
-     0  ⍝ 251008, MB: don't pretend "all is ok" if it isn't 
+     0  ⍝ 251008, MB: don't pretend "all is ok" if it isn't
  }##.Retry arg ⍝ Check last non-empty line in session
