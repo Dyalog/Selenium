@@ -7,4 +7,5 @@
  :If q≢0  ⍝ make sure that we found it!
      text←eis text
      q.SendKeys¨⊂¨text
+     ⎕dl .5  ⍝ allow some time to process it...
  :EndIf
