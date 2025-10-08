@@ -3,9 +3,7 @@
      Se')clear'S.Keys.Enter
  :AndIf LastIs'clear ws'
      1 MonacoInput'var←''Hej Morten'''
-     Se S.Keys.Enter
-     1 MonacoInput'var'
-     Se S.Keys.Enter
+     Se S.Keys.Enter'var'S.Keys.Enter
  :AndIf LastIs'Hej Morten'
      1 MonacoInput'var'
      Se S.Keys.(Shift,Enter)
