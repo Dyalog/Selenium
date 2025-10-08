@@ -1,1 +1,1 @@
-Gives←{Do:r←LastIs¨eis ⍵⊣Se ⍺ Enter ⋄ r←1}
+Gives←{Do:r←LastIs¨##.eis ⍵⊣Se ⍺ ##.Keys.Enter ⋄ r←1}
