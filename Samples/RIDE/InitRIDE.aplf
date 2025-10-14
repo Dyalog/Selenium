@@ -1,12 +1,14 @@
- {debug}InitRIDE browser;z;path;f;file;rpfile;rc
+ {debug}InitRIDE browser;z;path;f;file;rpfile;rc;ridelog;log;tmpdir;ridelog∆;cfg;nativeRide;PORT
 ⍝ launch an APL Interpreter with ZFP RIDE and connect a browser to it (assumes Selenium is present in ##.##)
 ⍝ browser must refer to an entry in config.json (i.e. Chrome | HtmlRenderer) where the last has the flag "isCEF"
-⍝ which is used by InitBrowser to create an additional process running the renderer
+⍝ which is used by InitBrowser to create an additional process running the renderer. Alternatively browser can be the name
+⍝ of the ride executable in which case we will launch it and attempt to start a session with the current interpreter.
 ⍝ creates globals:
 ⍝ S - reference to Selenium ns
 ⍝ proc - the process that runs the APL Interpreter that we are controlling through RIDE
 ⍝ [procHR - the process that contains the HtmlRenderer]
 ⍝ RIDEPORT - the port that RIDE is connected to
+ :If 0=≢browser ⋄ browser←'C:\Users\mb\AppData\Local\Programs\Dyalog\Ride-4.6\Ride-4.6.exe' ⋄ :EndIf ⍝<<<<<<<<<<<<< DO NOT COMMIT THIS LINE! <<<<<<<<<<<<<<<<<<<<
  :If 0=⎕NC'debug' ⍝ optional flag "debug" controls if DevTools should be shown (currently only supported with HtmlRenderer)
      debug←0
  :EndIf
@@ -15,40 +17,81 @@
      ⎕SE.Link.Import ##.##'APLProcess'
  :EndIf
  S←##.##.Selenium
- :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
-     RIDEPORT←4502
-     proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
-     ⎕←''
-     ⎕←'RIDEPORT+←1 ⋄ →¯4+⊃⎕LC   ⍝ try with a alternate port if there is an error message during startup'
-     ⎕←'→1+⊃⎕LC                  ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
-     ∘∘∘
- :Else
-⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> (dev todo: enable me to query that port) -> pass it back via a file -> read that file, get port
-     file←S._HOME,'/Samples/RIDE/tools/ReportRidePort.aplf'
-     rpfile←∊(2↑⎕NPARTS file),'.rideport'
-     3 ⎕NDELETE rpfile
-     proc←⎕NEW ##.##.APLProcess(''('LOAD=',file)0('http:127.0.0.1:0'))
-⍝ todo: wait until file is available, then read it to get its value into RIDEPORT
-     :While ~⎕NEXISTS rpfile
+ nativeRide←0   ⍝ are we testing the ride client?
+ tmpdir←((⎕MKDIR⍠'Unique' 1)((739⌶0),'/')),'/'
+ :If ⎕SE.SALTUtils.WIN
+     tmpdir←('/'⎕R'\\')tmpdir
+ :EndIf
+ :If ⎕NEXISTS browser
+ :AndIf 2=⊃1 ⎕NINFO browser  ⍝ and it is a file
+ :AndIf ∨/'ride'⍷⎕C browser ⍝ and it contains "ride"
+     ridelog←tmpdir,'ride.log'
+     (⊂'')⎕NPUT ridelog 1  ⍝ initialize log file (this is not "THE" ride log, just the log of the session ride was started from)
+     ridelog∆←tmpdir,'ride-session.log'
+     cfg←⎕NS''
+     cfg.(type subtype name favname log)←'start' 'raw' 'auto' 'auto'ridelog∆
+     cfg.exe←(1⊃160⌶'DYALOG'),'/dyalog.exe'
+     (⊂⎕JSON,cfg)⎕NPUT(tmpdir,'connections.json')1  ⍝ create a temporary connections.json file
+     rc←(⎕SHELL⍠('Output'(1('File'ridelog)))('Env'('spectron_temp_dir'tmpdir)))(browser,' --remote-debugging-port=0') ⍝ launch it and capture result
+     ⎕DL 5   ⍝ give it some time to start and write to log
+     :While 0=⊃2 ⎕NINFO ridelog  ⍝ wait until log file appears
          ⎕DL 0.5
      :EndWhile
-     ⎕DL 0.5
-     RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
-     3 ⎕NDELETE rpfile
- :EndIf
- :If browser≡'HtmlRenderer'
-     procHR←⎕NEW ##.##.APLProcess(''('LX="''h''⎕WC''HtmlRenderer''',debug/'⋄h.ShowDevTools 1" -cef --remote-debugging-port=8080'))
- :EndIf
+     log←1⊃⎕NGET ridelog
+     RIDEPORT←2⊃⎕VFI⊃('listening on .*//.*:(\d*)/'⎕S'\1')log    ⍝ get the port from the log file
+     nativeRide←1
+     S.ApplySettings'Ride'
+     ⍝ change Ride settings to use the remote debugging port that was actually used
+     browser←⎕NS''
+     browser.Browsers←⎕NS''
+     browser.Browser←'Ride'
+     browser.Browsers.Ride←⎕JSON ⎕JSON S.SETTINGS.Browsers.Ride
+     browser.Browsers.Ride.Options.DebuggerAddress←'127.0.0.1:',⍕RIDEPORT
+     browser.Browsers.Ride.Port←RIDEPORT
+     ⎕←(⎕JSON⍠'Compact' 0)browser
+ :Else
+     :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
+         RIDEPORT←4502
+         proc←⎕NEW ##.##.APLProcess('' '' 0('http:127.0.0.1:',⍕RIDEPORT))
+         ⎕←''
+         ⎕←'RIDEPORT+←1 ⋄ →¯4+⊃⎕LC   ⍝ try with a alternate port if there is an error message during startup'
+         ⎕←'→1+⊃⎕LC                  ⍝ continue if interpreter started up w/o complaints about RIDE_INIT!'
+         ∘∘∘
+     :Else
+       ⍝ better approach: RIDEPORT=0 -> RIDE picks free port -> query actual port -> pass it back via a file -> read that file, get port
+       ⍝ needs v20
+         file←S._HOME,'/Samples/RIDE/tools/ReportRidePort.aplf'
+         rpfile←tmpdir,(2⊃⎕NPARTS file),'.rideport'
+         3 ⎕NDELETE rpfile
+         proc←⎕NEW ##.##.APLProcess(''('LOAD="',file,'" rpfile="',rpfile,'"')0('http:127.0.0.1:0'))
+         :While ~⎕NEXISTS rpfile
+             ⎕DL 0.5
+         :EndWhile
+         ⎕DL 0.5
+         RIDEPORT←2⊃⎕VFI 1⊃1⊃⎕NGET rpfile 1
+         3 ⎕NDELETE rpfile
+     :EndIf
+     :If browser≡'HtmlRenderer'
+         procHR←⎕NEW ##.##.APLProcess(''('LX="''h''⎕WC''HtmlRenderer''',(debug/'⋄h.ShowDevTools 1'),'" -cef --remote-debugging-port=8080'))
+     :EndIf
 
+ :EndIf
  :If 1⊃rc←S.InitBrowser browser
      ⎕←'Problem initialising browser "',browser,'"'
      ⎕←2⊃rc
      ∘∘∘   ⍝ stop so that user can check vars etc,
  :EndIf
- S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
- S.InjectScript S._HOME,'/Samples/RIDE/tools/MonacoTools.js'  ⍝ to handle Monaco editors
+ S.InjectScript S._HOME,'/Samples/RIDE/tools/MonacoTools.js'  ⍝ inject tools for the Monaco editor
  :If ~S.ExecuteScript'return typeof window.MonacoInput === "function";'
      ⎕←'could not inject script MonacoInput!'
      ∘∘∘
  :EndIf
  ⎕PATH←'S S.ride'
+ :If nativeRide
+     :If debug
+         '.cn'S.SendKeys S.Keys.F12    ⍝ sometimes it works...
+     :EndIf
+     'ClassName'S.Click'go'
+ :Else
+     S.GoTo'http://127.0.0.1:',(⍕RIDEPORT),'/'
+ :EndIf
