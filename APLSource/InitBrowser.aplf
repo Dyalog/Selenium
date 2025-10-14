@@ -15,9 +15,22 @@
      BROWSER.Quit
  :EndIf
  :If 0 2∊⍨10|⎕DR settings   ⍝ if settings is a string
- :AndIf ⎕NEXISTS settings   ⍝ and it points to an existing file
- :AndIf 2=1 ⎕NINFO settings  ⍝ and it really IS a file (yes, that did happen!)
-     settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET settings
+     :If ⎕NEXISTS settings   ⍝ and it points to an existing file
+     :AndIf 2=1 ⎕NINFO settings  ⍝ and it really IS a file (yes, that did happen!)
+         settings←(⎕JSON⍠'Dialect' 'JSON5')1⊃⎕NGET settings
+     :ElseIf 1=≡settings
+         SETTINGS←⎕NS''
+         SETTINGS.BROWSER←⎕NS''
+         SETTINGS.BROWSER.wdns←settings
+     :EndIf
+ :ElseIf 326=⎕DR settings   ⍝ is it a nested vector...
+     :If 2=≢settings         ⍝ ...with 2 elements?
+         SETTINGS←⎕NS''
+         SETTINGS.BROWSER←⎕NS''
+         SETTINGS.BROWSER.(wdns Port)←settings
+     :ElseIf 1=≢settings
+         SETTINGS.BROWSER←settings
+     :EndIf
  :EndIf
  :If 0=≢settings            ⍝ it it is empty
  :AndIf 0<≢f1←2 ⎕NQ'.' 'GetEnvironment' ' SELENIUM_CONFIGFILE'    ⍝ and a configfile is given in the environment
@@ -45,7 +58,7 @@
          av←'-'~⍨⎕C 1⊃'.'⎕WG'aplversion'
 
          pckgs⍪←SETTINGS.Browser.(nuget({0::'' ⋄ ⍎⍵}'version')using)
-         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erase by "End"
+         :If ⎕NEXISTS myNuGetFolder←(739⌶0),'/Selenium'    ⍝ myNuGetFolder is global (well, in the Selenium namespace), will be erased by "End"
              :If 20≤1⊃⎕SE.SALTUtils.VERSION
                  myNuGetFolder←(⎕MKDIR⍠'Unique' 1)myNuGetFolder
              :Else
@@ -95,13 +108,12 @@
              (⍕vers)⎕SIGNAL 11
          :EndIf
          versF←'/'(≠⊆⊢)vers.Data.Browser
-     ⍝ path←'C:\Users\mbaas\.nuget\packages\selenium.webdriver.chromedriver\127.0.6533.11900\driver\win32\chromedriver.exe'
          vers←{(2>+\⍵='.')/⍵}2⊃versF
+
        ⍝ now add the driver version needed for the CEF Version we got from /json/version
          pckgs[≢pckgs;2]←⊂{(3>+\⍵='.')/⍵}2⊃versF
          zPckgs←(⍳≢pckgs)≠pckgs[;1]⍳⊂'WebDriverManager'  ⍝ we don't need WebDriverManager with CEF, as we got the exact version from CEF
          nul←{0 NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨zPckgs/↓pckgs
-         ⎕←zPckgs⌿pckgs
          :If ∨/'Error'⍷∊nul
              ⎕←nul
              ⎕SIGNAL 11
@@ -109,32 +121,12 @@
          NuGet.Publish myNuGetFolder  ⍝ publish after we added everything...
          ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/zPckgs/pckgs[;3])~⎕NULL
 
-
-         ⍝path←FindChromeDriver vers os
-
-     ⍝    BSVC←(⍎SETTINGS.Browser.driver,'Service').CreateDefaultService⊂(path)
-     ⍝    BSVC.Start
-     ⍝ C#: new DriverManager().SetUpDriver(new ChromeConfig(), majorMinor);
-        ⍝drvm←⎕NEW DriverManager
-         ⍝DRVMSG←drvm.SetUpDriver((⎕NEW ChromeConfig) vers Architecture.Auto)
-
          Environment.SetEnvironmentVariable'SE_DISABLE_DRIVER_MANAGEMENT' '1'
          exe←⊃⊃0(⎕NINFO⍠('Recurse' 1))myNuGetFolder,'/chromedriver.exe'
          (folder exe)←¯1↓⎕NPARTS exe
-         svc←ChromeDriverService.CreateDefaultService(folder exe)
-         svc.EnableVerboseLogging←1
-         svc.LogPath←myNuGetFolder,'chromedriver.log'
-
-
-         options←⎕NEW ChromeOptions
-         options.DebuggerAddress←'127.0.0.1:',⍕SETTINGS.Browser.Port
-         BROWSER←⎕NEW ChromeDriver(svc options)
-        ⍝  :Trap 90
-        ⍝      z←1⊣BSVC.IsRunning
-        ⍝  :Else
-        ⍝      ok←1('BrowserService "',(⍎SETTINGS.Browser.driver,'Service'),'" has been started, but it not running!"')
-        ⍝      →0
-        ⍝  :EndTrap
+         BSVC←ChromeDriverService.CreateDefaultService(folder exe)
+         BSVC.EnableVerboseLogging←1
+         BSVC.LogPath←'chromedriver.log'
      :Else
          nul←{0 NuGet.Add myNuGetFolder((1⊃⍵),(0<≢2⊃⍵)/'/',2⊃⍵)}¨↓pckgs
          :If ∨/'Error'⍷∊nul
@@ -143,7 +135,6 @@
          :EndIf
          NuGet.Publish myNuGetFolder  ⍝ publish after we added everything...
          ⎕USING,←('(includePrimary: 0)'NuGet.Using myNuGetFolder),(⊃,/pckgs[;3])~⎕NULL
-
      :EndIf
 
      options←InitOptions browser
@@ -170,7 +161,6 @@
              options.SetLoggingPreference p.type(OpenQA.Selenium.LogLevel⍎p.level)
          :EndFor
      :EndIf
-
      :Trap 90
          :If BSVC≡⍬
              :If options≡''
