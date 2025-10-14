@@ -8,7 +8,6 @@
 ⍝ proc - the process that runs the APL Interpreter that we are controlling through RIDE
 ⍝ [procHR - the process that contains the HtmlRenderer]
 ⍝ RIDEPORT - the port that RIDE is connected to
- :If 0=≢browser ⋄ browser←'C:\Users\mb\AppData\Local\Programs\Dyalog\Ride-4.6\Ride-4.6.exe' ⋄ :EndIf ⍝<<<<<<<<<<<<< DO NOT COMMIT THIS LINE! <<<<<<<<<<<<<<<<<<<<
  :If 0=⎕NC'debug' ⍝ optional flag "debug" controls if DevTools should be shown (currently only supported with HtmlRenderer)
      debug←0
  :EndIf
@@ -30,7 +29,7 @@
      ridelog∆←tmpdir,'ride-session.log'
      cfg←⎕NS''
      cfg.(type subtype name favname log)←'start' 'raw' 'auto' 'auto'ridelog∆
-     cfg.exe←(1⊃160⌶'DYALOG'),'/dyalog.exe'
+     cfg.exe←(1⊃160⌶'DYALOG'),'/dyalog.exe'   ⍝ windows only!
      (⊂⎕JSON,cfg)⎕NPUT(tmpdir,'connections.json')1  ⍝ create a temporary connections.json file
      rc←(⎕SHELL⍠('Output'(1('File'ridelog)))('Env'('spectron_temp_dir'tmpdir)))(browser,' --remote-debugging-port=0') ⍝ launch it and capture result
      ⎕DL 5   ⍝ give it some time to start and write to log
@@ -48,7 +47,6 @@
      browser.Browsers.Ride←⎕JSON ⎕JSON S.SETTINGS.Browsers.Ride
      browser.Browsers.Ride.Options.DebuggerAddress←'127.0.0.1:',⍕RIDEPORT
      browser.Browsers.Ride.Port←RIDEPORT
-     ⎕←(⎕JSON⍠'Compact' 0)browser
  :Else
      :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
          RIDEPORT←4502
