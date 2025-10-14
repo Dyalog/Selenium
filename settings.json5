@@ -29,6 +29,15 @@
           //AddArguments: ['--no-sandbox','--remote-debugging-port=8080','--disable-dev-shm-usage','--log-level=0','--verbose'],
          isCEF:1,  // is a flag to indicate that this is a CEF config (which needs special magic to query version and locate the driver)
         },
+        Ride: {
+         isCEF:1,
+           Options: {
+            DebuggerAddress: '127.0.0.1:8080',
+            isDriverParam: true
+          },
+         AddArguments: ['--no-sandbox','--disable-dev-shm-usage','--log-level=0','--verbose'],
+         Port: 80,
+        },
         Chrome: {
           // uses all details of parent object
         },
