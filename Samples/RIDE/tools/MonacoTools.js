@@ -241,7 +241,14 @@
       const vtext = picked.vline.text;
       if (!vtext) return fail("Nearest view-line text is empty (cannot map)");
 
-      const token = chooseToken(vtext);
+      const token = (function(t){
+        const tokens = (t.match(/[^\s]+/g) || []).map(s=>s.replace(/\r/g,"").replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\u00A0/g," "));
+        const long3 = tokens.filter(x=>x.length>=3).sort((a,b)=>b.length-a.length)[0];
+        if (long3) return long3.slice(0,64);
+        const long2 = tokens.filter(x=>x.length>=2).sort((a,b)=>b.length-a.length)[0];
+        if (long2) return long2.slice(0,64);
+        const tt = t.trim(); return tt ? tt.slice(0,64) : null;
+      })(vtext);
       if (!token) return fail("Could not derive a search token from view-line");
       log("[MonacoInput] wrap-fallback token:", token);
 
@@ -254,7 +261,7 @@
       if (!matches.length) {
         const lineCount = model.getLineCount();
         for (let L = 1; L <= lineCount; L++) {
-          const mt = norm(model.getLineContent(L));
+          const mt = (model.getLineContent(L)||"").replace(/\r/g,"").replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\u00A0/g," ");
           if (mt.includes(token)) { matches.push({ range: new monaco.Range(L, 1, L, 1) }); break; }
         }
       }
@@ -264,7 +271,8 @@
       for (const m of matches) {
         const L = m.range && m.range.startLineNumber;
         if (!L) continue;
-        if (norm(model.getLineContent(L)) === vtext) { line = L; break; }
+        const mt = (model.getLineContent(L)||"").replace(/\r/g,"").replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\u00A0/g," ");
+        if (mt === vtext) { line = L; break; }
       }
       if (!line) line = matches[0].range.startLineNumber;
 
@@ -284,6 +292,132 @@
       }
     }
   }
+
+  // ===================== EnterKey (improved mapping + cache) =====================
+
+  // cache last mapped line per model-uri to keep mappings stable across calls
+  const __MonacoEnterCache = new Map(); // key: modelUri(string), value: { lastLine: number, lastTs: number }
+  function __getModelUriString(model){ try { return String(model.uri); } catch(_) { return ""; } }
+
+  // Extract visible .view-line nodes (sorted) for EnterKey mapping
+  function __extractViewLines(editorEl){
+    const root = editorEl.querySelector(".view-lines");
+    if (!root) return [];
+    const arr = Array.from(root.querySelectorAll(".view-line"))
+      .map(el => ({
+        el,
+        text: (el.textContent || "").replace(/\r/g,"").replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\u00A0/g," "),
+        rect: el.getBoundingClientRect()
+      }))
+      .filter(x => x.rect && x.rect.height > 0);
+    arr.sort((a,b) => a.rect.top - b.rect.top);
+    return arr;
+  }
+
+  // Multi-line mapping: match a short run (k lines) of visible lines exactly in the model; prefer vicinity
+  function __mapViewToModelByRun(model, vlines, preferAround /* number | null */){
+    if (!vlines.length) return null;
+    const lineCount = model.getLineCount();
+    const maxK = Math.min(5, vlines.length);
+    for (let k = maxK; k >= 1; k--) {
+      const runs = [];
+      for (let i = 0; i <= vlines.length - k; i++) {
+        const seg = vlines.slice(i, i+k);
+        if (seg.some(x => x.text.length > 0)) runs.push({ i, seg });
+      }
+      if (!runs.length) continue;
+
+      let best = null, bestScore = Infinity;
+      for (const run of runs) {
+        for (let L = 1; L <= lineCount - k + 1; L++) {
+          // quick check first line
+          if ((model.getLineContent(L) || "") !== run.seg[0].text) continue;
+          // verify whole run
+          let ok = true;
+          for (let j = 1; j < k; j++) {
+            if ((model.getLineContent(L + j) || "") !== run.seg[j].text) { ok = false; break; }
+          }
+          if (!ok) continue;
+          const score = (preferAround ? Math.abs(L - preferAround) : 0) * 10 + run.i;
+          if (score < bestScore) { bestScore = score; best = { firstModelLine: L, viewOffset: run.i, k }; }
+        }
+      }
+      if (best) return best;
+    }
+    return null;
+  }
+
+
+// Minimal EnterKey: fire real Enter (optionally with Shift/Ctrl) for APL session.
+function EnterKey(selector, combo) {
+  // combo: "plain" | "shift" | "ctrl" | "ctrl-shift"
+  const useCombo = (combo || "plain").toLowerCase();
+  const mods = {
+    ctrlKey:  useCombo === "ctrl" || useCombo === "ctrl-shift",
+    shiftKey: useCombo === "shift" || useCombo === "ctrl-shift",
+    altKey:   false,
+    metaKey:  false
+  };
+
+  function log(){ if (MonacoInput && MonacoInput.DEBUG) console.log.apply(console, arguments); }
+  function warn(){ if (MonacoInput && MonacoInput.DEBUG) console.warn.apply(console, arguments); }
+
+  log("[EnterKey] start selector=", selector, "combo=", useCombo);
+
+  const root = document.querySelector(selector);
+  if (!root) { warn("[EnterKey] FAIL: container not found"); return { ok:false, details:"container not found" }; }
+
+  // Prefer the Monaco textarea (that's where Monaco listens for keyboard input).
+  // Fallback to any focusable element inside the editor.
+  const editorEl =
+    (root.matches(".monaco-editor") ? root : root.querySelector(".monaco-editor")) ||
+    root;
+  const ta = editorEl.querySelector("textarea.inputarea, textarea, input, [contenteditable='true']");
+
+  if (!ta) { warn("[EnterKey] FAIL: no editable target"); return { ok:false, details:"no editable target" }; }
+
+  // Ensure focus is on the textarea to receive events.
+  try {
+    editorEl.focus && editorEl.focus();
+    ta.focus && ta.focus();
+    editorEl.dispatchEvent(new Event("focus", { bubbles:true }));
+    ta.dispatchEvent(new Event("focus", { bubbles:true }));
+  } catch(_) {}
+
+  // Optionally close suggest widgets to avoid the editor turning Enter into "accept suggestion".
+  // If you want Enter to accept suggestions, remove this block.
+  try {
+    ta.dispatchEvent(new KeyboardEvent("keydown", { key:"Escape", code:"Escape", bubbles:true, cancelable:true }));
+    ta.dispatchEvent(new KeyboardEvent("keyup",   { key:"Escape", code:"Escape", bubbles:true, cancelable:true }));
+  } catch(_) {}
+
+  // Dispatch the Enter key events. We don't emit beforeinput/input here,
+  // because in APL session Enter should trigger the host app handler, not insert a newline.
+  function fire(type){
+    const ev = new KeyboardEvent(type, Object.assign({
+      key: "Enter",
+      code: "Enter",
+      bubbles: true,
+      cancelable: true
+    }, mods));
+    // Some engines still look at legacy properties:
+    try { Object.defineProperty(ev, "keyCode", { get: () => 13 }); } catch(_) {}
+    try { Object.defineProperty(ev, "which",   { get: () => 13 }); } catch(_) {}
+    ta.dispatchEvent(ev);
+  }
+
+  fire("keydown");
+  fire("keypress");
+  fire("keyup");
+
+  log("[EnterKey] dispatched Enter events with mods:", mods);
+  return { ok:true, mode:"events", details:`Enter(${useCombo}) dispatched` };
+}
+
+
+  // expose (single, clean)
+  window.EnterKey = EnterKey;
+  MonacoInput.EnterKey = EnterKey;
 
   MonacoInput.DEBUG = true;
   // expose globally
