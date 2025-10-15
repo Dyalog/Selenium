@@ -28,3 +28,12 @@ The variable `SELENIUM_HOME` is supposed to contain the path to Selenium's setti
 ### PORT
 
 The address of the port that the browser uses to retrieve content.
+
+## The configuration file `settings.json5`
+
+In earlier versions of our implementation, this file needed frequent updates in order to adjust to the latest browser versions. 
+With the release 2.0 we are using new features of Selenium that help to identify browsers version and load suitable drivers.
+Consequently this file now has a more static nature and should not need updates by the user.
+
+When new versions of Selenium and its drivers are released, we may update the file - it is therefore advised to no longer keep 
+local versions of it, but instead treat it as part of the code.
