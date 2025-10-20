@@ -145,19 +145,19 @@
          :EndFor
      :EndIf
 
-     :If 2=SETTINGS.Browser.⎕NC'additionalcapabilities'
+     :If 2=SETTINGS.Browser.⎕NC'AdditionalCapabilities'
      :AndIf 0 ⍝ not yet ripe for production!
          :For cap :In SETTINGS.Browser.additionalcapabilities
              options.AddAdditionalCapability(cap.name)(cap.value)
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'addarguments'
-         :For opt :In SETTINGS.Browser.addarguments
+     :If 2=SETTINGS.Browser.⎕NC'AddArguments'
+         :For opt :In SETTINGS.Browser.AddArguments
              options.AddArgument⊂opt
          :EndFor
      :EndIf
-     :If 2=SETTINGS.Browser.⎕NC'loggingpreferences'
-         :For p :In SETTINGS.Browser.loggingpreferences
+     :If 2=SETTINGS.Browser.⎕NC'LoggingPreferences'
+         :For p :In SETTINGS.Browser.LoggingPreferences
              options.SetLoggingPreference p.type(OpenQA.Selenium.LogLevel⍎p.level)
          :EndFor
      :EndIf
