@@ -2,7 +2,7 @@
  ⍝ stop: 0 (default) ignore but report errors; 1 stop on error; 2 stop before every test
  ⍝ site: port number (default is PORT) or URL
  ⍝ match: 0 (default) run all tests on the baseURL; 1 run tests on baseURL matching dir struct
- ⍝ config: points to an entry of your settinghs.json-Foöe
+ ⍝ config: points to an entry of your settings.json5
  'stop_site_match_config'DefaultTo 0
  :If isChar stop_site_match_config  ⍝ handle mode where just the name of a config is given
      stop_site_match_config←0 0 0,⊂stop_site_match_config
