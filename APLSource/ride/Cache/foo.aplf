@@ -1,0 +1,4 @@
+foo←{
+'This is an almost useless placeholder function - but we need some code here to get the cache folder created!'
+}
+
