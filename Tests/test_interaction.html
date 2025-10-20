@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selenium Browser Interactions Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        section {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .element-box {
+            border: 1px solid #cce5ff;
+            background-color: #e6f3ff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        button, input[type="text"], input[type="submit"], select {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border-color: #218838;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        input[type="text"] {
+            background-color: #fff;
+            color: #333;
+        }
+        select {
+            background-color: #fff;
+            color: #333;
+        }
+        /* Drag and Drop specific styles */
+        #draggable {
+            width: 100px;
+            height: 100px;
+            background-color: #ffc107; /* Yellow */
+            border: 2px solid #e0a800;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 100px;
+            cursor: grab;
+            position: relative; /* Needed for JavaScript positioning */
+            user-select: none; /* Prevent text selection during drag */
+            transition: background-color 0.3s ease;
+        }
+        #draggable:active {
+            cursor: grabbing;
+        }
+        #droppable {
+            width: 200px;
+            height: 200px;
+            background-color: #17a2b8; /* Blue-green */
+            border: 2px dashed #138496;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 200px;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        #droppable.hovered {
+            background-color: #007bff; /* Darker blue on hover */
+        }
+        #droppable.dropped {
+            background-color: #28a745; /* Green on drop */
+            border-color: #218838;
+        }
+        /* MoveToElement specific styles */
+        #hoverBox {
+            width: 150px;
+            height: 100px;
+            background-color: #6f42c1; /* Purple */
+            color: white;
+            text-align: center;
+            line-height: 100px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        #hoverBox:hover {
+            background-color: #5a2d9e;
+        }
+        #hoverMessage {
+            margin-top: 10px;
+            color: #d63384; /* Pink */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selenium Browser Interactions Test Page</h1>
+    <p>This page demonstrates various browser interactions for Selenium tests.</p>
+
+    <section>
+        <h2>1. Click Interaction</h2>
+        <div class="element-box">
+            <button id="clickButton" onclick="document.getElementById('clickMessage').textContent='Button Clicked!';">Click Me</button>
+            <p id="clickMessage">Status: Ready to click.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Clear Interaction</h2>
+        <div class="element-box">
+            <label for="clearInput">Input to Clear:</label>
+            <input type="text" id="clearInput" value="Some text to clear">
+            <button id="resetClearInput" onclick="document.getElementById('clearInput').value='Initial text here!';">Reset</button>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. Drag and Drop Interaction</h2>
+        <p>Drag the yellow box into the blue-green drop zone.</p>
+        <div class="element-box">
+            <div id="draggable">Drag Me</div>
+            <div id="droppable">Drop Here</div>
+            <p id="dragDropStatus">Status: Waiting for drag.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. MoveToElement (Hover) Interaction</h2>
+        <p>Hover over the box to see a message.</p>
+        <div class="element-box">
+            <div id="hoverBox">Hover Over Me</div>
+            <p id="hoverStatus">Status: Not hovered.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Select Interaction (Dropdown)</h2>
+        <div class="element-box">
+            <label for="selectLanguage">Choose a language:</label>
+            <select id="selectLanguage">
+                <option value="none">-- Select --</option>
+                <option value="APL">APL</option>
+                <option value="C#">C#</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Python">Python</option>
+                <option value="SQL" id="pickSQL">SQL</option>
+            </select>
+            <p id="selectStatus">Selected: -- None --</p>
+        </div>
+    </section>
+
+    <script>
+        // --- Drag and Drop JavaScript Logic ---
+        const draggable = document.getElementById('draggable');
+        const droppable = document.getElementById('droppable');
+        const dragDropStatus = document.getElementById('dragDropStatus');
+
+        let isDragging = false;
+
+        draggable.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            draggable.style.position = 'absolute';
+            draggable.style.zIndex = 1000;
+            dragDropStatus.textContent = "Status: Dragging...";
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            draggable.style.left = e.pageX - draggable.offsetWidth / 2 + 'px';
+            draggable.style.top = e.pageY - draggable.offsetHeight / 2 + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            // Check if dropped onto droppable
+            const draggableRect = draggable.getBoundingClientRect();
+            const droppableRect = droppable.getBoundingClientRect();
+
+            if (draggableRect.left < droppableRect.right &&
+                draggableRect.right > droppableRect.left &&
+                draggableRect.top < droppableRect.bottom &&
+                draggableRect.bottom > droppableRect.top) {
+                
+                droppable.classList.add('dropped');
+                droppable.textContent = "DROPPED!";
+                dragDropStatus.textContent = "Status: Item dropped!";
+            } else {
+                dragDropStatus.textContent = "Status: Drag cancelled or missed.";
+                droppable.classList.remove('dropped');
+                droppable.textContent = "Drop Here";
+            }
+            draggable.style.position = 'relative'; // Reset position after drag
+            draggable.style.left = '0px';
+            draggable.style.top = '0px';
+        });
+
+        // Add hover effect for droppable
+        droppable.addEventListener('mouseenter', () => {
+            if (!isDragging) { // Only highlight if not currently dragging
+                droppable.classList.add('hovered');
+            }
+        });
+        droppable.addEventListener('mouseleave', () => {
+            droppable.classList.remove('hovered');
+        });
+
+
+        // --- MoveToElement (Hover) JavaScript Logic ---
+        const hoverBox = document.getElementById('hoverBox');
+        const hoverMessage = document.getElementById('hoverStatus');
+
+        hoverBox.addEventListener('mouseenter', () => {
+            hoverMessage.textContent = "Status: Mouse is over the box!";
+            hoverBox.style.backgroundColor = '#5a2d9e'; // Darker purple
+        });
+
+        hoverBox.addEventListener('mouseleave', () => {
+            hoverMessage.textContent = "Status: Not hovered.";
+            hoverBox.style.backgroundColor = '#6f42c1'; // Original purple
+        });
+
+
+        // --- Select Interaction JavaScript Logic ---
+        const selectLanguage = document.getElementById('selectLanguage');
+        const selectStatus = document.getElementById('selectStatus');
+
+        selectLanguage.addEventListener('change', (event) => {
+            selectStatus.textContent = `Selected: ${event.target.options[event.target.selectedIndex].text}`;
+        });
+
+    </script>
+</body>
+</html>

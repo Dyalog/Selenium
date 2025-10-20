@@ -1,0 +1,20 @@
+ r←test_screenshots nul;ctl;file2;file
+
+ r←''
+ 3 ⎕NDELETE path,'screenshot.png'
+ #.S.GoTo'file://',path,'Tests/test_interaction.html'
+
+⍝ 1. Take a screenshot and check it is there...
+ #.S.SaveScreenshot file←path,'screenshot.png'
+ 1 Assert ⎕NEXISTS file
+
+⍝ 2. Take a 2nd and compare it with the first one
+ #.S.SaveScreenshot file2←path,'screenshot2.png'
+ 0 Assert file #.S.CompareScreenshots file2
+
+ 'clearInput'#.S.SetInputValue'⍳3'
+ 3 ⎕NDELETE file2
+ #.S.SaveScreenshot file2←path,'screenshot2.png'
+ 1 Assert file #.S.CompareScreenshots file2
+
+ 3 ⎕NDELETE¨file file2 ((∊2↑⎕nparts file2),'-diff.png')

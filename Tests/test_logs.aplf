@@ -1,0 +1,9 @@
+ r←test_logs nul;z;txt;l
+ r←''
+ ⎕←'Warning: test_logs is disabled! (The GetLogs function of WebDriver4 is said to be chronically unreliable and we saw it working and failing...)'
+ →0
+ txt←'Hello world!'
+ #.S.ExecuteScript'console.log("',txt,'");'
+ l←#.S.(GetLogs BROWSER.LogType.Browser)
+ 2 Assert≢l                         ⍝ check if we have two entries
+ 1 Assert(∨/('"',txt,'"')⍷2⊃2↑l)    ⍝ and if the 2nd contains the text we logged

@@ -1,0 +1,46 @@
+ {desc}kbdm_test keys;z;c;sink;exp;txt;symbols;j;k;ev;txtL
+⍝ Send keystrokes to the browser and monitor keyboard events (related to test_keyboard_monitor.aplf and keyboard-monitor.html )
+⍝ writes errors into global "r" (result of test function test_keyboard_monitor that calls this fn)
+ →(0=≢keys)/0
+ symbols←'; :.,-_#+*''^°!"$%&/()=?\[]{}'
+ c←⊃keys
+ sink←ctl #.S.SendKeys c
+ ev←'KEYPRESS'  ⍝ event to look for
+ exp←''   ⍝ the text we expect to see in the log
+ :If 0=⎕NC'desc'
+ :AndIf ∧/c∊⎕A,symbols
+     desc←c
+ :EndIf
+ :If ∧/c∊⎕A     ⍝ uppercase characters need shift (automagically added by Selenium)
+     exp,←' [Shift] Key=''',c,''''
+ :ElseIf ∧/c∊symbols    ⍝ special handling to check these as JS does not recognize the keypress event for ° (so I decided it's better to look for the input event with these keystrokes)
+     ev←'INPUT'
+     exp←'Input Value=''',c,''''
+ :ElseIf ∨/z←c∊∊allKeys[;2]
+     j←(∊allKeys[;2])⍳z/c
+     :If 0=⎕NC'desc'
+         desc←1⊃allKeys[j;1]
+     :EndIf
+     :If ∨/k←∨/¨(⊂'Shift')⍷¨allKeys[j;1]
+         exp,←' [Shift]'
+         j←(~k)/j
+         :If 0∊z
+             exp,←' Key=''',(1 ⎕C(~z)/c),''''
+         :EndIf
+     :Else
+         exp,←' Key=''',(∊allKeys[j;1]),''''
+     :EndIf
+ :Else
+     exp,←' Key=''',c,''''
+ :EndIf
+ txtL←log.GetAttribute⊂'value'   ⍝ full log (for current key)
+ txt←⊃(('^.*',ev,': .*$')⎕S'&')txtL  ⍝ only look at line for keypress event
+ :If 0=≢txt  ⍝ if no keypress evnt found, it's probably Fn key or something else -> look for KEYDOWN
+     txt←⊃(('^.*KEYDOWN: .*$')⎕S'&')txtL
+ :EndIf
+ clb.Click  ⍝ clear log
+ :If 1 Check∨/exp⍷txt
+     r,←'Could not find expected text "',exp,'" in log: "',txt,'" when pressing key "',desc,'"'lf
+     →0
+ :EndIf
+ kbdm_test 1↓keys

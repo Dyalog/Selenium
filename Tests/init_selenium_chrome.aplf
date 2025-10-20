@@ -1,0 +1,18 @@
+ r←init_selenium_chrome nul;z;arg;⎕TRAP
+⍝ Initialize Selenium with Chrome driver
+ path←1⊃⎕NPARTS{(-'/\'∊⍨⊢/⍵)↓⍵}##.TESTSOURCE    ⍝ needs to be global so that tests can find resources
+ arg←⎕NS''
+ arg.folder←path
+ arg.batch←1
+
+ :If ~⊃r←⎕SE.Cider.OpenProject ⎕SE.Cider.CreateOpenParms arg    ⍝ open project using Cider
+     r←2⊃r
+     →0
+ :EndIf
+ 
+ #.S←#.Selenium
+ :If ⊃r←#.S.InitBrowser'Chrome' 80   ⍝ if there was an error initialising the browser
+     r←2⊃r                           ⍝ report it...
+ :Else
+     r←''
+ :EndIf
