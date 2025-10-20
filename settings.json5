@@ -72,7 +72,7 @@
     WebDriver: {
       nuget: 'Selenium.WebDriver', // name of NuGet package
       version: '4.34.0', // version
-      using: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.Keys'], // "things" we are using
+      using: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.DevTools','OpenQA.Selenium.Keys'], // "things" we are using
     },
     optional: {
       WebDriverManager: {
