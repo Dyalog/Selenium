@@ -2,7 +2,7 @@
  r←''
  #.S.End
  {}⎕SE.Cider.CloseProject ⍬
- #.⎕EX'Selenium' 'path'
+ #.⎕EX'Selenium' 'path' 'APLProcess' 'S'
  :If 9=⎕NC'PROCESS'  ⍝ kill APL Process with HtmlRenderer (if we had one)
      PROCESS.(Kill Proc.Id)
  :EndIf
