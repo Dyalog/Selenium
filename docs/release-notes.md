@@ -1,6 +1,6 @@
 # Release notes
 
-## 2025 10 30 MBaas, V2.0.0 - major update
+## 2025 10 30 MBaas, V3.0.0 - major update
 
 * in addition to Chrome, we now also support Firefox and Edge browsers
 * Selenium should work with the browser version that's installed
@@ -20,6 +20,7 @@
 * function GetLogs can be used to access the browser logs (though it wasn't working reliably in our tests - it sometimes does not get logs though are some to be gotten.)
 * Select has been significantly improved and offers more options to identify the target element
 * updated Ride tests and implemented tools to support testing against its Monaco editor
+* changed major version to 3.0.0 (there were previous releases with a version number mentioning > 2.0)
 
 **BREAKING CHANGES:**
 
