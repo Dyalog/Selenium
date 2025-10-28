@@ -108,7 +108,6 @@
         const outputLog = document.getElementById('outputLog');
         const clearLogButton = document.getElementById('clearLogButton');
 
-        // Event Listener für Tastatureingaben
         inputField.addEventListener('keydown', (event) => {
             logEvent('keydown', event);
         });
@@ -125,11 +124,10 @@
             logEvent('input', event);
         });
 
-        // Event Listener für den Clear Log Button
         clearLogButton.addEventListener('click', () => {
-            outputLog.value = ''; // Leert das Textfeld
-            inputField.value = ''; // Leert auch das Eingabefeld
-            inputField.focus(); // Setzt den Fokus zurück ins Eingabefeld
+            outputLog.value = '';
+            inputField.value = '';
+            inputField.focus();
             console.log('Log cleared.');
         });
 
@@ -166,11 +164,9 @@
                 }
             }
 
-            // Füge den neuen Eintrag oben hinzu
             outputLog.value = logMessage + '\n' + outputLog.value; 
             
-            // Begrenze die Anzahl der Zeilen (optional)
-            const maxLines = 100; // Mehr Zeilen als vorher für längere Tests
+            const maxLines = 100;
             const lines = outputLog.value.split('\n');
             if (lines.length > maxLines) {
                 outputLog.value = lines.slice(0, maxLines).join('\n');
