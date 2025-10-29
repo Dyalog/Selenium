@@ -1,6 +1,2 @@
  r←lc R  ⍝ lowercase
- :If 18≤2⊃⎕VFI 2↑2⊃'.'⎕WG'aplversion'
-     r←⎕C R
- :Else
-     r←0(819⌶)R
- :EndIf
+ r←⎕C R
