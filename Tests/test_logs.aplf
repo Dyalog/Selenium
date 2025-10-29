@@ -1,6 +1,8 @@
  r←test_logs nul;z;txt;l
  r←''
  ⎕←'Warning: test_logs is disabled! (The GetLogs function of WebDriver4 is said to be chronically unreliable and we saw it working and failing...)'
+ →0
+
 ⍝ The following C# Code is supposed to use Chrome DevTools Protocol (CDP) which is more reliable.
 ⍝ I could not translate that to APL.
 ⍝ var devTools = driver as IDevTools;
