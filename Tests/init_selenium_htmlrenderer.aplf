@@ -15,7 +15,7 @@
  PROCESS←⎕NEW #.APLProcess(''cmd)
 
  #.S←#.Selenium
- :If ⊃r←#.S.InitBrowser'HtmlRenderer' 80   ⍝ if there was an error initialising the browser
+ :If ⊃r←#.S.InitBrowser'HtmlRenderer' 8080   ⍝ if there was an error initialising the browser
      ∘∘∘
      r←2⊃r                           ⍝ report it...
  :Else
