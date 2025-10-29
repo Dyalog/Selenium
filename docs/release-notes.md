@@ -1,6 +1,6 @@
 # Release notes
 
-## 2025 10 30 MBaas, V3.0.0 - major update
+## 2025 10 29 MBaas, V3.0.0 - major update
 
 * in addition to Chrome, we now also support Firefox and Edge browsers
 * Selenium should work with the browser version that's installed
