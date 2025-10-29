@@ -1,0 +1,2 @@
+ options←InitOptions browser
+ options←⎕NEW⍎browser,'Options'

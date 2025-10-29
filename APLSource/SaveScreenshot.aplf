@@ -1,0 +1,2 @@
+ SaveScreenshot ToFile
+ BROWSER.GetScreenshot.SaveAsFile⊂ToFile

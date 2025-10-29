@@ -1,0 +1,15 @@
+﻿ r←TestUppercase nul;S;path;demoText;expect;errMsg;file
+ path←1⊃1 ⎕NPARTS{6::50 ⎕ATX ⍵ ⋄ SALT_Data.SourceFile}1⊃⎕SI   ⍝ where does this file come from?
+ 11 ⎕SIGNAL(0=≢path)/'Unable to determine source path'
+ file←path,'text-uppercase.html'
+ 11 ⎕SIGNAL(≡⎕NEXISTS file)/'File "',file,'" does not exist!'
+ demoText←'Hello World!'
+ expect←1 ⎕C demoText
+ errMsg←'Did not find expected output!'
+ S←##.Selenium
+ S.InitBrowser'Chrome'
+ S.GoTo'file:///',file
+ 'inputText'S.SendKeys demoText
+ (S.Find'transformButton').Click
+ r←'outputText'S.WaitFor expect errMsg
+ S.End

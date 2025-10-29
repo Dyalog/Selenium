@@ -1,0 +1,5 @@
+ factorial←{     ⍝ Tail recursive factorial.
+     ⍺←1
+     ⍵=0:⍺
+     (⍺×⍵)∇ ⍵-1
+ }

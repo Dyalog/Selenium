@@ -1,0 +1,5 @@
+ Fix←{⍺←2             ⍝ execute ⎕FIX in session and print out result
+     nul←1 MonacoInput('⎕←⊃',(⍕⍺),'⎕FIX''file://',⍵,'''')
+     ⍝sink←⎕DL 1
+     nul←MonacoEnter 1
+ }

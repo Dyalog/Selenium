@@ -1,0 +1,15 @@
+ r←test_keyboard_monitor nul;z;ctl;allKeys;log;clb;symbols;lf
+⍝
+ r←''
+ allKeys←{nl←⍵.⎕NL ¯2 ⋄ nl,[1.5]⍵⍎¨⍵.⎕NL ¯2}#.S.Keys
+ lf←⎕UCS 10
+ #.S.GoTo'file://',path,'Tests/keyboard-monitor.html'
+ ctl←#.S.Find'inputField'
+ log←#.S.Find'outputLog'
+ clb←#.S.Find'clearLogButton'
+
+ kbdm_test'ABC',⎕D,'abc' ⍝ avoid YZ! (see -md for SendKeys
+ kbdm_test⊂#.S.Keys.(Shift,Enter)
+ kbdm_test⊂#.S.Keys.Shift,'a'
+ kbdm_test #.S.Keys.F2
+ kbdm_test⊂#.S.Keys.(Shift,F3)

@@ -1,0 +1,1 @@
+IsVisible←{(Find ⍵).Displayed}  ⍝ test if given element is Displayed (useful if combined with Retry to wait till control is accessible)

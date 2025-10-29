@@ -1,0 +1,20 @@
+ R←{a}SET w
+
+ :If 20>2⊃⎕VFI 2↑2⊃'.'⎕WG'APLVersion'
+     :If 0=⎕NC'a'
+         a←⊃⎕RSI
+     :EndIf
+     R←a ∆NS w
+ :Else
+     :If 0=⎕NC'a'
+         R←⎕VSET w
+         :If (⎕JSON R)≢⎕JSON ∆NS w ⍝ temporary QA
+             ∘∘∘
+         :EndIf
+     :Else
+         R←a ⎕VSET w
+         :If (⎕JSON R)≢⎕JSON a ∆NS w ⍝ temporary QA
+             ∘∘∘
+         :EndIf
+     :EndIf
+ :EndIf

@@ -1,0 +1,2 @@
+ r←lc R  ⍝ lowercase
+ r←⎕C R

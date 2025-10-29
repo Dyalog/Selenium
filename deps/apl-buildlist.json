@@ -1,0 +1,11 @@
+{
+  packageID: [
+    "dyalog-NuGet-0.2.3",
+  ],
+  principal: [
+    1,
+  ],
+  url: [
+    "https://tatin.dev/",
+  ],
+}

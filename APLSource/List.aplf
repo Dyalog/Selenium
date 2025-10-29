@@ -1,0 +1,2 @@
+ List←List ⍝ List names and types in directory ⍵
+ List←0 1 ⎕NINFO⍠1⊢

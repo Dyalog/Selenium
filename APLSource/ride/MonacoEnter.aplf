@@ -1,0 +1,18 @@
+ {nul}←{opts}MonacoEnter idx;sc;class
+⍝ Sends Enterkey to Monaco Editor
+⍝ idx=1: Session
+⍝     2: Editor
+⍝ opts:
+⍝      - combo: "plain" | "shift" | "ctrl" | "ctrl-shift"
+
+ class←idx⊃'.ride_win' '.ride_win_me'
+ :If 0=⎕NC'opts'
+     sc←'EnterKey("',class,'");'
+ :Else
+     :If 9=⎕NC'opts'
+         opts←⎕JSON opts
+     :EndIf
+     sc←'EnterKey("',class,'",',opts,');'
+ :EndIf
+ ##.ExecuteScript sc
+ nul←⍬

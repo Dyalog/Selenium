@@ -1,0 +1,106 @@
+{
+  /***
+     This file contains settings for some browser-configs that were current at the time it was composed.
+     Simply refer to the name of a config in ⍺ of the Test-fn
+    i.e. Test'./MS3' '' 'Chrome' - of course that is optional, the "default"-Config will used if you don't explicitely select a config
+    or use `Selenium.ApplySettings'Chrome80'` (or: Selenium.InitBrowser'HtmlRenderer') in your own test-function. 
+    NB: you may also pass an empty string as ⍵ to use the default. 
+  ***/
+
+  Browsers: {
+    Chromium: {// see https://www.nuget.org/packages/Selenium.WebDriver.ChromeDriver#versions-body-tab for latest versions
+      driver: 'ChromeDriver', // name of object that will be instiated
+      nuget: 'Selenium.WebDriver.ChromeDriver', // name of Nuget package
+      using: ['OpenQA.Selenium.Chrome'],
+      wdns: 'Chrome', // name of WebDriver (namespaces in OpenQA.Selenium.) we will be ⎕USING
+      // Options: {
+      //   AddArguments: ['--window-size=1920,1080']
+      // },
+      Flavours: {
+        HtmlRenderer: {
+          SITEROOT: 'http://dyalog_root',
+          // NB:Namespaces are usually something to dig into - Options specifies a parameter within this config. To avoid further processing, is has the flag isDriverParam!
+          Options: {
+            DebuggerAddress: '127.0.0.1:8080',
+            isDriverParam: true
+          },
+          Port: 8080,
+          AddArguments: ['--no-sandbox','--disable-dev-shm-usage','--log-level=0','--verbose'],
+          //AddArguments: ['--no-sandbox','--remote-debugging-port=8080','--disable-dev-shm-usage','--log-level=0','--verbose'],
+         isCEF:1,  // is a flag to indicate that this is a CEF config (which needs special magic to query version and locate the driver)
+        },
+        Ride: {
+         isCEF:1,
+           Options: {
+            DebuggerAddress: '127.0.0.1:8080',
+            isDriverParam: true
+          },
+         AddArguments: ['--no-sandbox','--disable-dev-shm-usage','--log-level=0','--verbose'],
+         Port: 80,
+        },
+        Chrome: {
+          // uses all details of parent object
+        },
+        HeadlessChrome: {
+          // uses same defaults as LatestChrome and runs in headless mode
+          AddArguments: ['--headless window-size=1920,1080']
+        }
+      }
+    },
+    Firefox: {
+      driver: 'FirefoxDriver',
+      nuget: 'Selenium.WebDriver.GeckoDriver',
+      using: ['OpenQA.Selenium.Firefox'],
+      wdns: 'Firefox',
+    },
+    Edge: {
+      driver: 'EdgeDriver',
+      nuget: 'Selenium.WebDriver.EdgeDriver',
+      using:[ 'OpenQA.Selenium.Edge'],
+      wdns: 'Edge',
+    },
+    LoggingPreferences: [// edit as needed!
+      {type: "Browser",level: 'All'}, // │All│Debug│Info│Off│Severe│Warning│
+      {type: "Driver", level: 'All'}, 
+      {type: "Performance",level: 'Off'} 
+    ],
+  },
+  Port: 8080,
+  Browser: 'Chrome', 
+  WindowSize: [ 1920, 1080 ],
+  Components: {
+    WebDriver: {
+      nuget: 'Selenium.WebDriver', // name of NuGet package
+      version: '4.34.0', // version
+      using: ['OpenQA', 'OpenQA.Selenium','OpenQA.Selenium.DevTools','OpenQA.Selenium.Keys'], // "things" we are using
+    },
+    optional: {
+      WebDriverManager: {
+        nuget: 'WebDriverManager',
+        version: '2.17.6',
+        using: ['WebDriverManager','WebDriverManager.DriverConfigs.Impl','WebDriverManager.Helpers']
+      },
+      Support: {
+        nuget: 'Selenium.Support',
+        version: '4.34.0',
+        using: ['OpenQA.Selenium.Support', 'OpenQA.Selenium.Support.UI'],
+      },
+      Newtonsoft: {
+        nuget: 'Newtonsoft.Json',
+        version: '13.0.3'
+      },
+      WaitHelpers: {
+        nuget: 'SeleniumExtras.WaitHelpers',
+        version: '1.0.2'
+      },
+      ImageSharp: {
+        nuget: 'SixLabors.ImageSharp',
+        version: '3.1.10'
+      },
+      ImageSharpCompare: {
+        nuget: 'Codeuctivity.ImageSharpCompare',
+        version: '4.1.342'
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+ UrlIs←{(⊂BROWSER.Url)∊⍥⎕C⍵(⍵,'/')} ⍝ Is the browser currently at ⍵?

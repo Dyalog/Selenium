@@ -1,0 +1,5 @@
+ {R}←Se arg
+ R←{
+     Do:SeRef ##.SendKeys¨⊂⍣(1=≡,⍵)⊢⍵
+     0
+ }##.Retry arg ⍝ SendKeys in Session

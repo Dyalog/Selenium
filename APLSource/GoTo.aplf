@@ -1,0 +1,28 @@
+ {ok}←GoTo url;z;base ⍝ Ask the browser to navigate to a URL and check that it did it
+ ok←1
+ :If ~(⊂lc 4↑url)∊'http' 'file'  ⍝ it's probably a relative URL (does this text need be more detailed?)
+     base←BROWSER.Url
+     :While (≢url)>z←url⍳'/'
+         :If z=1
+             base←((2≥+\base='/')/base),'/'
+         :ElseIf '../'≡z↑url
+             base←(2⊃⌽⍸base='/')↑base
+         :ElseIf './'≡z↑url
+             base←(⊢/⍸base='/')↑base
+         :Else
+             base←base,z↑url
+         :EndIf
+         url←z↓url
+     :EndWhile
+     url←base,url
+ :ElseIf 'file'≡lc 4↑url
+ :AndIf 'win'≡⎕C 3↑1⊃'.'⎕WG'APLVersion'
+     url←(7↑url),((url[8]≠'/')/'/'),7↓url
+ :EndIf
+ :Trap 90
+     BROWSER.Navigate.GoToUrl⊂url
+     ('Could not navigate from ',BROWSER.Url,' to ',url)⎕SIGNAL 11/⍨~UrlIs url
+ :Else
+     ⎕TRAP←0 'S' ⋄ (⎕LC[1]+1)⎕STOP 1⊃⎕SI
+     ('Alert running "',url,'": ',⎕EXCEPTION.Message)⎕SIGNAL 11
+ :EndTrap

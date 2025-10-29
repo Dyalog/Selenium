@@ -1,0 +1,12 @@
+{nul}← idx MonacoInput txt;id;sc;class
+ ⍝ idx=1: Session
+ ⍝     2: Editor
+ class←idx⊃'.ride_win' '.ride_win_me'
+ :If 1=≡txt
+     sc←'MonacoInput(arguments[0],arguments[1]);'
+ :Else
+     sc←'MonacoInput(arguments[0],arguments[1],arguments[2]);'
+ :EndIf
+ txt←(⊂class),⊆txt
+ txt ##.ExecuteScript sc
+ nul←⍬

@@ -1,0 +1,2 @@
+ Folders←Folders ⍝ Filter for folders only
+ Folders←⊃(/⍨∘(1∘=))/

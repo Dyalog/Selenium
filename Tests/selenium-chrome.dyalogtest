@@ -1,0 +1,14 @@
+DyalogTest : 1.30
+ID         : selenium-chrome
+Description: run tests of Selenium against the installed version of chrome
+
+Setup   : init_selenium_chrome
+
+Test    : test_find
+Test    : test_input_monitor
+Test    : test_interaction
+Test    : test_keyboard_monitor
+Test    : test_logs
+Test    : test_screenshots
+
+Teardown: teardown

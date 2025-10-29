@@ -1,0 +1,35 @@
+ ApplySettings name;settings;ref;go;rarg;nv;s2;n;ns∆;nv_;ns1;ns2;i
+ ⍝ ⍵ is (name of browser)[port]
+ ⍝   or a namespace with the same content
+
+ settings←GetSettings
+ :If (0 2∊⍨10|⎕DR)⊃name  ⍝ browser[port]
+ :AndIf 0<≢name
+     rarg←name
+     name←⎕NS''
+     name.Browser←⊃⊆rarg
+     :If 2=≢rarg
+     :AndIf (2|⎕DR)2⊃rarg
+         name.Port←2⊃rarg
+     :EndIf
+ :EndIf
+
+
+ :If 0<≢name
+     SETTINGS←settings MergeNS name
+ :EndIf
+
+ ref←{
+     6::''
+     ⍵.Browsers⍎⍵.Browser
+ }SETTINGS
+ :If ref≡''
+     ('Settings "',SETTINGS.Browser,'" not found!')⎕SIGNAL 11
+ :EndIf
+ SETTINGS.Browser←⎕JSON ⎕JSON ref
+ BROWSEROPTIONS←⍬  ⍝ no options found...
+ :Select ⍬⍴ref.⎕NC'Options'
+ :CaseList 2 9 ⋄ BROWSEROPTIONS←ref.Options
+ :EndSelect
+
+ ⎕USING←'System'

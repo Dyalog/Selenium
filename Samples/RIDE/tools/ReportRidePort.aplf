@@ -1,0 +1,4 @@
+ ReportRidePort nul;file;port
+ file←1⊃160⌶'rpfile'
+ port←(497⌶⍬)[1;4]
+ (⊂⍕port)⎕NPUT file 1

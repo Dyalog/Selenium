@@ -1,0 +1,13 @@
+﻿ repro nul;z;dir;d
+ ⎕SE.Tatin.LoadPackages'nuget'#  ⍝ ]LOAD if you do not have Tatin
+ :If ⎕NEXISTS dir←(739⌶0),'/repro-mb-250801/'
+     ⎕NDELETE dir
+ :EndIf
+ ⎕MKDIR dir
+
+ {}NuGet.Setup dir
+ NuGet.Add dir'WebDriverManager'
+ ⎕USING←('(includePrimary: 0)'NuGet.Using ¯1↓dir),'WebDriverManager' 'WebDriverManager.DriverConfigs.Impl' 'WebDriverManager.Helpers'
+ d←⎕NEW DriverManager.SetUpDriver(⎕NEW ChromeConfig)
+
+ ⎕NDELETE dir

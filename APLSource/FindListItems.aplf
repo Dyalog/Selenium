@@ -1,0 +1,4 @@
+ r←id FindListItems text;li;ok
+ ⍝ Find list items with a given text within element with id
+ (ok li)←{li←⌷'CssSelectors'Find'#',⍵,' li' ⋄ (0≠⍴li)li}Retry id
+ r←(li.Text∊eis text)/li

@@ -1,0 +1,57 @@
+ r←test_interaction nul;ctl
+⍝
+ r←''
+ #.S.GoTo'file://',path,'Tests/test_interaction.html'
+
+ ⍝ 1. Click
+ 'Status: Ready to click.'Assert(#.S.Find'clickMessage').Text
+ 1 Assert #.S.Click'clickButton'
+ 'Button Clicked!'Assert(#.S.Find'clickMessage').Text
+
+ ⍝ 2. ClearInput
+ ctl←#.S.Find'clearInput'
+ 'Some text to clear'Assert ctl.GetAttribute⊂'value'
+ #.S.ClearInput'clearInput'
+ ''Assert ctl.GetAttribute⊂'value'
+
+⍝ 2b. SetInputValue
+ ctl #.S.SetInputValue'APL Expression: (≠⊆⊢)'
+ 'APL Expression: (≠⊆⊢)'Assert ctl.GetAttribute⊂'value'
+
+ #.S.ClearInput'clearInput'
+ ctl #.S.SendKeys(⊂#.S.Keys.Shift,'h'),'ello world'
+ 'Hello world'Assert ctl.GetAttribute⊂'value'
+
+⍝ 3. Drag&Drop
+ 'draggable'#.S.DragAndDrop'droppable'      ⍝ drop it at a proper place...
+ 'Status: Item dropped!'Assert(#.S.Find'dragDropStatus').Text
+
+ 'draggable'#.S.DragAndDrop'clearInput'     ⍝ drop elsewhere...
+ 'Status: Drag cancelled or missed.'Assert(#.S.Find'dragDropStatus').Text
+
+⍝ 4. MoveToElement
+ #.S.MoveToElement'hoverBox'
+ 'Status: Mouse is over the box!'Assert(#.S.Find'hoverStatus').Text
+
+ #.S.MoveToElement'clearInput'                                  ⍝ hover elsewhere and check
+ 'Status: Not hovered.'Assert(#.S.Find'hoverStatus').Text       ⍝ that status shows it
+
+ ⍝ 5. Select
+ ⍝ test all options of Select
+ 'selectLanguage'#.S.Select'APL'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'C' 'PartialText'
+ 'Selected: C#'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select 1 'Index'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'#pickSQL' 'CssSelector'
+ 'Selected: SQL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select 1 'Index'
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'none' 'Value'
+ 'Selected: -- Select --'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'AP' 1
+ 'Selected: APL'Assert(#.S.Find'selectStatus').Text
+ 'selectLanguage'#.S.Select'none' 'Value'
+ 'selectLanguage'#.S.SelectItemText'C#'
+ 'Selected: C#'Assert(#.S.Find'selectStatus').Text

@@ -1,0 +1,32 @@
+ r←larg WaitFor args;f;text;msg;element;oLarg
+ ⍝ Retry until text/value of element begins with text
+ ⍝ Return msg on failure, '' on success
+ ⍝ larg ist either an object or the [left and] right argument of Find.
+ ⍝ ie.         MyLabel WaitFor'MyText'
+ ⍝ or         'MyLabel'WaitFor'MyText'
+ ⍝ or  ('id' 'MyLabel')WaitFor'MyText'
+ ⍝ are all possible!
+ :If 9≠⎕NC'larg'
+     oLarg←larg
+     :If 2=≡larg
+     :AndIf 2=≢larg
+         larg←(1⊃larg)Find 2⊃larg
+     :Else
+         larg←Find larg
+     :EndIf
+ :EndIf
+ :If larg≡0 ⋄ r←'Did not find element "',(⍕oLarg),'"' ⋄ →0 ⋄ :EndIf
+ element←larg
+ args←eis args
+ (text msg)←2↑args,(⍴args)↓'Thank You!' 'Expected output did not appear'
+ f←'{∨/''',((1+text='''')/text),'''','≡⍷'[1+×⍴,text]
+ :If ({0<≢⍵.TagName})Retry element  ⍝ check if we can query TagName w/o errors...
+     :If (⊂element.TagName)∊'input' 'textarea'
+         f,←'element.GetAttribute⊂''value''}'
+     :Else
+         f,←'element.Text}'
+     :EndIf
+     r←(~(⍎f)Retry ⍬)/msg
+ :Else
+     r←msg
+ :EndIf

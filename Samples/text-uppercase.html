@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Transformer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px; /* Added padding for smaller screens */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            width: calc(100% - 20px); /* Adjust width to account for padding */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical; /* Allow vertical resizing */
+            background-color: #e9ecef; /* Light gray background for output */
+            cursor: not-allowed; /* Indicate it's not directly editable */
+        }
+
+        /* IDs for Selenium Locators */
+        #inputText,
+        #transformButton,
+        #outputText {
+            /* No specific styling here, just for clarity that these are the IDs */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Transformer</h1>
+
+        <div class="form-group">
+            <label for="inputText">Enter your text:</label>
+            <input type="text" id="inputText" placeholder="Type here...">
+        </div>
+
+        <button id="transformButton" onclick="convertToUppercase()">Transform</button>
+
+        <div class="form-group" style="margin-top: 30px;">
+            <label for="outputText">Transformed text:</label>
+            <textarea id="outputText" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        function convertToUppercase() {
+            // Get the input text element by its ID
+            const inputTextElement = document.getElementById('inputText');
+            // Get the output textarea element by its ID
+            const outputTextElement = document.getElementById('outputText');
+
+            // Get the value from the input text field
+            const originalText = inputTextElement.value;
+
+            // Convert the text to uppercase
+            const transformedText = originalText.toUpperCase();
+
+            // Set the transformed text into the output textarea
+            outputTextElement.value = transformedText;
+        }
+    </script>
+</body>
+</html>

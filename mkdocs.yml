@@ -1,0 +1,111 @@
+site_name: Selenium
+repo_url: https://github.com/dyalog/Selenium
+repo_name: Dyalog/Selenium
+dev_addr: 127.0.0.1:22361
+copyright: <div class="left">Made with <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener"><strong>Material for MkDocs</strong></a>.&nbsp;</div><div class="right">Contents copyright &copy;2015-2024 <strong><a href="https://dyalog.com" target="_blank" rel="noopener">Dyalog, LTD</a></strong></div>
+
+theme:
+  favicon: 'img/favicon-32.png'
+  logo: 'img/dyalog-white.svg'
+  features:
+    - navigation.sections
+    - navigation.instant
+    - content.footnote.tooltips
+    - navigation.path
+    - navigation.indexes
+  name: material
+
+extra:
+  generator: false
+  version:
+    provider: mike
+
+extra_css:
+  - style/documentation-styles/css/main.css
+  - style/documentation-styles/css/extra.css
+  - style/documentation-styles/css/admonition-ucmdhelp.css
+
+
+plugins:
+  - search
+  - print-site:
+      add_to_navigation: true
+      print_page_title: 'Print'
+      add_print_site_banner: false
+      # Table of contents
+      add_table_of_contents: false
+      toc_title: 'Table of Contents'
+      toc_depth: 6
+      # Content-related
+      add_full_urls: false
+      enumerate_headings: false
+      enumerate_figures: false
+      add_cover_page: true
+      cover_page_template: ""
+      path_to_pdf: ""
+      include_css: true
+      enabled: true
+      exclude:  
+
+markdown_extensions:
+  - admonition
+  - abbr 
+  - footnotes
+  - attr_list
+  - def_list
+  - markdown_tables_extended
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true 
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  # - pymdownx.emoji:
+  #     emoji_index: material.extensions.emoji.twemoji
+  #     emoji_generator: material.extensions.emoji.to_svg      
+  - toc:
+      title: On this page
+
+nav: # This 'nav:' MUST be at the very first column (no spaces before it)
+  - Overview: 'index.md' # Indented by two spaces relative to 'nav:'
+  - Usage:              # Indented by two spaces
+    - 'Installation': 'install-selenium.md' # Indented by four spaces
+    - 'Setting browser options': 'settings.md'
+    - 'Inspecting the Contents of the Page': 'inspecting-the-contents.md'
+    - 'Browser Automation Functions': 'browser-automation.md'
+    - 'Other WebDriver Functionality': 'other-webdriver-functionality.md'
+    - 'Ending a test': 'End.md'
+  - Examples:           # Indented by two spaces
+    - 'Simple Example': 'simple-example.md' # Indented by four spaces
+    - 'Testing RIDE': 'ride.md'
+  - Command Reference:  # Indented by two spaces
+    - 'Commands by category': 'commands-by-category.md' 
+    - 'ClearInput': 'browser-automation.md#clearinput'
+    - 'Click': 'browser-automation.md#click'
+    - 'CompareScreenshots': 'screenshots.md#comparescreenshots'
+    - 'DragAndDrop': 'browser-automation.md#draganddrop'
+    - 'DragAndDropToOffset': 'browser-automation.md#draganddroptooffset'
+    - 'End': 'End.md#end'
+    - 'ExecuteScript': 'browser-automation.md#executescript'
+    - 'Find': 'Find.md'   
+    - 'GetLogs': 'browser-automation.md#getlogs'
+    - 'GoTo': 'GoTo.md'
+    - 'InitBrowser': 'InitBrowser.md' 
+    - 'IsVisible': 'inspecting-the-contents.md#isvisible'
+    - 'MoveToElement': 'browser-automation.md#movetoelement'
+    - 'SaveScreenshot': 'screenshots.md#savescreenshot'
+    - 'Select': 'browser-automation.md#select'
+    - 'SelectItemText': 'browser-automation.md#selectitemtext'
+    - 'SendKeys': 'SendKeys.md'
+    - 'SetInputValue': 'browser-automation.md#setinputvalue'
+    - 'Text': 'inspecting-the-contents.md#text'
+    - 'PageSource': 'inspecting-the-contents.md#pagesource'
+    - 'Retry': 'inspecting-the-contents.md#retry'
+    - 'Wait': 'Wait.md'
+    - 'WaitFor': 'inspecting-the-contents.md#waitfor'
+  - Additional Information: 
+    - 'Terminology': 'terminology.md' 
+    - 'FAQ': 'faq.md'
+    - 'Release Notes': 'release-notes.md'
+    - 'License': 'LICENSE.md'

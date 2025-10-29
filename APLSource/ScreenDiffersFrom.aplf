@@ -1,0 +1,35 @@
+ R←{files}ScreenDiffersFrom file;getBaseName;bool;diff;fileStreamDifferenceMask;maskImage
+ ⎕TRAP←0 'S'
+     ⍝ files: optional 2 filenames.
+     ⍝ file is the name of the file containing the difference of the reference screenshot (file)
+     ⍝ files[1]: the current contents of the screen. (default: {file}-curr.png)
+     ⍝ files[2]: the difference file. (default: {file}-diff.png)
+     ⍝ R[1]: boolean: image differ =1, are equal =0
+     ⍝ R[2]: filename of current screenshot
+
+
+ getBaseName←{a b←2↑⎕NPARTS ⍵ ⋄ a,((⌽∨\⌽(~'-'∊b)∨⍵='-')/b)}   ⍝ compute base name of files (up to last "-" - or full name )
+ :If 0=⎕NC'files'
+     files←⍬
+ :EndIf
+ :If 0=≢files
+     files←⊂(getBaseName file),'-curr.png'
+ :EndIf
+ :If 1=≢files
+     files,←⊂(getBaseName 1⊃files),'-diff.png'
+ :EndIf
+ SaveScreenshot 1⊃files
+ :If bool←~Codeuctivity.ImageSharpCompare.ImageSharpCompare.ImagesAreEqual file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize
+     :Trap 90
+         diff←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiff file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize 0
+         fileStreamDifferenceMask←File.Create files[2]
+         maskImage←Codeuctivity.ImageSharpCompare.ImageSharpCompare.CalcDiffMaskImage file(1⊃files)Codeuctivity.ImageSharpCompare.ResizeOption.DontResize 0
+         SixLabors.ImageSharp.ImageExtensions.SaveAsPng(maskImage fileStreamDifferenceMask)
+         R←bool,files[1]
+     :Else
+         R←¯1(⎕EXCEPTION.Message)
+     :EndTrap
+ :Else
+     ⎕NDELETE 1⊃files
+     R←bool''
+ :EndIf
