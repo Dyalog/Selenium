@@ -24,6 +24,9 @@
  :If ⎕NEXISTS browser
  :AndIf 2=⊃1 ⎕NINFO browser  ⍝ and it is a file
  :AndIf ∨/'ride'⍷⎕C browser ⍝ and it contains "ride"
+     :If 'win'≢⎕C 3↑1⊃# ⎕WG'APLVersion'
+         'Passing full path to RIDE executable on non-Windows platform is not supported'⎕SIGNAL 11
+     :EndIf
      ridelog←tmpdir,'ride.log'
      (⊂'')⎕NPUT ridelog 1  ⍝ initialize log file (this is not "THE" ride log, just the log of the session ride was started from)
      ridelog∆←tmpdir,'ride-session.log'
