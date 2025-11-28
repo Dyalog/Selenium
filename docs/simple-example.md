@@ -6,7 +6,7 @@ Use LINK to bring it into the workspace:
 `]LINK.Create Sample /git/Selenium/Samples`
 
 
-````
+```
  r←TestUppercase nul;S;path;demoText;expect;errMsg;file
  path←1⊃1 ⎕NPARTS{6::50 ⎕ATX ⍵ ⋄ SALT_Data.SourceFile}1⊃⎕SI   ⍝ where does this file come from?
  11 ⎕SIGNAL(0=≢path)/'Unable to determine source path'
@@ -22,7 +22,7 @@ Use LINK to bring it into the workspace:
  (S.Find'transformButton').Click
  r←'outputText'S.WaitFor expect errMsg
  S.End
- ````
+ ```
 
 There is some initialisation work to do by assigning path as the directory where the code was loaded from. (This approach is compatible with SALT's `]Load` as well as with Link´s `]Import` or `⎕FIX`.) It then assigns `demoText` as the text that we want to operate on and uses `⎕C` to determine the expected value, which we will compare against the result that the web page delivers.
  The above code assumes that the `Selenium` namespace has been loaded into the same namespace as the `TestUppercase` function itself and creates a reference to it using the variable `S`.
